@@ -27,7 +27,6 @@ import FloatingWhatsApp from "./components/FloatingWhatsApp";
 function App() {
   return (
     <>
-      <TopBar />
       <Navbar />
 
       <Routes>

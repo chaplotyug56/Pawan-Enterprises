@@ -229,9 +229,7 @@ const getOrders = async (req, res) => {
 // ========================================
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find({
-        user: req.user._id,
-      })
+    const orders = await Order.find({})
       .sort({ createdAt: -1 })
       .populate("user", "name email")
       .populate("items.product");

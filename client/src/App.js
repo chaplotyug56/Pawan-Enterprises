@@ -38,7 +38,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/settings" element={<AdminSettings />} />

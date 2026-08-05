@@ -46,6 +46,7 @@ function CheckoutForm({ onSubmit }) {
       }
     } catch (err) {
       console.log(err);
+      setShowManualForm(true);
     }
   };
 

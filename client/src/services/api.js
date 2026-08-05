@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://pawan-enterprises-7pdv.onrender.com/api",
+    baseURL: process.env.REACT_APP_API_URL,
 });
 
 // Automatically attach JWT token

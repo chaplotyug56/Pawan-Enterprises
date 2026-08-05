@@ -15,13 +15,26 @@ require("dotenv").config();
 const app = express();
 
 // Middleware
-app.use(
+const allowedOrigins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://pawan-enterprises-9nkmai8r3-pawan-enterprises.vercel.app",
+    "https://pawan-enterprises-mu.vercel.app"
+  ];
+  
+  app.use(
     cors({
-      origin: [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://pawan-enterprises-mu.vercel.app",
-      ],
+      origin: function (origin, callback) {
+        if (
+          !origin ||
+          origin.startsWith("http://localhost") ||
+          origin.endsWith(".vercel.app")
+        ) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
       credentials: true,
     })
   );

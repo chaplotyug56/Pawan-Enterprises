@@ -23,6 +23,7 @@ const allowedOrigins = [
   ];
   
   app.use(
+
     cors({
       origin: function (origin, callback) {
         if (
@@ -38,6 +39,7 @@ const allowedOrigins = [
       credentials: true,
     })
   );
+  app.options("*", cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use("/api/products", productRoutes);

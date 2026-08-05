@@ -56,14 +56,16 @@ function AdminOrders() {
   const filteredOrders = orders.filter((order) => {
     const customer = order.user?.name || "";
     const email = order.user?.email || "";
-    const orderId = order._id || "";
+    const dbOrderId = order._id || "";
+    const displayOrderId = order.orderId || "";
   
     return (
       customer.toLowerCase().includes(search.toLowerCase()) ||
       email.toLowerCase().includes(search.toLowerCase()) ||
-      orderId.toLowerCase().includes(search.toLowerCase())
+      dbOrderId.toLowerCase().includes(search.toLowerCase()) ||
+      displayOrderId.toLowerCase().includes(search.toLowerCase())
     );
-  });
+  }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
     <div className="admin-orders">

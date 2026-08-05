@@ -39,7 +39,7 @@ const allowedOrigins = [
       credentials: true,
     })
   );
-  app.options("*", cors());
+  app.options(/(.*)/, cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use("/api/products", productRoutes);
@@ -54,14 +54,22 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/settings", settingsRoutes);
 
 // Connect MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
+const { MongoMemoryServer } = require("mongodb-memory-server");
+const connectDB = async () => {
+  try {
+    let uri = process.env.MONGODB_URI;
+    if (!uri) {
+      console.log("No MONGODB_URI found, using in-memory MongoDB...");
+      const mongoServer = await MongoMemoryServer.create({ instance: { args: ['--nounixsocket'] } });
+      uri = mongoServer.getUri();
+    }
+    await mongoose.connect(uri);
     console.log("✅ MongoDB Connected Successfully");
-  })
-  .catch((err) => {
+  } catch (err) {
     console.log("❌ MongoDB Connection Error:", err.message);
-  });
+  }
+};
+connectDB();
 
 // Home Route
 app.get("/", (req, res) => {

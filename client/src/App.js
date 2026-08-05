@@ -13,7 +13,7 @@ import Admin from "./pages/Admin";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import AdminOrders from "./pages/AdminOrders";
-import TopBar from "./components/TopBar";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Wishlist from "./pages/Wishlist";

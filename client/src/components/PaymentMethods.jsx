@@ -23,23 +23,7 @@ function PaymentMethods({ payment, setPayment }) {
         UPI
       </label>
 
-      <label>
-        <input
-          type="radio"
-          checked={payment === "card"}
-          onChange={() => setPayment("card")}
-        />
-        Debit / Credit Card
-      </label>
 
-      <label>
-        <input
-          type="radio"
-          checked={payment === "netbanking"}
-          onChange={() => setPayment("netbanking")}
-        />
-        Net Banking
-      </label>
     </div>
   );
 }

@@ -30,8 +30,8 @@ function Register() {
       
           navigate("/");
       
-        } catch {
-          toast.error("Registration Failed");
+        } catch (err) {
+          toast.error(err.response?.data?.message || "Registration Failed");
         }
       };
 

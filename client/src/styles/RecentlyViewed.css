@@ -1,0 +1,17 @@
+.recently-viewed{
+    margin-top:40px;
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.section-title h2{
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+.section-title p{
+    color:#666;
+}

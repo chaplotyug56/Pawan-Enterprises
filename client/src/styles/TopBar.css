@@ -1,0 +1,36 @@
+.topbar{
+    background:#0b1e4b;
+    color:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 40px;
+    font-size:14px;
+}
+
+.topbar-left{
+    display:flex;
+    gap:30px;
+}
+
+.topbar-left span,
+.topbar-right span{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+@media(max-width:768px){
+
+.topbar{
+    flex-direction:column;
+    gap:10px;
+    text-align:center;
+}
+
+.topbar-left{
+    flex-direction:column;
+    gap:8px;
+}
+
+}

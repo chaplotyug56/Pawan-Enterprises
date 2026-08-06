@@ -4,7 +4,6 @@ import Categories from "../components/Categories";
 import FeaturedProducts from "../components/FeaturedProducts";
 import BestSelling from "../components/BestSelling";
 //import NewArrivals from "../components/NewArrivals";
-import RecentlyViewed from "../components/RecentlyViewed";
 //import CustomerReviews from "../components/CustomerReviews";
 //import VisitStore from "../components/VisitStore";
 
@@ -20,8 +19,6 @@ function Home() {
   <BestSelling />
 
   <FeaturedProducts />
-
-  <RecentlyViewed />
 </>
   );
 }

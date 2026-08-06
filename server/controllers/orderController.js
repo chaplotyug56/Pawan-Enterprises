@@ -80,6 +80,10 @@ product.salesCount += item.quantity;
 
 await product.save();
     }
+    
+    // Add shipping charge if applicable
+    const shippingPrice = calculatedTotal > 1000 ? 0 : 20;
+    calculatedTotal += shippingPrice;
 
     // ========================================
 // Generate Custom Order ID

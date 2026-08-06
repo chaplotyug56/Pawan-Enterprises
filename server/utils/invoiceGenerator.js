@@ -36,7 +36,7 @@ function generateInvoice(res, order) {
   doc
     .fillColor("#000000")
     .fontSize(20)
-    .text("TAX INVOICE", 50, 130);
+    .text("INVOICE", 50, 130);
 
   doc
     .fontSize(10)
@@ -104,11 +104,20 @@ function generateInvoice(res, order) {
 
   // Totals Section
   y += 10;
+  
+  const itemsTotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const shippingCharge = order.totalPrice - itemsTotal;
 
   doc.font("Helvetica-Bold");
   doc.fontSize(12);
   doc.text("Total Discount:", 350, y, { width: 100, align: "right" });
   doc.text(`Rs. ${totalDiscount}`, 460, y, { width: 90, align: "right" });
+  
+  if (shippingCharge > 0) {
+    y += 15;
+    doc.text("Shipping:", 350, y, { width: 100, align: "right" });
+    doc.text(`Rs. ${shippingCharge}`, 460, y, { width: 90, align: "right" });
+  }
   
   y += 20;
   

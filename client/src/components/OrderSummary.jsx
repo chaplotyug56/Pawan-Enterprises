@@ -6,13 +6,8 @@ function OrderSummary({ hideButton = false }) {
 
   const { cartTotal } = useCart();
 
-  const shipping =
-    cartTotal > 1000 ? 0 : 80;
-
-  const gst = Math.round(cartTotal * 0.18);
-
-  const total =
-    cartTotal + shipping + gst;
+  const shipping = cartTotal > 1000 ? 0 : 20;
+  const totalAmount = cartTotal + shipping;
 
   return (
 
@@ -28,35 +23,15 @@ function OrderSummary({ hideButton = false }) {
 
       </div>
 
-      <div>
-
+      <div className="summary-row">
         <span>Shipping</span>
-
-        <span>
-
-          {shipping === 0
-            ? "FREE"
-            : `₹${shipping}`}
-
-        </span>
-
+        <span>{shipping === 0 ? "Free" : `₹${shipping}`}</span>
       </div>
 
-      <div>
-
-        <span>GST</span>
-
-        <span>₹{gst}</span>
-
-      </div>
-
-      <hr />
-
-      <div className="grand">
-
+      <div className="summary-row total">
         <span>Total</span>
 
-        <span>₹{total}</span>
+        <span>₹{totalAmount}</span>
 
       </div>
 

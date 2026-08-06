@@ -1,6 +1,6 @@
 // Store Configuration
 export const STORE_LOCATION = {
-    latitude: 24.7431, // Default to Akola, Chittaurgarh
-    longitude: 74.1956,
+    latitude: 24.759606075792092,
+    longitude: 74.19737392795003,
     maxDeliveryDistanceKm: 3 // 3 kilometers radius
 };

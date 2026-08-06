@@ -19,4 +19,3 @@ dist/
 .DS_Store
 
 # uploads (optional)
-server/uploads/

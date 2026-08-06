@@ -14,9 +14,20 @@ function UPIPayment({
   const UPI_ID = "9929119290@okbizaxis";
   const BUSINESS_NAME = "Pawan Enterprises";
 
-  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(
-    BUSINESS_NAME
-  )}&am=${totalAmount}&cu=INR`;
+  const baseUpiParams = `pa=${UPI_ID}&pn=${encodeURIComponent(BUSINESS_NAME)}&am=${totalAmount}&cu=INR`;
+  const upiLink = `upi://pay?${baseUpiParams}`;
+  const gpayLink = `tez://upi/pay?${baseUpiParams}`;
+  const phonepeLink = `phonepe://pay?${baseUpiParams}`;
+  const paytmLink = `paytmmp://pay?${baseUpiParams}`;
+
+  const handleFallback = () => {
+    const startTime = Date.now();
+    setTimeout(() => {
+      if (Date.now() - startTime < 2500) {
+        toast.info("Could not open the app automatically. Please scan the QR code.", { autoClose: 5000 });
+      }
+    }, 2000);
+  };
 
   const copyUPI = async () => {
     try {
@@ -64,24 +75,20 @@ function UPIPayment({
           size={220}
         />
 
-        <a
-          href={upiLink}
-          className="primary-btn"
-          style={{ marginTop: "20px", display: "flex", gap: "10px", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
-          onClick={(e) => {
-            // Prevent default just in case, but let the browser try to open it natively via href
-            // Actually, we SHOULD NOT prevent default on an anchor if we want the browser to natively open the deep link.
-            // We just trigger the fallback check here.
-            const startTime = Date.now();
-            setTimeout(() => {
-              if (Date.now() - startTime < 2500) {
-                toast.info("Could not automatically open a UPI app. Please scan the QR code instead.", { autoClose: 5000 });
-              }
-            }, 2000);
-          }}
-        >
-          Pay via UPI App
-        </a>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "20px", justifyContent: "center" }}>
+          <a href={gpayLink} className="secondary-btn" style={{ textDecoration: "none", fontSize: "14px", padding: "8px 12px" }} onClick={handleFallback}>
+             Google Pay
+          </a>
+          <a href={phonepeLink} className="secondary-btn" style={{ textDecoration: "none", fontSize: "14px", padding: "8px 12px" }} onClick={handleFallback}>
+             PhonePe
+          </a>
+          <a href={paytmLink} className="secondary-btn" style={{ textDecoration: "none", fontSize: "14px", padding: "8px 12px" }} onClick={handleFallback}>
+             Paytm
+          </a>
+          <a href={upiLink} className="secondary-btn" style={{ textDecoration: "none", fontSize: "14px", padding: "8px 12px" }} onClick={handleFallback}>
+             Other UPI Apps
+          </a>
+        </div>
 
       </div>
 

@@ -11,11 +11,11 @@ function Cart() {
   if (cart.length === 0) {
     return (
 
-      <div className="empty-cart">
+      <div className="empty-cart container section" style={{ textAlign: 'center', padding: '80px 20px', minHeight: '50vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
 
-        <h1>Your Cart is Empty</h1>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '15px' }}>Your Cart is Empty</h1>
 
-        <p>
+        <p style={{ color: '#666', fontSize: '1.2rem', marginBottom: '30px' }}>
           Looks like you haven't added
           anything yet.
         </p>
@@ -23,6 +23,7 @@ function Cart() {
         <Link
           to="/products"
           className="primary-btn"
+          style={{ padding: '15px 30px', fontSize: '1.1rem' }}
         >
           Continue Shopping
         </Link>

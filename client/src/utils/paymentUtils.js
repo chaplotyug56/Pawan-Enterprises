@@ -19,8 +19,12 @@ export const openUPIApp = ({ upiId, merchantName, amount, transactionNote = "" }
   // Record the time before trying to open the app
   const startTime = Date.now();
 
-  // Attempt to open the UPI deep link
-  window.location.href = upiLink;
+  // Attempt to open the UPI deep link robustly
+  const link = document.createElement("a");
+  link.href = upiLink;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 
   // Set a timeout to detect if the app switch failed.
   // If the user hasn't left the page after 2 seconds, it likely failed.

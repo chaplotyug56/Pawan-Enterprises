@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import QRCode from "react-qr-code";
 import { toast } from "react-toastify";
-import { openUPIApp } from "../utils/paymentUtils";
 
 function UPIPayment({
   totalAmount,
@@ -65,21 +64,24 @@ function UPIPayment({
           size={220}
         />
 
-        <button
-          type="button"
+        <a
+          href={upiLink}
           className="primary-btn"
-          style={{ marginTop: "20px", display: "flex", gap: "10px", alignItems: "center", justifyContent: "center" }}
-          onClick={() => {
-            openUPIApp({
-              upiId: UPI_ID,
-              merchantName: BUSINESS_NAME,
-              amount: totalAmount,
-              transactionNote: "Order Payment"
-            });
+          style={{ marginTop: "20px", display: "flex", gap: "10px", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
+          onClick={(e) => {
+            // Prevent default just in case, but let the browser try to open it natively via href
+            // Actually, we SHOULD NOT prevent default on an anchor if we want the browser to natively open the deep link.
+            // We just trigger the fallback check here.
+            const startTime = Date.now();
+            setTimeout(() => {
+              if (Date.now() - startTime < 2500) {
+                toast.info("Could not automatically open a UPI app. Please scan the QR code instead.", { autoClose: 5000 });
+              }
+            }, 2000);
           }}
         >
           Pay via UPI App
-        </button>
+        </a>
 
       </div>
 

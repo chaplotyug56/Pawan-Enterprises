@@ -141,10 +141,9 @@ function CheckoutForm({ onSubmit }) {
 
     <input
       name="email"
-      placeholder="Email"
+      placeholder="Email (Optional)"
       value={form.email}
       onChange={handleChange}
-      required
     />
 
     <textarea

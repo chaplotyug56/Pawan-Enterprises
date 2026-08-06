@@ -76,29 +76,15 @@ function Admin() {
 
     if (files) {
       if (name === "images") {
-        const promises = Array.from(files).map(file => {
-             return new Promise((resolve) => {
-                 const reader = new FileReader();
-                 reader.onload = (e) => resolve(e.target.result);
-                 reader.readAsDataURL(file);
-             });
-         });
-         Promise.all(promises).then(base64Images => {
-             setForm((prev) => ({
-                 ...prev,
-                 images: base64Images
-             }));
-         });
+        setForm((prev) => ({
+          ...prev,
+          images: Array.from(files),
+        }));
       } else {
-         const file = files[0];
-         const reader = new FileReader();
-         reader.onload = (e) => {
-             setForm((prev) => ({
-                 ...prev,
-                 [name]: e.target.result
-             }));
-         };
-         reader.readAsDataURL(file);
+        setForm((prev) => ({
+          ...prev,
+          [name]: files[0],
+        }));
       }
     } else {
       setForm((prev) => ({
@@ -153,7 +139,23 @@ function Admin() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const data = { ...form };
+    const data = new FormData();
+
+    Object.keys(form).forEach((key) => {
+        if (key === "images") {
+            form.images.forEach((img) => {
+                data.append("images", img);
+            });
+        }
+        else if (key === "image") {
+            if (form.image && typeof form.image !== "string") {
+                data.append("image", form.image);
+            }
+        }
+        else {
+            data.append(key, form[key]);
+        }
+    });
 
     try {
       setLoading(true);

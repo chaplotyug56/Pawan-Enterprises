@@ -9,11 +9,17 @@ function ProductForm({
   const [preview, setPreview] = useState(null);
 
   useEffect(() => {
+    if (form.image instanceof File) {
+      const objectUrl = URL.createObjectURL(form.image);
+      setPreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+
     if (typeof form.image === "string" && form.image !== "") {
-      if (form.image.startsWith("data:image/") || form.image.startsWith("http")) {
+      if (form.image.startsWith("http")) {
         setPreview(form.image);
       } else {
-        setPreview(`http://localhost:8000/uploads/${form.image}`);
+        setPreview(`http://localhost:8000/api/images/${form.image}`);
       }
     } else {
       setPreview(null);

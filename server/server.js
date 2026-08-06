@@ -8,6 +8,7 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const reviewRoutes =  require("./routes/reviewRoutes.js");
 const notificationRoutes = require("./routes/notificationRoutes");
 const settingsRoutes = require("./routes/settingsRoutes");
+const imageRoutes = require("./routes/imageRoutes");
 const multer = require("multer");
 
 require("dotenv").config();
@@ -53,6 +54,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/reviews",reviewRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/images", imageRoutes);
 
 // Connect MongoDB
 const { MongoMemoryServer } = require("mongodb-memory-server");

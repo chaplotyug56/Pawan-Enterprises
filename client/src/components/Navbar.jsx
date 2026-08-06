@@ -60,7 +60,7 @@ function Navbar() {
         {/* Logo */}
 
         <Link to="/" className="logo">
-          <FaStore className="logo-icon" />
+          <img src="/logo.png" alt="Pawan Enterprises Logo" className="logo-img" />
 
           <div>
             <h2>Pawan</h2>

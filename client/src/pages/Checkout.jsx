@@ -30,6 +30,10 @@ function Checkout() {
   const continueCheckout = (address) => {
     setShippingAddress(address);
     setShowPayment(true);
+    toast.success("Delivery Address Selected!");
+    setTimeout(() => {
+      window.scrollBy({ top: 500, behavior: "smooth" });
+    }, 100);
   };
 
   const placeOrder = async () => {

@@ -27,7 +27,7 @@ import {
               <h3>Delivery in Akola</h3>
   
               <p>
-                Fast local delivery. Free delivery on orders above ₹500.
+                Fast local delivery. Free delivery on orders above ₹1000.
               </p>
             </div>
   

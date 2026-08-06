@@ -14,11 +14,18 @@ function UPIPayment({
   const UPI_ID = "9929119290@okbizaxis";
   const BUSINESS_NAME = "Pawan Enterprises";
 
-  const baseUpiParams = `pa=${UPI_ID}&pn=${encodeURIComponent(BUSINESS_NAME)}&am=${totalAmount}&cu=INR`;
+  // 1. Amount must be strictly formatted with exactly 2 decimal places (e.g., 60.00)
+  const formattedAmount = Number(totalAmount).toFixed(2);
+
+  // 2. Simplest possible valid UPI Deep Link
+  const baseUpiParams = `pa=${UPI_ID}&pn=${encodeURIComponent(BUSINESS_NAME)}&am=${formattedAmount}&cu=INR`;
+  
+  // 3. We use standard upi://pay for ALL buttons. 
+  // Proprietary schemes (tez://, phonepe://, paytmmp://) trigger strict merchant risk policies for unregistered deep links.
   const upiLink = `upi://pay?${baseUpiParams}`;
-  const gpayLink = `tez://upi/pay?${baseUpiParams}`;
-  const phonepeLink = `phonepe://pay?${baseUpiParams}`;
-  const paytmLink = `paytmmp://pay?${baseUpiParams}`;
+  const gpayLink = `upi://pay?${baseUpiParams}`;
+  const phonepeLink = `upi://pay?${baseUpiParams}`;
+  const paytmLink = `upi://pay?${baseUpiParams}`;
 
   const handleFallback = () => {
     const startTime = Date.now();

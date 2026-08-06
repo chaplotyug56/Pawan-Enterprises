@@ -128,6 +128,7 @@ function ProductForm({
           name="image"
           accept="image/*"
           onChange={handleChange}
+          required={!isEditing}
         />
 
 <label>Gallery Images (Max 5)</label>

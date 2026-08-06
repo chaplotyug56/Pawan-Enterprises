@@ -150,11 +150,9 @@ if (files) {
         }
     
         else if (key === "image") {
-    
-            if (form.image instanceof File) {
+            if (form.image && typeof form.image !== "string") {
                 data.append("image", form.image);
             }
-    
         }
     
         else {

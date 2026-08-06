@@ -121,6 +121,10 @@ const [form, setForm] = useState(emptyForm);
           placeholder="Phone"
           value={form.phone}
           onChange={handleChange}
+          pattern="[0-9]{10}"
+          minLength="10"
+          maxLength="10"
+          title="Please enter exactly 10 digits"
           required
         />
 

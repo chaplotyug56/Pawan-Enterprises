@@ -215,6 +215,10 @@ function CheckoutForm({ onSubmit }) {
                 placeholder="Mobile Number *"
                 value={form.phone}
                 onChange={handleChange}
+                pattern="[0-9]{10}"
+                minLength="10"
+                maxLength="10"
+                title="Please enter exactly 10 digits"
                 required
               />
             </div>

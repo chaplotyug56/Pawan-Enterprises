@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const upload = require("../middleware/upload");
-
 const {
     addProduct,
     getProducts,
@@ -39,10 +37,6 @@ router.post(
   "/",
   protect,
   admin,
-  upload.fields([
-    { name: "image", maxCount: 1 },
-    { name: "images", maxCount: 5 },
-  ]),
   addProduct
 );
 
@@ -51,10 +45,6 @@ router.put(
   "/:id",
   protect,
   admin,
-  upload.fields([
-    { name: "image", maxCount: 1 },
-    { name: "images", maxCount: 5 },
-  ]),
   updateProduct
 );
 

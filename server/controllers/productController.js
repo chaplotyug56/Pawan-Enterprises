@@ -7,22 +7,8 @@ const addProduct = async (req, res) => {
   console.log("🔥 addProduct API called");
 
   try {
-    // Main Image
-    const image =
-      req.files?.image?.length > 0
-        ? req.files.image[0].filename
-        : "";
-
-    // Gallery Images
-    const images =
-      req.files?.images?.length > 0
-        ? req.files.images.map((file) => file.filename)
-        : [];
-
     const product = new Product({
-      ...req.body,
-      image,
-      images,
+      ...req.body
     });
 
     await product.save();
@@ -144,14 +130,18 @@ const getProducts = async (req, res) => {
       const obj = product.toObject();
 
       if (obj.image) {
-        obj.image = `${req.protocol}://${req.get("host")}/uploads/${obj.image}`;
+        if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
+          obj.image = `${req.protocol}://${req.get("host")}/uploads/${obj.image}`;
+        }
       }
       
       if (obj.images && obj.images.length > 0) {
-        obj.images = obj.images.map(
-          (img) =>
-            `${req.protocol}://${req.get("host")}/uploads/${img}`
-        );
+        obj.images = obj.images.map((img) => {
+          if (!img.startsWith("http") && !img.startsWith("data:image")) {
+            return `${req.protocol}://${req.get("host")}/uploads/${img}`;
+          }
+          return img;
+        });
       }
 
       return obj;
@@ -187,16 +177,20 @@ const getProductById = async (req, res) => {
     const productObj = product.toObject();
 
     if (productObj.image) {
-      productObj.image = `${req.protocol}://${req.get("host")}/uploads/${productObj.image}`;
+      if (!productObj.image.startsWith("http") && !productObj.image.startsWith("data:image")) {
+        productObj.image = `${req.protocol}://${req.get("host")}/uploads/${productObj.image}`;
+      }
     }
     if (
       productObj.images &&
       productObj.images.length > 0
     ) {
-      productObj.images = productObj.images.map(
-        (img) =>
-          `${req.protocol}://${req.get("host")}/uploads/${img}`
-      );
+      productObj.images = productObj.images.map((img) => {
+        if (!img.startsWith("http") && !img.startsWith("data:image")) {
+          return `${req.protocol}://${req.get("host")}/uploads/${img}`;
+        }
+        return img;
+      });
     }
 
     res.status(200).json({
@@ -225,21 +219,10 @@ const updateProduct = async (req, res) => {
       });
     }
 
+    // The req.body already contains the updated image and images strings
     const updateData = {
       ...req.body,
     };
-
-    // Update main image only if new image uploaded
-    if (req.files?.image?.length > 0) {
-      updateData.image = req.files.image[0].filename;
-    }
-
-    // Update gallery only if new gallery images uploaded
-    if (req.files?.images?.length > 0) {
-      updateData.images = req.files.images.map(
-        (file) => file.filename
-      );
-    }
 
     const updatedProduct =
       await Product.findByIdAndUpdate(
@@ -318,7 +301,9 @@ const getRelatedProducts = async (req, res) => {
       const obj = item.toObject();
 
       if (obj.image) {
-        obj.image = `${req.protocol}://${req.get("host")}/uploads/${obj.image}`;
+        if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
+          obj.image = `${req.protocol}://${req.get("host")}/uploads/${obj.image}`;
+        }
       }
 
       return obj;
@@ -349,7 +334,9 @@ const getBestSellingProducts = async (req, res) => {
       const obj = product.toObject();
 
       if (obj.image) {
-        obj.image = `${req.protocol}://${req.get("host")}/uploads/${obj.image}`;
+        if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
+          obj.image = `${req.protocol}://${req.get("host")}/uploads/${obj.image}`;
+        }
       }
 
       return obj;

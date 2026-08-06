@@ -36,7 +36,7 @@ import {
   
             <p>
               <FaPhoneAlt />
-              &nbsp; +91 9929119290
+              &nbsp; +91 8209707984
             </p>
   
             <p>

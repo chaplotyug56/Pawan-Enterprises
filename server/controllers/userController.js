@@ -7,9 +7,9 @@ const jwt = require("jsonwebtoken");
 // ========================================
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !phone) {
       return res.status(400).json({
         success: false,
         message: "Please fill all fields",
@@ -17,13 +17,16 @@ const registerUser = async (req, res) => {
     }
 
     const userExists = await User.findOne({
-      email: email.toLowerCase(),
+      $or: [
+        { email: email.toLowerCase() },
+        { phone: phone }
+      ]
     });
 
     if (userExists) {
       return res.status(400).json({
         success: false,
-        message: "User already exists",
+        message: "User with this email or phone already exists",
       });
     }
 
@@ -33,6 +36,7 @@ const registerUser = async (req, res) => {
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
+      phone,
     });
 
     const userData = user.toObject();
@@ -61,17 +65,23 @@ const registerUser = async (req, res) => {
 // ========================================
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { identifier, email, password } = req.body;
+    
+    // Support both old 'email' payload and new 'identifier' payload
+    const loginId = identifier || email;
 
-    if (!email || !password) {
+    if (!loginId || !password) {
       return res.status(400).json({
         success: false,
-        message: "Please enter email and password",
+        message: "Please enter email/phone and password",
       });
     }
 
     const user = await User.findOne({
-      email: email.toLowerCase(),
+      $or: [
+        { email: loginId.toLowerCase() },
+        { phone: loginId }
+      ]
     });
 
     if (!user) {

@@ -9,7 +9,7 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
 
   const [password, setPassword] = useState("");
 
@@ -17,7 +17,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const data = await login(email, password);
+      const data = await login(identifier, password);
 
       toast.success("Login Successful");
 
@@ -45,11 +45,11 @@ function Login() {
         <h1>Login</h1>
 
         <input
-          type="email"
-          placeholder="Email"
-          value={email}
+          type="text"
+          placeholder="Email or Mobile Number"
+          value={identifier}
           onChange={(e) =>
-            setEmail(e.target.value)
+            setIdentifier(e.target.value)
           }
           required
         />

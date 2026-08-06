@@ -15,6 +15,7 @@ function Register() {
     useState({
       name: "",
       email: "",
+      phone: "",
       password: "",
     });
 
@@ -54,9 +55,11 @@ function Register() {
               name: e.target.value,
             })
           }
+          required
         />
 
         <input
+          type="email"
           placeholder="Email"
           onChange={(e) =>
             setForm({
@@ -64,6 +67,19 @@ function Register() {
               email: e.target.value,
             })
           }
+          required
+        />
+
+        <input
+          type="tel"
+          placeholder="Mobile Number"
+          onChange={(e) =>
+            setForm({
+              ...form,
+              phone: e.target.value,
+            })
+          }
+          required
         />
 
         <input
@@ -75,6 +91,7 @@ function Register() {
               password: e.target.value,
             })
           }
+          required
         />
 
         <button>

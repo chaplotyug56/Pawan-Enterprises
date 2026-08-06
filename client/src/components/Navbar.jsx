@@ -173,14 +173,6 @@ function Navbar() {
           Products
         </NavLink>
 
-        <NavLink to="/wishlist" onClick={() => setMenuOpen(false)}>
-          Wishlist
-        </NavLink>
-
-        <NavLink to="/cart" onClick={() => setMenuOpen(false)}>
-          Cart
-        </NavLink>
-
         {user && (
           <>
             <NavLink to="/my-orders" onClick={() => setMenuOpen(false)}>
@@ -189,10 +181,6 @@ function Navbar() {
 
             <NavLink to="/addresses" onClick={() => setMenuOpen(false)}>
               Saved Addresses
-            </NavLink>
-
-            <NavLink to="/profile" onClick={() => setMenuOpen(false)}>
-              Profile
             </NavLink>
           </>
         )}

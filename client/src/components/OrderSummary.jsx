@@ -6,7 +6,7 @@ function OrderSummary({ hideButton = false }) {
 
   const { cartTotal } = useCart();
 
-  const shipping = cartTotal > 1000 ? 0 : 20;
+  const shipping = cartTotal >= 1000 ? 0 : 20;
   const totalAmount = cartTotal + shipping;
 
   return (

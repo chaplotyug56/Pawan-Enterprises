@@ -23,7 +23,7 @@ function Checkout() {
 
   const [paymentTime, setPaymentTime] = useState("");
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
-  const shipping = cartTotal > 1000 ? 0 : 20;
+  const shipping = cartTotal >= 1000 ? 0 : 20;
   const totalAmount = cartTotal + shipping;
   
   const continueCheckout = (address) => {

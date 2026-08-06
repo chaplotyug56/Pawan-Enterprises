@@ -198,10 +198,6 @@ function Navbar() {
             <NavLink to="/admin/reviews" onClick={() => setMenuOpen(false)}>
               Reviews
             </NavLink>
-
-            <NavLink to="/admin/settings" onClick={() => setMenuOpen(false)}>
-              Settings
-            </NavLink>
           </>
         )}
 

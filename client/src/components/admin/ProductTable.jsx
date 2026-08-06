@@ -136,11 +136,7 @@ function ProductTable({
 
                     <img
                       className="table-image"
-                      src={
-                        product.image.startsWith("http")
-                          ? product.image
-                          : `/uploads/${product.image}`
-                      }
+                      src={product.image}
                       alt={product.name}
                     />
 

@@ -20,6 +20,7 @@ const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
     fetchAddresses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAddresses = async () => {

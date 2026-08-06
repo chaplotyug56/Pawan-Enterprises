@@ -64,3 +64,18 @@
     border-top:1px solid rgba(255,255,255,.2);
     font-size:15px;
 }
+
+@media(max-width:768px) {
+    .footer-container {
+        text-align: center;
+        gap: 30px;
+    }
+    
+    .footer-section a {
+        padding: 8px 0;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}

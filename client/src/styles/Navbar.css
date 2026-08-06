@@ -240,24 +240,60 @@
     
     /* ================= MOBILE ================= */
     
+    .menu-btn {
+        display: none;
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        color: #222;
+        cursor: pointer;
+    }
+
     @media(max-width:900px){
     
-    .navbar{
-    flex-direction:column;
-    gap:18px;
-    padding:18px;
-    }
-    
-    .search-box{
-    width:100%;
-    }
-    
-    .nav-icons{
-    gap:20px;
-    }
-    
-    .menu{
-    gap:20px;
-    }
+        .navbar{
+            flex-direction:row;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px 15px;
+        }
+        
+        .logo-img {
+            height: 35px;
+        }
+        .logo h2 {
+            font-size: 22px;
+        }
+        .logo span {
+            font-size: 16px;
+        }
+        
+        .search-box{
+            order: 3;
+            width:100%;
+            margin-top: 5px;
+        }
+        
+        .nav-icons{
+            gap:15px;
+        }
+
+        .menu-btn {
+            display: block;
+            margin-left: auto;
+        }
+        
+        .menu{
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            text-align: center;
+            gap: 15px;
+            padding: 15px 0;
+        }
+
+        .menu.show {
+            display: flex;
+        }
     
     }

@@ -70,11 +70,15 @@
     }
     
     @media(max-width:500px){
-    
-    .category-grid{
-    
-    grid-template-columns:1fr;
-    
-    }
-    
+        .category-grid{
+            grid-template-columns:repeat(2,1fr);
+            gap: 15px;
+        }
+        .category-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .category-box h3 {
+            font-size: 14px;
+        }
     }

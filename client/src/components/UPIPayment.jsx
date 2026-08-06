@@ -20,21 +20,8 @@ function UPIPayment({
   // 2. Simplest possible valid UPI Deep Link
   const baseUpiParams = `pa=${UPI_ID}&pn=${encodeURIComponent(BUSINESS_NAME)}&am=${formattedAmount}&cu=INR`;
   
-  // 3. We use standard upi://pay for ALL buttons. 
-  // Proprietary schemes (tez://, phonepe://, paytmmp://) trigger strict merchant risk policies for unregistered deep links.
+  // 3. We use standard upi://pay for the QR Code
   const upiLink = `upi://pay?${baseUpiParams}`;
-  const gpayLink = `upi://pay?${baseUpiParams}`;
-  const phonepeLink = `upi://pay?${baseUpiParams}`;
-  const paytmLink = `upi://pay?${baseUpiParams}`;
-
-  const handleFallback = () => {
-    const startTime = Date.now();
-    setTimeout(() => {
-      if (Date.now() - startTime < 2500) {
-        toast.info("Could not open the app automatically. Please scan the QR code.", { autoClose: 5000 });
-      }
-    }, 2000);
-  };
 
   const copyUPI = async () => {
     try {
@@ -81,21 +68,6 @@ function UPIPayment({
           value={upiLink}
           size={220}
         />
-
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "20px", justifyContent: "center" }}>
-          <a href={gpayLink} className="secondary-btn" style={{ textDecoration: "none", fontSize: "14px", padding: "8px 12px" }} onClick={handleFallback}>
-             Google Pay
-          </a>
-          <a href={phonepeLink} className="secondary-btn" style={{ textDecoration: "none", fontSize: "14px", padding: "8px 12px" }} onClick={handleFallback}>
-             PhonePe
-          </a>
-          <a href={paytmLink} className="secondary-btn" style={{ textDecoration: "none", fontSize: "14px", padding: "8px 12px" }} onClick={handleFallback}>
-             Paytm
-          </a>
-          <a href={upiLink} className="secondary-btn" style={{ textDecoration: "none", fontSize: "14px", padding: "8px 12px" }} onClick={handleFallback}>
-             Other UPI Apps
-          </a>
-        </div>
 
       </div>
 

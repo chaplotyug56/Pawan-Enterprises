@@ -27,10 +27,12 @@ function HeroBanner() {
           </Link>
 
           <a
-            href="tel:+919929119290"
+            href="https://wa.me/918209707984?text=Hello%20Pawan%20Enterprises"
+            target="_blank"
+            rel="noopener noreferrer"
             className="call-btn"
           >
-            📞 Call Now
+            💬 Chat Now
           </a>
 
         </div>

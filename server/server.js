@@ -13,6 +13,7 @@ const multer = require("multer");
 require("dotenv").config();
 
 const app = express();
+app.set("trust proxy", 1);
 
 // Middleware
 const allowedOrigins = [

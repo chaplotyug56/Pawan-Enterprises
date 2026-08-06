@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../services/api";
 import { STORE_LOCATION } from "../config";
 import "../styles/Checkout.css";
 import { FaMapMarkerAlt, FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
@@ -22,6 +23,9 @@ function deg2rad(deg) {
 }
 
 function CheckoutForm({ onSubmit }) {
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [showManualForm, setShowManualForm] = useState(false);
   const [form, setForm] = useState({
     fullName: "",
     phone: "",
@@ -42,6 +46,44 @@ function CheckoutForm({ onSubmit }) {
       ...form,
       [e.target.name]: e.target.value,
     });
+  };
+
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
+
+  const fetchAddresses = async () => {
+    try {
+      const res = await api.get("/users/addresses");
+      setAddresses(res.data.addresses);
+
+      const defaultAddress = res.data.addresses.find((a) => a.isDefault);
+      if (defaultAddress) {
+        handleAddressSelection(defaultAddress);
+      } else {
+        setShowManualForm(true);
+      }
+    } catch (err) {
+      console.log(err);
+      setShowManualForm(true);
+    }
+  };
+
+  const handleAddressSelection = (address) => {
+    setSelectedAddress(address);
+    setShowManualForm(false);
+    setForm({
+      fullName: address.fullName || "",
+      phone: address.phone || "",
+      houseNo: address.houseNo || "",
+      building: address.building || "",
+      street: address.street || "",
+      landmark: address.landmark || "",
+      city: address.city || "",
+      pincode: address.pincode || "",
+    });
+    setLocationStatus("idle");
+    setVerifiedLocation(null);
   };
 
   const verifyLocation = () => {
@@ -119,75 +161,113 @@ function CheckoutForm({ onSubmit }) {
       }}
     >
       <div className="checkout-section">
-        <h2>Customer Information</h2>
-        <div className="input-row">
-          <input
-            name="fullName"
-            placeholder="Full Name *"
-            value={form.fullName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="phone"
-            placeholder="Mobile Number *"
-            value={form.phone}
-            onChange={handleChange}
-            required
-          />
-        </div>
-      </div>
-
-      <div className="checkout-section">
         <h2>Delivery Address</h2>
-        <div className="input-row">
-          <input
-            name="houseNo"
-            placeholder="House / Flat Number *"
-            value={form.houseNo}
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="building"
-            placeholder="Building / Society Name *"
-            value={form.building}
-            onChange={handleChange}
-            required
-          />
-        </div>
 
-        <input
-          name="street"
-          placeholder="Street / Area *"
-          value={form.street}
-          onChange={handleChange}
-          required
-        />
+        {addresses.length > 0 && (
+          <div className="saved-addresses" style={{ marginBottom: '20px' }}>
+            {addresses.map((item) => (
+              <label key={item._id} className="saved-address" style={{ display: 'flex', gap: '10px', padding: '10px', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', marginBottom: '10px', cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  checked={selectedAddress?._id === item._id}
+                  onChange={() => handleAddressSelection(item)}
+                />
+                <div>
+                  <strong>{item.fullName} {item.isDefault && "⭐"}</strong>
+                  <p style={{ fontSize: '0.9em', color: 'var(--text-secondary)' }}>
+                    {item.houseNo}, {item.building}, {item.street}<br/>
+                    {item.city} - {item.pincode}
+                  </p>
+                </div>
+              </label>
+            ))}
+            <button
+              type="button"
+              className="secondary-btn"
+              onClick={() => {
+                setShowManualForm(true);
+                setSelectedAddress(null);
+                setForm({
+                  fullName: "", phone: "", houseNo: "", building: "", street: "", landmark: "", city: "", pincode: "",
+                });
+                setLocationStatus("idle");
+                setVerifiedLocation(null);
+              }}
+              style={{ padding: '8px 12px', fontSize: '0.9em' }}
+            >
+              + Enter New Address
+            </button>
+          </div>
+        )}
 
-        <input
-          name="landmark"
-          placeholder="Landmark (Optional)"
-          value={form.landmark}
-          onChange={handleChange}
-        />
-
-        <div className="input-row">
-          <input
-            name="city"
-            placeholder="City *"
-            value={form.city}
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="pincode"
-            placeholder="PIN Code *"
-            value={form.pincode}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        {showManualForm && (
+          <>
+            <div className="input-row">
+              <input
+                name="fullName"
+                placeholder="Full Name *"
+                value={form.fullName}
+                onChange={handleChange}
+                required
+              />
+              <input
+                name="phone"
+                placeholder="Mobile Number *"
+                value={form.phone}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="input-row">
+              <input
+                name="houseNo"
+                placeholder="House / Flat Number *"
+                value={form.houseNo}
+                onChange={handleChange}
+                required
+              />
+              <input
+                name="building"
+                placeholder="Building / Society Name *"
+                value={form.building}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            
+            <input
+              name="street"
+              placeholder="Street / Area *"
+              value={form.street}
+              onChange={handleChange}
+              required
+            />
+            
+            <input
+              name="landmark"
+              placeholder="Landmark (Optional)"
+              value={form.landmark}
+              onChange={handleChange}
+            />
+            
+            <div className="input-row">
+              <input
+                name="city"
+                placeholder="City *"
+                value={form.city}
+                onChange={handleChange}
+                required
+              />
+              <input
+                name="pincode"
+                placeholder="PIN Code *"
+                value={form.pincode}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </>
+        )}
       </div>
 
       <div className="location-verification-section">

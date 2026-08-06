@@ -272,18 +272,20 @@ const addAddress = async (req, res) => {
     const {
       fullName,
       phone,
-      address,
+      houseNo,
+      building,
+      street,
+      landmark,
       city,
-      state,
       pincode,
     } = req.body;
 
     if (
       !fullName ||
       !phone ||
-      !address ||
+      !houseNo ||
+      !street ||
       !city ||
-      !state ||
       !pincode
     ) {
       return res.status(400).json({
@@ -304,9 +306,11 @@ const addAddress = async (req, res) => {
     user.addresses.push({
       fullName,
       phone,
-      address,
+      houseNo,
+      building,
+      street,
+      landmark,
       city,
-      state,
       pincode,
       isDefault: user.addresses.length === 0,
     });
@@ -425,9 +429,11 @@ const updateAddress = async (req, res) => {
 
     address.fullName = req.body.fullName || address.fullName;
     address.phone = req.body.phone || address.phone;
-    address.address = req.body.address || address.address;
+    address.houseNo = req.body.houseNo || address.houseNo;
+    address.building = req.body.building || address.building;
+    address.street = req.body.street || address.street;
+    address.landmark = req.body.landmark || address.landmark;
     address.city = req.body.city || address.city;
-    address.state = req.body.state || address.state;
     address.pincode = req.body.pincode || address.pincode;
 
     await user.save();

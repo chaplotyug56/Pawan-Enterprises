@@ -9,9 +9,11 @@ function Addresses() {
 const emptyForm = {
   fullName: "",
   phone: "",
-  address: "",
+  houseNo: "",
+  building: "",
+  street: "",
+  landmark: "",
   city: "",
-  state: "",
   pincode: "",
 };
 const [form, setForm] = useState(emptyForm);
@@ -85,9 +87,11 @@ const [form, setForm] = useState(emptyForm);
     setForm({
       fullName: address.fullName,
       phone: address.phone,
-      address: address.address,
+      houseNo: address.houseNo,
+      building: address.building,
+      street: address.street,
+      landmark: address.landmark,
       city: address.city,
-      state: address.state,
       pincode: address.pincode,
     });
   
@@ -120,26 +124,41 @@ const [form, setForm] = useState(emptyForm);
           required
         />
 
-        <textarea
-          name="address"
-          placeholder="Address"
-          value={form.address}
+        <input
+          name="houseNo"
+          placeholder="House / Flat Number"
+          value={form.houseNo}
           onChange={handleChange}
           required
+        />
+
+        <input
+          name="building"
+          placeholder="Building / Society Name"
+          value={form.building}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          name="street"
+          placeholder="Street / Area"
+          value={form.street}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          name="landmark"
+          placeholder="Landmark (Optional)"
+          value={form.landmark}
+          onChange={handleChange}
         />
 
         <input
           name="city"
           placeholder="City"
           value={form.city}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          name="state"
-          placeholder="State"
-          value={form.state}
           onChange={handleChange}
           required
         />
@@ -178,10 +197,10 @@ const [form, setForm] = useState(emptyForm);
 
             <p>{item.phone}</p>
 
-            <p>{item.address}</p>
+            <p>{item.houseNo}, {item.building}, {item.street}</p>
 
             <p>
-              {item.city}, {item.state} - {item.pincode}
+              {item.landmark && `${item.landmark}, `}{item.city} - {item.pincode}
             </p>
 
             <div style={{ marginTop: "10px" }}>

@@ -171,7 +171,7 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
           
             paymentScreenshot,
           
-            address: `${shippingAddress.houseNo}, ${shippingAddress.building}, ${shippingAddress.street}${shippingAddress.landmark ? `, ${shippingAddress.landmark}` : ''}, ${shippingAddress.city} - ${shippingAddress.pincode}`,
+            address: `${shippingAddress.houseNo}, ${shippingAddress.building}, ${shippingAddress.street}${shippingAddress.landmark ? `, ${shippingAddress.landmark}` : ''}, ${shippingAddress.city}, ${shippingAddress.state || 'Rajasthan'} - ${shippingAddress.pincode}`,
           
             orderId: customOrderId,
 

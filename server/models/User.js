@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema(
           street: String,
           landmark: String,
           city: String,
+          state: {
+            type: String,
+            default: "Rajasthan"
+          },
           pincode: String,
           isDefault: {
             type: Boolean,

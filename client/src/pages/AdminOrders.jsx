@@ -227,7 +227,7 @@ function AdminOrders() {
             <p>
               <strong>Address:</strong>{" "}
               {order.shippingAddress?.houseNo}, {order.shippingAddress?.building}, {order.shippingAddress?.street}
-              {order.shippingAddress?.landmark && `, ${order.shippingAddress?.landmark}`}, {order.shippingAddress?.city} - {order.shippingAddress?.pincode}
+              {order.shippingAddress?.landmark && `, ${order.shippingAddress?.landmark}`}, {order.shippingAddress?.city}, {order.shippingAddress?.state || 'Rajasthan'} - {order.shippingAddress?.pincode}
             </p>
             
             {order.location && (

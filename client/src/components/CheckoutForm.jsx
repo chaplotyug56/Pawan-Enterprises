@@ -34,6 +34,7 @@ function CheckoutForm({ onSubmit }) {
     street: "",
     landmark: "",
     city: "",
+    state: "Rajasthan",
     pincode: "",
   });
 
@@ -81,6 +82,7 @@ function CheckoutForm({ onSubmit }) {
       street: address.street || "",
       landmark: address.landmark || "",
       city: address.city || "",
+      state: address.state || "Rajasthan",
       pincode: address.pincode || "",
     });
     setLocationStatus("idle");
@@ -177,7 +179,7 @@ function CheckoutForm({ onSubmit }) {
                   <strong>{item.fullName} {item.isDefault && "⭐"}</strong>
                   <p style={{ fontSize: '0.9em', color: 'var(--text-secondary)' }}>
                     {item.houseNo}, {item.building}, {item.street}<br/>
-                    {item.city} - {item.pincode}
+                    {item.city}, {item.state || "Rajasthan"} - {item.pincode}
                   </p>
                 </div>
               </label>
@@ -189,7 +191,7 @@ function CheckoutForm({ onSubmit }) {
                 setShowManualForm(true);
                 setSelectedAddress(null);
                 setForm({
-                  fullName: "", phone: "", houseNo: "", building: "", street: "", landmark: "", city: "", pincode: "",
+                  fullName: "", phone: "", houseNo: "", building: "", street: "", landmark: "", city: "", state: "Rajasthan", pincode: "",
                 });
                 setLocationStatus("idle");
                 setVerifiedLocation(null);
@@ -263,6 +265,17 @@ function CheckoutForm({ onSubmit }) {
                 onChange={handleChange}
                 required
               />
+              <input
+                name="state"
+                placeholder="State"
+                value={form.state}
+                onChange={handleChange}
+                readOnly
+                style={{ backgroundColor: '#f5f5f5', color: '#666' }}
+                required
+              />
+            </div>
+            <div className="input-row">
               <input
                 name="pincode"
                 placeholder="PIN Code *"

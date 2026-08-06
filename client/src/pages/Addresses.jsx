@@ -14,6 +14,7 @@ const emptyForm = {
   street: "",
   landmark: "",
   city: "",
+  state: "Rajasthan",
   pincode: "",
 };
 const [form, setForm] = useState(emptyForm);
@@ -93,6 +94,7 @@ const [form, setForm] = useState(emptyForm);
       street: address.street,
       landmark: address.landmark,
       city: address.city,
+      state: address.state || "Rajasthan",
       pincode: address.pincode,
     });
   
@@ -165,6 +167,16 @@ const [form, setForm] = useState(emptyForm);
           placeholder="City"
           value={form.city}
           onChange={handleChange}
+          required
+        />
+
+        <input
+          name="state"
+          placeholder="State"
+          value={form.state}
+          onChange={handleChange}
+          readOnly
+          style={{ backgroundColor: '#f5f5f5', color: '#666' }}
           required
         />
 

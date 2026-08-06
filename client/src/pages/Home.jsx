@@ -12,13 +12,13 @@ function Home() {
     <>
   <HeroBanner />
 
-  <WhyChooseUs />
-
   <Categories />
 
   <BestSelling />
 
   <FeaturedProducts />
+
+  <WhyChooseUs />
 </>
   );
 }

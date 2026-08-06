@@ -55,6 +55,11 @@ function CheckoutForm({ onSubmit }) {
       className="checkout-form"
       onSubmit={(e) => {
         e.preventDefault();
+        const currentPincode = selectedAddress && !showManualForm ? selectedAddress.pincode : form.pincode;
+        if (currentPincode.trim() !== "312205") {
+          alert("Sorry, we currently only deliver to pincode 312205. Your area is not deliverable at the moment.");
+          return;
+        }
         if (selectedAddress && !showManualForm) {
             onSubmit(selectedAddress);
           } else {

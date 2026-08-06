@@ -38,6 +38,11 @@ const [form, setForm] = useState(emptyForm);
 
   const addAddress = async (e) => {
     e.preventDefault();
+    
+    if (form.pincode.trim() !== "312205") {
+      alert("Sorry, we currently only deliver to pincode 312205. Your area is not deliverable at the moment.");
+      return;
+    }
   
     try {
       if (editingId) {

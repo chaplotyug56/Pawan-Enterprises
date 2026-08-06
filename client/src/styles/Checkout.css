@@ -23,7 +23,7 @@ margin-bottom:30px;
 
 }
 
-.checkout-form input,
+.checkout-form input:not([type="radio"]):not([type="checkbox"]),
 .checkout-form textarea{
 
 width:100%;

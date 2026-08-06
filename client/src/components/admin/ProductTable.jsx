@@ -8,8 +8,10 @@ function ProductTable({
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
 
+  const [showAll, setShowAll] = useState(false);
+
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
+    let filtered = products.filter((product) => {
       const matchesSearch = product.name
         .toLowerCase()
         .includes(search.toLowerCase());
@@ -21,7 +23,11 @@ function ProductTable({
 
       return matchesSearch && matchesCategory;
     });
+    
+    return filtered.sort((a, b) => a.name.localeCompare(b.name));
   }, [products, search, category]);
+
+  const displayedProducts = showAll ? filteredProducts : filteredProducts.slice(0, 5);
 
   return (
     <div className="admin-card">
@@ -122,7 +128,7 @@ function ProductTable({
 
             ) : (
 
-              filteredProducts.map((product) => (
+              displayedProducts.map((product) => (
 
                 <tr key={product._id}>
 
@@ -207,6 +213,25 @@ function ProductTable({
         </table>
 
       </div>
+
+      {filteredProducts.length > 5 && (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <button 
+            onClick={() => setShowAll(!showAll)}
+            style={{
+              padding: "10px 20px",
+              background: "#1565C0",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "600"
+            }}
+          >
+            {showAll ? "Show Less" : "Show More"}
+          </button>
+        </div>
+      )}
 
     </div>
   );

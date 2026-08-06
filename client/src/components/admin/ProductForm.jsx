@@ -27,6 +27,31 @@ function ProductForm({
     }
   }, [form.image]);
 
+  const handlePaste = (e) => {
+    if (e.clipboardData.files && e.clipboardData.files.length > 0) {
+      const file = e.clipboardData.files[0];
+      if (file.type.startsWith("image/")) {
+        e.preventDefault(); // Prevent default paste behavior (e.g. if focused on text input)
+        
+        // Update the actual file input so HTML5 validation passes
+        const fileInput = document.querySelector('input[name="image"]');
+        if (fileInput) {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+        }
+        
+        // Update React state
+        handleChange({
+          target: {
+            name: "image",
+            files: [file]
+          }
+        });
+      }
+    }
+  };
+
   return (
     <div className="admin-card">
 
@@ -37,6 +62,7 @@ function ProductForm({
       <form
         className="product-form"
         onSubmit={handleSubmit}
+        onPaste={handlePaste}
       >
 
         <div className="form-grid">
@@ -123,13 +149,16 @@ function ProductForm({
           onChange={handleChange}
         />
 
-        <input
-          type="file"
-          name="image"
-          accept="image/*"
-          onChange={handleChange}
-          required={!isEditing}
-        />
+        <div className="file-input-wrapper" style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleChange}
+            required={!isEditing}
+          />
+          <small style={{color: '#666'}}>💡 Tip: You can also paste an image directly anywhere in this form (Ctrl+V / Cmd+V)</small>
+        </div>
 
 <label>Gallery Images (Max 5)</label>
 

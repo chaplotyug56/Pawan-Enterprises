@@ -40,10 +40,18 @@ const orderSchema = new mongoose.Schema(
     shippingAddress: {
         fullName: String,
         phone: String,
-        address: String,
+        houseNo: String,
+        building: String,
+        street: String,
+        landmark: String,
         city: String,
-        state: String,
         pincode: String,
+      },
+      
+      location: {
+        latitude: Number,
+        longitude: Number,
+        distance: Number,
       },
 
       status: {

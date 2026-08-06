@@ -14,6 +14,7 @@ const createOrder = async (req, res) => {
     let {
         items,
         shippingAddress,
+        location,
         paymentMethod,
         paymentTime,
       } = req.body;
@@ -25,6 +26,10 @@ const createOrder = async (req, res) => {
       
       if (typeof shippingAddress === "string") {
         shippingAddress = JSON.parse(shippingAddress);
+      }
+      
+      if (typeof location === "string") {
+        location = JSON.parse(location);
       }
       
       // Uploaded screenshot (optional)
@@ -122,6 +127,7 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
         items,
         totalPrice: calculatedTotal,
         shippingAddress,
+        location,
         paymentMethod,
       
         paymentTime,
@@ -165,7 +171,7 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
           
             paymentScreenshot,
           
-            address: `${shippingAddress.address}, ${shippingAddress.city}, ${shippingAddress.state} - ${shippingAddress.pincode}`,
+            address: `${shippingAddress.houseNo}, ${shippingAddress.building}, ${shippingAddress.street}${shippingAddress.landmark ? `, ${shippingAddress.landmark}` : ''}, ${shippingAddress.city} - ${shippingAddress.pincode}`,
           
             orderId: customOrderId,
 

@@ -226,9 +226,29 @@ function AdminOrders() {
 
             <p>
               <strong>Address:</strong>{" "}
-              {order.shippingAddress?.address},{" "}
-              {order.shippingAddress?.city}
+              {order.shippingAddress?.houseNo}, {order.shippingAddress?.building}, {order.shippingAddress?.street}
+              {order.shippingAddress?.landmark && `, ${order.shippingAddress?.landmark}`}, {order.shippingAddress?.city} - {order.shippingAddress?.pincode}
             </p>
+            
+            {order.location && (
+              <div style={{ marginTop: '10px', padding: '10px', backgroundColor: '#f0f9ff', borderRadius: '8px', border: '1px solid #bae6fd' }}>
+                <p style={{ margin: '0 0 5px 0' }}><strong>📍 Location Verified</strong></p>
+                <p style={{ margin: '0 0 5px 0', fontSize: '0.9em' }}>
+                  Lat: {order.location.latitude}<br/>
+                  Lng: {order.location.longitude}<br/>
+                  Distance: {order.location.distance} km
+                </p>
+                <a 
+                  href={`https://www.google.com/maps?q=${order.location.latitude},${order.location.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="primary-btn"
+                  style={{ display: 'inline-block', padding: '6px 12px', fontSize: '0.85em', textDecoration: 'none', marginTop: '5px' }}
+                >
+                  Navigate
+                </a>
+              </div>
+            )}
             <p>
   <strong>Payment Method:</strong> {order.paymentMethod.toUpperCase()}
 </p>

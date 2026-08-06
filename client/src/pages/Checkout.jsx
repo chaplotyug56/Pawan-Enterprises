@@ -17,6 +17,7 @@ function Checkout() {
   const { cart, cartTotal, clearCart } = useCart();
 
   const [shippingAddress, setShippingAddress] = useState(null);
+  const [location, setLocation] = useState(null);
   const [showPayment, setShowPayment] = useState(false);
 
   const [payment, setPayment] = useState("cod");
@@ -26,10 +27,12 @@ function Checkout() {
   const shipping = cartTotal >= 1000 ? 0 : 20;
   const totalAmount = cartTotal + shipping;
   
-  const continueCheckout = (address) => {
-    setShippingAddress(address);
+  const continueCheckout = (data) => {
+    const { location: verifiedLocation, ...addressData } = data;
+    setShippingAddress(addressData);
+    setLocation(verifiedLocation);
     setShowPayment(true);
-    toast.success("Delivery Address Selected!");
+    toast.success("Delivery Address & Location Verified!");
     setTimeout(() => {
       window.scrollBy({ top: 500, behavior: "smooth" });
     }, 100);
@@ -38,6 +41,12 @@ function Checkout() {
   const placeOrder = async () => {
     console.log("🚀 Place Order Clicked");
     try {
+      if (!shippingAddress) {
+        return toast.error("Please add a shipping address");
+      }
+      if (!location) {
+        return toast.error("Please verify your location");
+      }
       if (payment === "upi") {
         if (!paymentTime) {
           return toast.error("Please enter payment time.");
@@ -56,6 +65,7 @@ function Checkout() {
 
       data.append("items", JSON.stringify(items));
       data.append("shippingAddress", JSON.stringify(shippingAddress));
+      data.append("location", JSON.stringify(location));
       data.append("paymentMethod", payment);
       data.append("paymentTime", paymentTime);
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import QRCode from "react-qr-code";
 import { toast } from "react-toastify";
+import { openUPIApp } from "../utils/paymentUtils";
 
 function UPIPayment({
   totalAmount,
@@ -63,6 +64,22 @@ function UPIPayment({
           value={upiLink}
           size={220}
         />
+
+        <button
+          type="button"
+          className="primary-btn"
+          style={{ marginTop: "20px", display: "flex", gap: "10px", alignItems: "center", justifyContent: "center" }}
+          onClick={() => {
+            openUPIApp({
+              upiId: UPI_ID,
+              merchantName: BUSINESS_NAME,
+              amount: totalAmount,
+              transactionNote: "Order Payment"
+            });
+          }}
+        >
+          Pay via UPI App
+        </button>
 
       </div>
 
@@ -154,7 +171,7 @@ function UPIPayment({
         <h4>Instructions</h4>
 
         <ol>
-          <li>Scan the QR code.</li>
+          <li>Scan the QR code OR click "Pay via UPI App".</li>
           <li>Pay the exact amount.</li>
           <li>Click "Use Current Time".</li>
           

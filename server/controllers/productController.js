@@ -159,14 +159,14 @@ const getProducts = async (req, res) => {
 
       if (obj.image) {
         if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
-          obj.image = `${req.protocol}://${req.get("host")}/api/images/${obj.image}`;
+          obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }
       
       if (obj.images && obj.images.length > 0) {
         obj.images = obj.images.map((img) => {
           if (!img.startsWith("http") && !img.startsWith("data:image")) {
-            return `${req.protocol}://${req.get("host")}/api/images/${img}`;
+            return `//${req.get("host")}/api/images/${img}`;
           }
           return img;
         });
@@ -206,7 +206,7 @@ const getProductById = async (req, res) => {
 
     if (productObj.image) {
       if (!productObj.image.startsWith("http") && !productObj.image.startsWith("data:image")) {
-        productObj.image = `${req.protocol}://${req.get("host")}/api/images/${productObj.image}`;
+        productObj.image = `//${req.get("host")}/api/images/${productObj.image}`;
       }
     }
     if (
@@ -215,7 +215,7 @@ const getProductById = async (req, res) => {
     ) {
       productObj.images = productObj.images.map((img) => {
         if (!img.startsWith("http") && !img.startsWith("data:image")) {
-          return `${req.protocol}://${req.get("host")}/api/images/${img}`;
+          return `//${req.get("host")}/api/images/${img}`;
         }
         return img;
       });
@@ -355,7 +355,7 @@ const getRelatedProducts = async (req, res) => {
 
       if (obj.image) {
         if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
-          obj.image = `${req.protocol}://${req.get("host")}/api/images/${obj.image}`;
+          obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }
 
@@ -388,7 +388,7 @@ const getBestSellingProducts = async (req, res) => {
 
       if (obj.image) {
         if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
-          obj.image = `${req.protocol}://${req.get("host")}/api/images/${obj.image}`;
+          obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }
 

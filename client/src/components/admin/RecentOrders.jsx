@@ -4,6 +4,8 @@ import api from "../../services/api";
 function RecentOrders() {
   const [orders, setOrders] = useState([]);
 
+  const [showAll, setShowAll] = useState(false);
+
   useEffect(() => {
     fetchRecentOrders();
   }, []);
@@ -32,6 +34,8 @@ function RecentOrders() {
     }
   }
 
+  const displayedOrders = showAll ? orders : orders.slice(0, 5);
+
   return (
     <div className="recent-orders">
       <h2>Recent Orders</h2>
@@ -48,20 +52,16 @@ function RecentOrders() {
         </thead>
 
         <tbody>
-          {orders.map((order) => (
+          {displayedOrders.map((order) => (
             <tr key={order._id}>
               <td>{order.orderId || order._id.slice(-6).toUpperCase()}</td>
-
               <td>{order.user?.name}</td>
-
               <td>₹{order.totalPrice}</td>
-
               <td>
                 <span className={statusClass(order.status)}>
                   {order.status}
                 </span>
               </td>
-
               <td>
                 {new Date(order.createdAt).toLocaleDateString("en-IN")}
               </td>
@@ -69,6 +69,25 @@ function RecentOrders() {
           ))}
         </tbody>
       </table>
+
+      {orders.length > 5 && (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <button 
+            onClick={() => setShowAll(!showAll)}
+            style={{
+              padding: "10px 20px",
+              background: "#1565C0",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "600"
+            }}
+          >
+            {showAll ? "Show Less" : "Show More"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

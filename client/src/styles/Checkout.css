@@ -48,7 +48,7 @@ resize:none;
 
 }
 
-.row{
+.row, .input-row{
 
 display:grid;
 
@@ -78,7 +78,7 @@ grid-template-columns:1fr;
 
 }
 
-.row{
+.row, .input-row{
 
 grid-template-columns:1fr;
 

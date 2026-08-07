@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "../styles/HeroBanner.css";
-import banner from "../assets/banner.jpg";
+import banner from "../assets/PHOTO-2026-08-08-02-04-54.jpg";
+
 function HeroBanner() {
   return (
     <section

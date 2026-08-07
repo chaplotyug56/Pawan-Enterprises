@@ -94,7 +94,7 @@ function Checkout() {
 
         toast.success("Order Placed Successfully");
 
-        navigate("/orders");
+        navigate("/my-orders");
       }
 
     } catch (err) {

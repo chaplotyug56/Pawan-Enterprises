@@ -11,7 +11,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Admin from "./pages/Admin";
 import Checkout from "./pages/Checkout";
-import Orders from "./pages/Orders";
 import AdminOrders from "./pages/AdminOrders";
 
 import { ToastContainer } from "react-toastify";
@@ -38,7 +37,6 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-        <Route path="/orders" element={<Orders />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/settings" element={<AdminSettings />} />
 

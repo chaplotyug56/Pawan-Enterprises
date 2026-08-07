@@ -144,15 +144,6 @@ function ProductCard({ product, addToCart }) {
             Add
           </button>
 
-          <button
-            className="buy-btn"
-            onClick={handleBuyNow}
-            disabled={product.stock === 0}
-          >
-            <FaBolt />
-            Buy
-          </button>
-
         </div>
 
       </div>

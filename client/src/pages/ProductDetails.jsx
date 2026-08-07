@@ -160,12 +160,12 @@ function ProductDetails() {
 
         </div>
 
-        <div className="actions">
+        <div className="detail-actions">
 
           {product.stock > 0 ? (
             <>
               <button
-                className="add-btn"
+                className="detail-add-btn"
                 onClick={() => addToCart(product)}
               >
                 <FaShoppingCart />
@@ -173,7 +173,7 @@ function ProductDetails() {
               </button>
 
               <button
-  className="buy-btn"
+  className="detail-buy-btn"
   onClick={() => {
     buyNow(product);
     navigate("/checkout");
@@ -186,14 +186,14 @@ function ProductDetails() {
           ) : (
             <>
               <button
-                className="add-btn disabled-btn"
+                className="detail-add-btn disabled-btn"
                 disabled
               >
                 Out of Stock
               </button>
 
               <button
-                className="buy-btn disabled-btn"
+                className="detail-buy-btn disabled-btn"
                 disabled
               >
                 <FaBolt />

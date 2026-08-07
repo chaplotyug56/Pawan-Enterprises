@@ -30,7 +30,6 @@ function Admin() {
     mrp: "",
     price: "",
     stock: "",
-    image: null,
     images: [],
   });
   async function fetchProducts() {
@@ -105,8 +104,7 @@ function Admin() {
         mrp: product.mrp,
         price: product.price,
         stock: product.stock,
-        image: product.image,
-        images: product.images || [],
+        images: product.images && product.images.length > 0 ? product.images : (product.image ? [product.image] : []),
     });
 
     window.scrollTo({
@@ -147,12 +145,7 @@ function Admin() {
                 data.append("images", img);
             });
         }
-        else if (key === "image") {
-            if (form.image && typeof form.image !== "string") {
-                data.append("image", form.image);
-            }
-        }
-        else {
+        else if (key !== "image") {
             data.append(key, form[key]);
         }
     });
@@ -174,8 +167,6 @@ function Admin() {
         description:"",
         price:"",
         stock:"",
-        image:null,
-        mrp:"",
         images:[]
     });
 

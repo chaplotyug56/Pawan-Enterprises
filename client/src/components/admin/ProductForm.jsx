@@ -6,44 +6,50 @@ function ProductForm({
   handleSubmit,
   isEditing,
 }) {
-  const [preview, setPreview] = useState(null);
+  const [previews, setPreviews] = useState([]);
 
   useEffect(() => {
-    if (form.image instanceof File) {
-      const objectUrl = URL.createObjectURL(form.image);
-      setPreview(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl);
-    }
-
-    if (typeof form.image === "string" && form.image !== "") {
-      if (form.image.startsWith("http")) {
-        setPreview(form.image);
-      } else {
-        setPreview(`http://localhost:8000/api/images/${form.image}`);
+    const newPreviews = [];
+    if (form.images && form.images.length > 0) {
+      form.images.forEach((img) => {
+        if (img instanceof File) {
+          newPreviews.push(URL.createObjectURL(img));
+        } else if (typeof img === "string" && img !== "") {
+          if (img.startsWith("http") || img.startsWith("data:")) {
+            newPreviews.push(img);
+          } else {
+            newPreviews.push(`http://localhost:8000/api/images/${img}`);
+          }
+        }
+      });
+    } else if (form.image) {
+      if (typeof form.image === "string" && form.image !== "") {
+        if (form.image.startsWith("http") || form.image.startsWith("data:")) {
+          newPreviews.push(form.image);
+        } else {
+          newPreviews.push(`http://localhost:8000/api/images/${form.image}`);
+        }
       }
-    } else {
-      setPreview(null);
     }
-  }, [form.image]);
+    setPreviews(newPreviews);
+  }, [form.images, form.image]);
 
   const handlePaste = (e) => {
     if (e.clipboardData.files && e.clipboardData.files.length > 0) {
       const file = e.clipboardData.files[0];
       if (file.type.startsWith("image/")) {
-        e.preventDefault(); // Prevent default paste behavior (e.g. if focused on text input)
+        e.preventDefault(); 
         
-        // Update the actual file input so HTML5 validation passes
-        const fileInput = document.querySelector('input[name="image"]');
+        const fileInput = document.querySelector('input[name="images"]');
         if (fileInput) {
             const dataTransfer = new DataTransfer();
             dataTransfer.items.add(file);
             fileInput.files = dataTransfer.files;
         }
         
-        // Update React state
         handleChange({
           target: {
-            name: "image",
+            name: "images",
             files: [file]
           }
         });
@@ -53,19 +59,15 @@ function ProductForm({
 
   return (
     <div className="admin-card">
-
       <h2>
         {isEditing ? "Update Product" : "Add Product"}
       </h2>
-
       <form
         className="product-form"
         onSubmit={handleSubmit}
         onPaste={handlePaste}
       >
-
         <div className="form-grid">
-
           <input
             type="text"
             name="name"
@@ -74,61 +76,36 @@ function ProductForm({
             onChange={handleChange}
             required
           />
-
           <select
             name="category"
             value={form.category}
             onChange={handleChange}
             required
           >
-            <option value="">
-              Select Category
-            </option>
-
-            <option value="Paints">
-              Paints
-            </option>
-
-            <option value="Cosmetics">
-              Cosmetics
-            </option>
-
-            <option value="Stationery">
-              Stationery
-            </option>
-
-            <option value="Grocery">
-              Grocery
-            </option>
-
-            <option value="Household">
-              Household
-            </option>
-
-            <option value="Gift Items">
-              Gift Items
-            </option>
-
+            <option value="">Select Category</option>
+            <option value="Paints">Paints</option>
+            <option value="Cosmetics">Cosmetics</option>
+            <option value="Stationery">Stationery</option>
+            <option value="Grocery">Grocery</option>
+            <option value="Household">Household</option>
+            <option value="Gift Items">Gift Items</option>
           </select>
-
           <input
-  type="number"
-  name="mrp"
-  placeholder="MRP"
-  value={form.mrp}
-  onChange={handleChange}
-  required
-/>
-
-<input
-  type="number"
-  name="price"
-  placeholder="Our Price"
-  value={form.price}
-  onChange={handleChange}
-  required
-/>
-
+            type="number"
+            name="mrp"
+            placeholder="MRP"
+            value={form.mrp}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="number"
+            name="price"
+            placeholder="Our Price"
+            value={form.price}
+            onChange={handleChange}
+            required
+          />
           <input
             type="number"
             name="stock"
@@ -137,9 +114,7 @@ function ProductForm({
             onChange={handleChange}
             required
           />
-
         </div>
-
         <textarea
           name="description"
           rows="5"
@@ -147,36 +122,29 @@ function ProductForm({
           value={form.description}
           onChange={handleChange}
         />
-
+        
         <div className="file-input-wrapper" style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
+          <label>Product Images (Max 5)</label>
           <input
             type="file"
-            name="image"
+            name="images"
             accept="image/*"
+            multiple
             onChange={handleChange}
-            required={!isEditing}
           />
           <small style={{color: '#666'}}>💡 Tip: You can also paste an image directly anywhere in this form (Ctrl+V / Cmd+V)</small>
         </div>
 
-<label>Gallery Images (Max 5)</label>
-
-<input
-  type="file"
-  name="images"
-  accept="image/*"
-  multiple
-  onChange={handleChange}
-/>
-
-        {preview && (
-          <div className="preview-box">
-
-            <img
-              src={preview}
-              alt="Preview"
-            />
-
+        {previews.length > 0 && (
+          <div className="preview-box" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            {previews.map((preview, index) => (
+              <img
+                key={index}
+                src={preview}
+                alt={`Preview ${index}`}
+                style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '5px' }}
+              />
+            ))}
           </div>
         )}
 
@@ -184,22 +152,9 @@ function ProductForm({
           className="save-btn"
           type="submit"
         >
-          {isEditing
-            ? "Update Product"
-            : "Add Product"}
-
-{isEditing &&
- typeof form.image === "string" && (
-    <img
-        src={form.image}
-        alt=""
-        width="120"
-    />
-)}
+          {isEditing ? "Update Product" : "Add Product"}
         </button>
-
       </form>
-
     </div>
   );
 }

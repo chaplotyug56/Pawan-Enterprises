@@ -67,15 +67,25 @@ function ProductDetails() {
       {/* LEFT SIDE */}
 
       <div className="details-image">
-
         <img
           src={selectedImage}
           alt={product.name}
           className="main-product-image"
         />
 
-
-
+        {product.images && product.images.length > 0 && (
+          <div className="thumbnail-gallery">
+            {product.images.map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`${product.name} ${idx + 1}`}
+                className={`thumbnail ${selectedImage === img ? 'active' : ''}`}
+                onClick={() => setSelectedImage(img)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* RIGHT SIDE */}

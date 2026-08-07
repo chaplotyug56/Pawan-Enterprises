@@ -8,21 +8,9 @@ const addProduct = async (req, res) => {
   console.log("🔥 addProduct API called");
 
   try {
-    let imageId = "";
-    if (req.files?.image?.length > 0) {
-      const imgFile = req.files.image[0];
-      const newImg = new Image({
-        name: imgFile.originalname,
-        data: imgFile.buffer,
-        contentType: imgFile.mimetype,
-      });
-      const savedImg = await newImg.save();
-      imageId = savedImg._id.toString();
-    }
-
     let imagesIds = [];
-    if (req.files?.images?.length > 0) {
-      for (const file of req.files.images) {
+    if (req.files?.length > 0) {
+      for (const file of req.files) {
         const newImg = new Image({
           name: file.originalname,
           data: file.buffer,
@@ -32,6 +20,8 @@ const addProduct = async (req, res) => {
         imagesIds.push(savedImg._id.toString());
       }
     }
+
+    let imageId = imagesIds.length > 0 ? imagesIds[0] : "";
 
     const product = new Product({
       ...req.body,
@@ -252,20 +242,9 @@ const updateProduct = async (req, res) => {
       ...req.body,
     };
 
-    if (req.files?.image?.length > 0) {
-      const imgFile = req.files.image[0];
-      const newImg = new Image({
-        name: imgFile.originalname,
-        data: imgFile.buffer,
-        contentType: imgFile.mimetype,
-      });
-      const savedImg = await newImg.save();
-      updateData.image = savedImg._id.toString();
-    }
-
-    if (req.files?.images?.length > 0) {
+    if (req.files?.length > 0) {
       const newImageIds = [];
-      for (const file of req.files.images) {
+      for (const file of req.files) {
         const newImg = new Image({
           name: file.originalname,
           data: file.buffer,
@@ -275,6 +254,7 @@ const updateProduct = async (req, res) => {
         newImageIds.push(savedImg._id.toString());
       }
       updateData.images = newImageIds;
+      updateData.image = newImageIds[0];
     }
 
     const updatedProduct =

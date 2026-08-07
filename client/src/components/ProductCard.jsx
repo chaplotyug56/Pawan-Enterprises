@@ -154,13 +154,6 @@ function ProductCard({ product, addToCart }) {
             Buy
           </button>
 
-          <Link
-            to={`/product/${product._id}`}
-            className="view-btn"
-          >
-            <FaEye />
-          </Link>
-
         </div>
 
       </div>

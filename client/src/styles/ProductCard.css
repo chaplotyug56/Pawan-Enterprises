@@ -166,9 +166,7 @@
     
             .actions{
                 display:grid;
-                
-                grid-template-columns:1fr 1fr 50px;
-                
+                grid-template-columns:1fr 1fr;
                 gap:10px;
                 
                 margin-top:15px;
@@ -223,22 +221,7 @@
     background:#0d47a1;
     }
     
-    .view-btn{
-    width:48px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#f0f3f8;
-    border-radius:10px;
-    color:#333;
-    text-decoration:none;
-    transition:.3s;
-    }
-    
-    .view-btn:hover{
-    background:#1565C0;
-    color:#fff;
-    }
+
 
     .best-seller{
 
@@ -275,13 +258,8 @@
             }
             
             .actions{
-                grid-template-columns:1fr 1fr 40px;
-                gap: 5px;
-            }
-            
-            .view-btn{
-                width: 40px;
-                height: 40px;
+                grid-template-columns:1fr 1fr;
+                gap: 8px;
             }
             
             .cart-btn, .buy-btn {

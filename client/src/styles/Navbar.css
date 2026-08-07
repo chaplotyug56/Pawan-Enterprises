@@ -6,13 +6,20 @@
     
     /* ================= NAVBAR ================= */
     
+    .navbar-wrapper {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: #fff;
+        box-shadow: 0 3px 12px rgba(0,0,0,.08);
+    }
+    
     .navbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
     padding:18px 50px;
     background:#fff;
-    box-shadow:0 3px 12px rgba(0,0,0,.08);
     }
     
     .logo{

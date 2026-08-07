@@ -64,7 +64,7 @@ function Navbar() {
   }, [search, products]);
 
   return (
-    <>
+    <div className="navbar-wrapper">
       <header className="navbar">
 
         {/* Logo */}
@@ -231,7 +231,7 @@ function Navbar() {
         )}
 
       </nav>
-    </>
+    </div>
   );
 }
 

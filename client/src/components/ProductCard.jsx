@@ -79,8 +79,9 @@ function ProductCard({ product, addToCart }) {
         <Link
           to={`/product/${product._id}`}
           className="product-name"
+          title={product.name}
         >
-          {product.name}
+          {product.name.length > 24 ? product.name.substring(0, 24) + "..." : product.name}
         </Link>
 
         <div className="rating">

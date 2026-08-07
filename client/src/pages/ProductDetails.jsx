@@ -74,25 +74,7 @@ function ProductDetails() {
           className="main-product-image"
         />
 
-        <div className="thumbnail-gallery">
 
-          {[product.image, ...(product.images || [])].map(
-            (img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`${product.name}-${index}`}
-                className={
-                  selectedImage === img
-                    ? "thumbnail active"
-                    : "thumbnail"
-                }
-                onClick={() => setSelectedImage(img)}
-              />
-            )
-          )}
-
-        </div>
 
       </div>
 

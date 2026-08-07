@@ -24,10 +24,10 @@ import {
             <div className="why-card">
               <FaTruck className="why-icon" />
   
-              <h3>Delivery in Akola</h3>
+              <h3>One Day Delivery in Akola</h3>
   
               <p>
-                Fast local delivery. Free delivery on orders above ₹1000.
+                Fast local one-day delivery. Free delivery on orders above ₹1000.
               </p>
             </div>
   

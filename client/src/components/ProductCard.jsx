@@ -6,7 +6,6 @@ import {
 } from "react-icons/fa";
 
 import { useWishlist } from "../context/WishlistContext";
-import { useCart } from "../context/CartContext";
 
 import "../styles/ProductCard.css";
 

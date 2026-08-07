@@ -4,6 +4,7 @@ import {
     useMemo,
     useState,
   } from "react";
+  import { useSearchParams } from "react-router-dom";
   
   import api from "../services/api";
   
@@ -15,10 +16,11 @@ import {
   import "../styles/Products.css";
   
   function Products() {
+    const [searchParams] = useSearchParams();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
   
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState(searchParams.get("search") || "");
     const [category, setCategory] = useState("All");
     const [sort, setSort] = useState("newest");
     const [inStock, setInStock] = useState(false);

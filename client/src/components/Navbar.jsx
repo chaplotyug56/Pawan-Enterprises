@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   FaSearch,
@@ -23,8 +23,19 @@ function Navbar() {
 
   const { cartCount } = useCart();
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const isAdmin = user?.role === "admin";
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (search.trim()) {
+      navigate(`/products?search=${encodeURIComponent(search.trim())}`);
+      setMenuOpen(false);
+      setSearch("");
+      setSuggestions([]);
+    }
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -69,7 +80,7 @@ function Navbar() {
 
         {/* Search */}
 
-        <div className="search-box">
+        <form className="search-box" onSubmit={handleSearchSubmit}>
 
           <input
             type="text"
@@ -78,7 +89,7 @@ function Navbar() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <button>
+          <button type="submit">
             <FaSearch />
           </button>
 
@@ -111,7 +122,7 @@ function Navbar() {
             </div>
           )}
 
-        </div>
+        </form>
 
         {/* Icons */}
 

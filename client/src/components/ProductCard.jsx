@@ -3,7 +3,6 @@ import {
   FaShoppingCart,
   FaHeart,
   FaStar,
-  FaEye,
   FaBolt,
 } from "react-icons/fa";
 

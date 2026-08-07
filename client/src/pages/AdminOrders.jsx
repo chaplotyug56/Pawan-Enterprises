@@ -53,6 +53,25 @@ function AdminOrders() {
       toast.error("Failed to update payment status");
     }
   };
+
+  async function downloadInvoice(id, orderId) {
+    try {
+      const res = await api.get(`/orders/${id}/invoice`, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Invoice-${orderId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+    } catch (err) {
+      console.log(err);
+      toast.error("Unable to download invoice");
+    }
+  }
   const filteredOrders = orders.filter((order) => {
     const customer = order.user?.name || "";
     const email = order.user?.email || "";
@@ -90,6 +109,27 @@ function AdminOrders() {
             </p>
 
             <p>{order.user?.email}</p>
+            {order.shippingAddress?.phone && (
+              <p>
+                <strong>Phone:</strong> {order.shippingAddress.phone}
+              </p>
+            )}
+
+            <button
+              onClick={() => downloadInvoice(order._id, order.orderId)}
+              style={{
+                marginTop: "10px",
+                padding: "8px 12px",
+                background: "#0d6efd",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              📄 Download Invoice
+            </button>
 
             <p>
               <strong>Total:</strong> ₹{order.totalPrice}

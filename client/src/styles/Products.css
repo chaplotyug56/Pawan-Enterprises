@@ -63,12 +63,7 @@
         color: #666;
       }
       
-      .products-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-        gap: 25px;
-        margin-top: 30px;
-      }
+
       
       .results-count {
         margin: 20px 0;

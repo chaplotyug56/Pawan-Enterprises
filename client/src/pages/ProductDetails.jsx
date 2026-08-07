@@ -150,7 +150,7 @@ function ProductDetails() {
 
           <p>
             <FaTruck />
-            Free Delivery Available
+            Free Delivery Above ₹1000
           </p>
 
           <p>

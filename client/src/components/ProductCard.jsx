@@ -1,9 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   FaShoppingCart,
   FaHeart,
   FaStar,
-  FaBolt,
 } from "react-icons/fa";
 
 import { useWishlist } from "../context/WishlistContext";
@@ -12,8 +11,6 @@ import { useCart } from "../context/CartContext";
 import "../styles/ProductCard.css";
 
 function ProductCard({ product, addToCart }) {
-  const navigate = useNavigate();
-  const { buyNow } = useCart();
 
   const {
     wishlist,
@@ -42,10 +39,6 @@ function ProductCard({ product, addToCart }) {
       ? product.mrp - product.price
       : 0;
 
-  const handleBuyNow = () => {
-    buyNow(product);
-    navigate("/checkout");
-  };
 
   return (
     <div className="product-card">

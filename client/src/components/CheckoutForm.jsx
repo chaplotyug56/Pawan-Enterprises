@@ -41,6 +41,7 @@ function CheckoutForm({ onSubmit }) {
   const [locationStatus, setLocationStatus] = useState("idle"); // idle, loading, success, error
   const [locationMessage, setLocationMessage] = useState("");
   const [verifiedLocation, setVerifiedLocation] = useState(null);
+  const [saveAddress, setSaveAddress] = useState(true);
 
   const handleChange = (e) => {
     setForm({
@@ -159,7 +160,7 @@ function CheckoutForm({ onSubmit }) {
         e.preventDefault();
         if (locationStatus === "success" && verifiedLocation) {
           // Pass both form data and location data up to Checkout component
-          onSubmit({ ...form, location: verifiedLocation });
+          onSubmit({ ...form, location: verifiedLocation, saveAddress });
         }
       }}
     >
@@ -284,6 +285,16 @@ function CheckoutForm({ onSubmit }) {
                 required
               />
             </div>
+            
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '15px', cursor: 'pointer', fontSize: '15px' }}>
+              <input
+                type="checkbox"
+                checked={saveAddress}
+                onChange={(e) => setSaveAddress(e.target.checked)}
+                style={{ width: '18px', height: '18px' }}
+              />
+              Save this address for next time
+            </label>
           </>
         )}
       </div>

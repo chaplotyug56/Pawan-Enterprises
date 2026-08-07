@@ -28,8 +28,8 @@ function Checkout() {
   const totalAmount = cartTotal + shipping;
   
   const continueCheckout = (data) => {
-    const { location: verifiedLocation, ...addressData } = data;
-    setShippingAddress(addressData);
+    const { location: verifiedLocation, saveAddress, ...addressData } = data;
+    setShippingAddress({ ...addressData, saveAddress });
     setLocation(verifiedLocation);
     setShowPayment(true);
     toast.success("Delivery Address & Location Verified!");
@@ -63,8 +63,20 @@ function Checkout() {
 
       const data = new FormData();
 
+      const { saveAddress, ...finalAddress } = shippingAddress;
+
+      // Save the address for next time if the user checked the box
+      if (saveAddress) {
+        try {
+          await api.post("/users/addresses", finalAddress);
+        } catch (err) {
+          console.error("Failed to save address:", err);
+          // We don't want to block the order if saving address fails
+        }
+      }
+
       data.append("items", JSON.stringify(items));
-      data.append("shippingAddress", JSON.stringify(shippingAddress));
+      data.append("shippingAddress", JSON.stringify(finalAddress));
       data.append("location", JSON.stringify(location));
       data.append("paymentMethod", payment);
       data.append("paymentTime", paymentTime);

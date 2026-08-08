@@ -134,17 +134,15 @@ function Navbar() {
           </NavLink>
 
           <NavLink to="/cart" className="cart-link">
-
-            <FaShoppingCart />
-
-            {cartCount > 0 && (
-              <div className="cart-count">
-                {cartCount}
-              </div>
-            )}
-
+            <div className="cart-icon-wrapper">
+              <FaShoppingCart />
+              {cartCount > 0 && (
+                <div className="cart-count">
+                  {cartCount}
+                </div>
+              )}
+            </div>
             <span>Cart</span>
-
           </NavLink>
 
           {!user ? (

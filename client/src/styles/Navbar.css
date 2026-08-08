@@ -207,6 +207,30 @@
     margin-bottom:4px;
     }
     
+    .cart-icon-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    }
+    
+    .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background-color: #ff3b30;
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    }
+    
     /* ================= MENU ================= */
     
     .menu{

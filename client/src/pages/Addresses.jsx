@@ -164,7 +164,7 @@ const [form, setForm] = useState(emptyForm);
 
         <input
           name="city"
-          placeholder="City"
+          placeholder="Village *"
           value={form.city}
           onChange={handleChange}
           required

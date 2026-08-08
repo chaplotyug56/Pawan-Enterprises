@@ -261,7 +261,7 @@ function CheckoutForm({ onSubmit }) {
             <div className="input-row">
               <input
                 name="city"
-                placeholder="City *"
+                placeholder="Village *"
                 value={form.city}
                 onChange={handleChange}
                 required

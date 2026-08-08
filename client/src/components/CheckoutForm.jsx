@@ -236,10 +236,9 @@ function CheckoutForm({ onSubmit }) {
               />
               <input
                 name="building"
-                placeholder="Building / Society Name *"
+                placeholder="Building / Society Name (Optional)"
                 value={form.building}
                 onChange={handleChange}
-                required
               />
             </div>
             

@@ -23,6 +23,7 @@ import AdminReviews from "./pages/AdminReviews";
 import Addresses from "./pages/Addresses";
 import AdminSettings from "./pages/AdminSettings";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
+import ShopBilling from "./pages/ShopBilling";
 function App() {
   return (
     <>
@@ -39,6 +40,7 @@ function App() {
         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/settings" element={<AdminSettings />} />
+        <Route path="/admin/billing" element={<ProtectedRoute><ShopBilling /></ProtectedRoute>} />
 
         <Route
   path="/wishlist"

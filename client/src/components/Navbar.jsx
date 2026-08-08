@@ -206,6 +206,10 @@ function Navbar() {
               Manage Orders
             </NavLink>
 
+            <NavLink to="/admin/billing" onClick={() => setMenuOpen(false)}>
+              Shop Billing
+            </NavLink>
+
             <NavLink to="/admin/reviews" onClick={() => setMenuOpen(false)}>
               Reviews
             </NavLink>

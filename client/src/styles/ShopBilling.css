@@ -1,0 +1,281 @@
+.shop-billing {
+  padding: 40px 20px;
+}
+
+.billing-header {
+  margin-bottom: 30px;
+}
+
+.billing-header h1 {
+  color: #1565C0;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.billing-header p {
+  color: #666;
+  font-size: 16px;
+}
+
+.billing-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 30px;
+  align-items: start;
+}
+
+.billing-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  margin-bottom: 25px;
+}
+
+.billing-card h3 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 20px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group input {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #1565C0;
+}
+
+.pos-search {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.pos-search input {
+  width: 100%;
+  padding: 15px 20px 15px 45px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+}
+
+.pos-search .search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.pos-suggestions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.pos-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  position: relative;
+}
+
+.pos-item:hover {
+  background: #f9f9f9;
+  border-color: #1565C0;
+}
+
+.pos-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 15px;
+}
+
+.pos-item-info h4 {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pos-item-info p {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1565C0;
+}
+
+.stock-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.stock-badge.in-stock {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.stock-badge.out-stock {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* Cart Section */
+.cart-section {
+  position: sticky;
+  top: 20px;
+}
+
+.empty-bill {
+  text-align: center;
+  padding: 40px 0;
+  color: #888;
+  font-style: italic;
+}
+
+.bill-items {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #eee;
+}
+
+.item-details h4 {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.item-details p {
+  color: #666;
+  font-size: 14px;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-actions button {
+  background: #f0f0f0;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #555;
+}
+
+.item-actions button:hover {
+  background: #e0e0e0;
+}
+
+.item-actions .trash-btn {
+  background: #ffebee;
+  color: #c62828;
+  margin-left: 5px;
+}
+
+.item-actions .trash-btn:hover {
+  background: #ffcdd2;
+}
+
+.item-actions span {
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+
+.bill-summary {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 15px;
+}
+
+.summary-row.total {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #ddd;
+  font-weight: bold;
+  color: #333;
+  font-size: 18px;
+}
+
+.generate-btn {
+  width: 100%;
+  padding: 16px;
+  background: #1565C0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.generate-btn:hover:not(:disabled) {
+  background: #0d47a1;
+}
+
+.generate-btn:disabled {
+  background: #90caf9;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .billing-grid {
+    grid-template-columns: 1fr;
+  }
+}

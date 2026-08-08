@@ -24,6 +24,7 @@ import Addresses from "./pages/Addresses";
 import AdminSettings from "./pages/AdminSettings";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 import ShopBilling from "./pages/ShopBilling";
+import AdminShopBills from "./pages/AdminShopBills";
 function App() {
   return (
     <>
@@ -41,6 +42,7 @@ function App() {
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/settings" element={<AdminSettings />} />
         <Route path="/admin/billing" element={<ProtectedRoute><ShopBilling /></ProtectedRoute>} />
+        <Route path="/admin/shop-bills" element={<ProtectedRoute><AdminShopBills /></ProtectedRoute>} />
 
         <Route
   path="/wishlist"

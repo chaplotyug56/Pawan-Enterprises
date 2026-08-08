@@ -210,6 +210,10 @@ function Navbar() {
               Shop Billing
             </NavLink>
 
+            <NavLink to="/admin/shop-bills" onClick={() => setMenuOpen(false)}>
+              Shop Bills
+            </NavLink>
+
             <NavLink to="/admin/reviews" onClick={() => setMenuOpen(false)}>
               Reviews
             </NavLink>

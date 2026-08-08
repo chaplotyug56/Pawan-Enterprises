@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import "../styles/AdminOrders.css";
 import { toast } from "react-toastify";
-function AdminOrders() {
+function AdminShopBills() {
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -83,13 +83,13 @@ function AdminOrders() {
       email.toLowerCase().includes(search.toLowerCase()) ||
       dbOrderId.toLowerCase().includes(search.toLowerCase()) ||
       displayOrderId.toLowerCase().includes(search.toLowerCase())) &&
-      order.shippingAddress?.houseNo !== "In-Store"
+      order.shippingAddress?.houseNo === "In-Store"
     );
   }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   return (
     <div className="admin-orders">
-      <h1>Manage Orders</h1>
+      <h1>Shop Bills</h1>
       <input
   type="text"
   placeholder="Search by customer, email or Order ID..."
@@ -380,4 +380,4 @@ function AdminOrders() {
   );
 }
 
-export default AdminOrders;
+export default AdminShopBills;

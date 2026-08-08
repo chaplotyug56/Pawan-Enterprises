@@ -45,7 +45,13 @@ function generateInvoice(res, order) {
     .text(`Date: ${new Date(order.createdAt).toLocaleDateString("en-IN")}`, 50, 175)
     .text(`Payment Method: ${order.paymentMethod.toUpperCase()}`, 50, 190);
 
-  // Customer Details
+  const addressLine1 = [order.shippingAddress.building, order.shippingAddress.street]
+    .filter(Boolean)
+    .join(", ") || "Shop Purchase";
+  const stateStr = order.shippingAddress.state || "Rajasthan";
+  const cityStr = order.shippingAddress.city || "In-Store";
+  const pinStr = order.shippingAddress.pincode || "000000";
+
   doc
     .fontSize(10)
     .fillColor("#000000")
@@ -53,8 +59,8 @@ function generateInvoice(res, order) {
     .fillColor("#444444")
     .text(order.shippingAddress.fullName, 300, 160)
     .text(`Phone: ${order.shippingAddress.phone}`, 300, 175)
-    .text(order.shippingAddress.address, 300, 190)
-    .text(`${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}`, 300, 205);
+    .text(addressLine1, 300, 190)
+    .text(`${cityStr}, ${stateStr} - ${pinStr}`, 300, 205);
 
   // Table Setup
   const tableTop = 250;

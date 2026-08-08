@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   FaShoppingCart,
   FaHeart,
@@ -10,6 +10,8 @@ import { useWishlist } from "../context/WishlistContext";
 import "../styles/ProductCard.css";
 
 function ProductCard({ product, addToCart }) {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   const {
     wishlist,
@@ -84,17 +86,19 @@ function ProductCard({ product, addToCart }) {
           {product.name.length > 24 ? product.name.substring(0, 24) + "..." : product.name}
         </Link>
 
-        <div className="rating">
-          <FaStar className="star-icon" />
+        {!isHome && (
+          <div className="rating">
+            <FaStar className="star-icon" />
 
-          <span>
-            {(product.averageRating || 0).toFixed(1)}
-          </span>
+            <span>
+              {(product.averageRating || 0).toFixed(1)}
+            </span>
 
-          <span className="review-count">
-            ({product.reviewCount || 0} Reviews)
-          </span>
-        </div>
+            <span className="review-count">
+              ({product.reviewCount || 0} Reviews)
+            </span>
+          </div>
+        )}
 
         <div className="price-row">
 

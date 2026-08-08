@@ -34,10 +34,9 @@ import {
             <div className="why-card">
               <FaMoneyBillWave className="why-icon" />
   
-              <h3>UPI & Cash on Delivery</h3>
-  
+              <h3>Secure UPI Payment</h3>
               <p>
-                Pay securely using UPI or choose Cash on Delivery.
+                Pay securely and quickly using any UPI app before delivery.
               </p>
             </div>
   

@@ -7,6 +7,22 @@ function ProductForm({
   isEditing,
 }) {
   const [previews, setPreviews] = useState([]);
+  const [discountPercent, setDiscountPercent] = useState("");
+
+  const handleDiscountChange = (e) => {
+    const discount = e.target.value;
+    setDiscountPercent(discount);
+
+    if (form.mrp && discount) {
+      const calculatedPrice = form.mrp - (form.mrp * (discount / 100));
+      handleChange({
+        target: {
+          name: "price",
+          value: Math.round(calculatedPrice),
+        }
+      });
+    }
+  };
 
   useEffect(() => {
     const newPreviews = [];
@@ -97,6 +113,12 @@ function ProductForm({
             value={form.mrp}
             onChange={handleChange}
             required
+          />
+          <input
+            type="number"
+            placeholder="Discount % (Optional)"
+            value={discountPercent}
+            onChange={handleDiscountChange}
           />
           <input
             type="number"

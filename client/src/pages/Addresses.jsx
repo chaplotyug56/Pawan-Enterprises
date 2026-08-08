@@ -132,14 +132,6 @@ const [form, setForm] = useState(emptyForm);
         />
 
         <input
-          name="houseNo"
-          placeholder="House / Flat Number"
-          value={form.houseNo}
-          onChange={handleChange}
-          required
-        />
-
-        <input
           name="building"
           placeholder="Building / Society Name (Optional)"
           value={form.building}

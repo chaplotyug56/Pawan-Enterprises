@@ -92,7 +92,7 @@ function CheckoutForm({ onSubmit }) {
 
   const verifyLocation = () => {
     // Validate required address fields before location check (optional, but good UX)
-    if (!form.fullName || !form.phone || !form.houseNo || !form.street || !form.city || !form.pincode) {
+    if (!form.fullName || !form.phone || !form.street || !form.city || !form.pincode) {
       setLocationStatus("error");
       setLocationMessage("Please fill all required address fields before verifying location.");
       return;

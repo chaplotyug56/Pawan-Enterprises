@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FaTrash, FaPlus, FaMinus, FaSearch } from "react-icons/fa";
+import QRCode from "react-qr-code";
 import api from "../services/api";
 import "../styles/ShopBilling.css";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ function ShopBilling() {
   const [cart, setCart] = useState([]);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -127,7 +129,7 @@ function ShopBilling() {
       formData.append("items", JSON.stringify(items));
       formData.append("shippingAddress", JSON.stringify(shippingAddress));
       formData.append("location", JSON.stringify(location));
-      formData.append("paymentMethod", "cash");
+      formData.append("paymentMethod", paymentMethod === "cash" ? "cash" : "upi");
       formData.append("paymentTime", new Date().toISOString());
 
       const res = await api.post("/orders", formData, {
@@ -246,6 +248,31 @@ function ShopBilling() {
                 <span>₹{finalTotal}</span>
               </div>
             </div>
+
+            <div className="billing-payment-options">
+              <h4>Payment Method</h4>
+              <div className="payment-options-grid">
+                <label className={`payment-option ${paymentMethod === 'cash' ? 'active' : ''}`}>
+                  <input type="radio" value="cash" checked={paymentMethod === "cash"} onChange={(e) => setPaymentMethod(e.target.value)} />
+                  Cash
+                </label>
+                <label className={`payment-option ${paymentMethod === 'upi-shop' ? 'active' : ''}`}>
+                  <input type="radio" value="upi-shop" checked={paymentMethod === "upi-shop"} onChange={(e) => setPaymentMethod(e.target.value)} />
+                  Shop QR
+                </label>
+                <label className={`payment-option ${paymentMethod === 'upi-custom' ? 'active' : ''}`}>
+                  <input type="radio" value="upi-custom" checked={paymentMethod === "upi-custom"} onChange={(e) => setPaymentMethod(e.target.value)} />
+                  Custom QR
+                </label>
+              </div>
+            </div>
+
+            {paymentMethod === "upi-custom" && finalTotal > 0 && (
+              <div className="custom-qr-container">
+                <QRCode value={`upi://pay?pa=9929119290@okbizaxis&pn=Pawan%20Enterprises&am=${Number(finalTotal).toFixed(2)}&cu=INR`} size={150} />
+                <p>Scan to pay exact ₹{finalTotal}</p>
+              </div>
+            )}
 
             <button 
               className="generate-btn" 

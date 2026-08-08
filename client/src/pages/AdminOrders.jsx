@@ -192,7 +192,7 @@ function AdminOrders() {
     </p>
 
     <img
-      src={`http://localhost:8000${order.paymentScreenshot}`}
+      src={`//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}${order.paymentScreenshot}`}
       alt="Payment Screenshot"
       style={{
         width: "220px",
@@ -203,7 +203,7 @@ function AdminOrders() {
       }}
       onClick={() =>
         window.open(
-          `http://localhost:8000${order.paymentScreenshot}`,
+          `//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}${order.paymentScreenshot}`,
           "_blank"
         )
       }
@@ -244,7 +244,7 @@ function AdminOrders() {
         <br />
 
         <img
-          src={`http://localhost:8000${order.paymentScreenshot}`}
+          src={`//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}${order.paymentScreenshot}`}
           alt="Payment Screenshot"
           style={{
             width: "220px",
@@ -311,7 +311,7 @@ function AdminOrders() {
     <br />
 
     <img
-      src={`http://localhost:8000${order.paymentScreenshot}`}
+      src={`//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}${order.paymentScreenshot}`}
       alt="Payment"
       style={{
         width: "250px",

@@ -133,7 +133,11 @@ function MyOrders() {
             {order.items.map((item) => (
               <div className="order-item" key={item.product}>
                 <img
-                  src={item.image}
+                  src={
+                    item.image.startsWith("http") || item.image.startsWith("data:")
+                      ? item.image
+                      : `//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}/api/images/${item.image}`
+                  }
                   alt={item.name}
                 />
 

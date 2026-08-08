@@ -86,8 +86,9 @@ product.salesCount += item.quantity;
 await product.save();
     }
     
-    // Add shipping charge if applicable
-    const shippingPrice = calculatedTotal >= 1000 ? 0 : 20;
+    // Add shipping charge if applicable (waived for in-store purchases)
+    const isInStore = shippingAddress.houseNo === "In-Store";
+    const shippingPrice = (isInStore || calculatedTotal >= 1000) ? 0 : 20;
     calculatedTotal += shippingPrice;
 
     // ========================================

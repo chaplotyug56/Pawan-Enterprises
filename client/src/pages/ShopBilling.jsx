@@ -84,8 +84,7 @@ function ShopBilling() {
   };
 
   const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  const shippingCharge = cartTotal > 0 && cartTotal < 1000 ? 20 : 0;
-  const finalTotal = cartTotal + shippingCharge;
+  const finalTotal = cartTotal;
 
   const handleGenerateBill = async (e) => {
     e.preventDefault();
@@ -242,14 +241,6 @@ function ShopBilling() {
             )}
 
             <div className="bill-summary">
-              <div className="summary-row">
-                <span>Subtotal</span>
-                <span>₹{cartTotal}</span>
-              </div>
-              <div className="summary-row">
-                <span>Shipping Charge (<small>₹20 if below ₹1000</small>)</span>
-                <span>₹{shippingCharge}</span>
-              </div>
               <div className="summary-row total">
                 <span>Total Amount</span>
                 <span>₹{finalTotal}</span>

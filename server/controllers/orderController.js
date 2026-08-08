@@ -81,6 +81,9 @@ const createOrder = async (req, res) => {
       product.stock -= item.quantity;
 
 // Increase total sold quantity
+if (product.salesCount == null || isNaN(product.salesCount)) {
+  product.salesCount = 0;
+}
 product.salesCount += item.quantity;
 
 await product.save();
@@ -172,7 +175,7 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
           
             paymentScreenshot,
           
-            address: `${shippingAddress.houseNo}, ${shippingAddress.building}, ${shippingAddress.street}${shippingAddress.landmark ? `, ${shippingAddress.landmark}` : ''}, ${shippingAddress.city}, ${shippingAddress.state || 'Rajasthan'} - ${shippingAddress.pincode}`,
+            address: `${shippingAddress.houseNo ? shippingAddress.houseNo + ', ' : ''}${shippingAddress.building ? shippingAddress.building + ', ' : ''}${shippingAddress.street}${shippingAddress.landmark ? `, ${shippingAddress.landmark}` : ''}, ${shippingAddress.city}, ${shippingAddress.state || 'Rajasthan'} - ${shippingAddress.pincode}`,
           
             orderId: customOrderId,
 

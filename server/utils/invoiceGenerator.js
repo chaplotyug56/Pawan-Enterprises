@@ -110,23 +110,28 @@ function generateInvoice(res, order) {
 
   doc.font("Helvetica-Bold");
   doc.fontSize(12);
-  doc.text("Total Discount:", 350, y, { width: 100, align: "right" });
-  doc.text(`Rs. ${totalDiscount}`, 460, y, { width: 90, align: "right" });
+  
+  // Left side: You Saved
+  doc.fillColor("#2e7d32");
+  doc.text(`You Saved: Rs. ${totalDiscount}`, 50, y);
+  doc.fillColor("#000000");
+  
+  let rightY = y;
   
   if (shippingCharge > 0) {
-    y += 15;
-    doc.text("Shipping:", 350, y, { width: 100, align: "right" });
-    doc.text(`Rs. ${shippingCharge}`, 460, y, { width: 90, align: "right" });
+    doc.text("Shipping:", 350, rightY, { width: 100, align: "right" });
+    doc.text(`Rs. ${shippingCharge}`, 460, rightY, { width: 90, align: "right" });
+    rightY += 15;
   }
   
-  y += 20;
+  rightY += 5;
   
   doc.fontSize(14);
-  doc.fillColor("#000000");
-  doc.text("Grand Total:", 350, y, { width: 100, align: "right" });
-  doc.text(`Rs. ${order.totalPrice}`, 460, y, { width: 90, align: "right" });
+  doc.text("Grand Total:", 350, rightY, { width: 100, align: "right" });
+  doc.text(`Rs. ${order.totalPrice}`, 460, rightY, { width: 90, align: "right" });
 
   doc.moveDown(3);
+  doc.y = Math.max(doc.y, rightY + 40);
 
   doc
     .font("Helvetica")

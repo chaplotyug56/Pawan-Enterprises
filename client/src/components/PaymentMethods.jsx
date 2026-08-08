@@ -8,15 +8,6 @@ function PaymentMethods({ payment, setPayment }) {
       <label>
         <input
           type="radio"
-          checked={payment === "cod"}
-          onChange={() => setPayment("cod")}
-        />
-        Cash on Delivery
-      </label>
-
-      <label>
-        <input
-          type="radio"
           checked={payment === "upi"}
           onChange={() => setPayment("upi")}
         />

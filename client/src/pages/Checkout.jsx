@@ -20,7 +20,7 @@ function Checkout() {
   const [location, setLocation] = useState(null);
   const [showPayment, setShowPayment] = useState(false);
 
-  const [payment, setPayment] = useState("cod");
+  const [payment, setPayment] = useState("upi");
 
   const [paymentTime, setPaymentTime] = useState("");
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);

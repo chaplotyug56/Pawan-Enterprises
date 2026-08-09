@@ -24,6 +24,7 @@ function Checkout() {
 
   const [paymentTime, setPaymentTime] = useState("");
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const shipping = cartTotal >= 1000 ? 0 : 20;
   const totalAmount = cartTotal + shipping;
   
@@ -39,6 +40,8 @@ function Checkout() {
   };
 
   const placeOrder = async () => {
+    if (isPlacingOrder) return;
+    setIsPlacingOrder(true);
     console.log("🚀 Place Order Clicked");
     try {
       if (!shippingAddress) {
@@ -101,6 +104,8 @@ function Checkout() {
       toast.error(
         err.response?.data?.message || "Order Failed"
       );
+    } finally {
+      setIsPlacingOrder(false);
     }
   };
 
@@ -134,8 +139,9 @@ function Checkout() {
               className="primary-btn"
               style={{ marginTop: "20px" }}
               onClick={placeOrder}
+              disabled={isPlacingOrder}
             >
-              Place Order
+              {isPlacingOrder ? "Placing Order..." : "Place Order"}
             </button>
 
           </>

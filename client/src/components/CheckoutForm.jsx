@@ -41,7 +41,7 @@ function CheckoutForm({ onSubmit }) {
   const [locationStatus, setLocationStatus] = useState("idle"); // idle, loading, success, error
   const [locationMessage, setLocationMessage] = useState("");
   const [verifiedLocation, setVerifiedLocation] = useState(null);
-  const [saveAddress, setSaveAddress] = useState(true);
+  const [saveAddress, setSaveAddress] = useState(false);
 
   const handleChange = (e) => {
     setForm({

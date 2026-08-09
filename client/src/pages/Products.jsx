@@ -3,8 +3,9 @@ import {
     useEffect,
     useMemo,
     useState,
+    useRef,
   } from "react";
-  import { useSearchParams } from "react-router-dom";
+  import { useSearchParams, useNavigationType } from "react-router-dom";
   
   import api from "../services/api";
   
@@ -26,6 +27,7 @@ import {
     const [inStock, setInStock] = useState(false);
   
     const { addToCart } = useCart();
+    const navigationType = useNavigationType();
   
     // Fetch Products
     const fetchProducts = useCallback(async () => {
@@ -59,6 +61,29 @@ import {
   
       return () => clearTimeout(timer);
     }, [fetchProducts]);
+
+    // Scroll Restoration Logic
+    const scrollPos = useRef(0);
+
+    useEffect(() => {
+      if (!loading && navigationType === "POP") {
+        const savedScroll = sessionStorage.getItem("productsScrollPos");
+        if (savedScroll) {
+          setTimeout(() => window.scrollTo(0, parseInt(savedScroll, 10)), 0);
+        }
+      }
+    }, [loading, navigationType]);
+
+    useEffect(() => {
+      const handleScroll = () => {
+        scrollPos.current = window.scrollY;
+      };
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        sessionStorage.setItem("productsScrollPos", scrollPos.current.toString());
+      };
+    }, []);
   
     // Products are already filtered by the backend
     const filteredProducts = useMemo(() => products, [products]);

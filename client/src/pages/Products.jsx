@@ -22,13 +22,22 @@ import {
     const [loading, setLoading] = useState(true);
   
     const [search, setSearch] = useState(searchParams.get("search") || "");
-    const [category, setCategory] = useState("All");
+    const [category, setCategory] = useState(searchParams.get("category") || "All");
     const [sort, setSort] = useState("newest");
     const [inStock, setInStock] = useState(false);
   
     const { addToCart } = useCart();
     const navigationType = useNavigationType();
-  
+
+    // Sync state with URL params on route change
+    useEffect(() => {
+      const querySearch = searchParams.get("search");
+      const queryCategory = searchParams.get("category");
+      
+      if (querySearch !== null) setSearch(querySearch);
+      if (queryCategory !== null) setCategory(queryCategory);
+    }, [searchParams]);
+
     // Fetch Products
     const fetchProducts = useCallback(async () => {
       try {

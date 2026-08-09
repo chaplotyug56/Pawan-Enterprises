@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import "../styles/AdminOrders.css";
 import { toast } from "react-toastify";
 function AdminOrders() {
+  const [searchParams] = useSearchParams();
   const [orders, setOrders] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+
+  useEffect(() => {
+    const querySearch = searchParams.get("search");
+    if (querySearch !== null) {
+      setSearch(querySearch);
+    }
+  }, [searchParams]);
 
   const fetchOrders = async () => {
     try {

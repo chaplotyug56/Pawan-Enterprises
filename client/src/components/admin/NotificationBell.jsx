@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 import api from "../../services/api";
 
@@ -6,6 +7,7 @@ const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const fetchNotifications = async () => {
     try {
@@ -50,11 +52,27 @@ const NotificationBell = () => {
   async function markAsRead(id) {
     try {
       await api.put(`/notifications/${id}/read`);
-
       fetchNotifications();
     } catch (err) {
       console.error(err);
     }
+  }
+
+  async function handleNotificationClick(n) {
+    if (!n.isRead) {
+      markAsRead(n._id);
+    }
+
+    if (n.type === "order") {
+      const searchTerm = n.metadata?.orderNumber || n.referenceId;
+      if (searchTerm) {
+        navigate(`/admin/orders?search=${searchTerm}`);
+      } else {
+        navigate(`/admin/orders`);
+      }
+    }
+    
+    setOpen(false);
   }
 
   async function markAllRead() {
@@ -104,7 +122,7 @@ const NotificationBell = () => {
                 className={`notification-item ${
                   !n.isRead ? "unread" : ""
                 }`}
-                onClick={() => markAsRead(n._id)}
+                onClick={() => handleNotificationClick(n)}
               >
                 <strong>{n.title}</strong>
 

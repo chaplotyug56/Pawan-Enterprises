@@ -61,6 +61,28 @@ const getDashboardStats = async (req, res) => {
       revenue: item.revenue,
     }));
 
+    // Sales by Category
+    const salesByCategory = await Product.aggregate([
+      {
+        $group: {
+          _id: "$category",
+          sales: { $sum: "$salesCount" },
+        },
+      },
+    ]);
+
+    // Top Selling Products
+    const topProducts = await Product.find()
+      .sort({ salesCount: -1 })
+      .limit(5)
+      .select("name category price salesCount stock image");
+
+    // Recent Customers
+    const recentCustomers = await User.find({ role: "user" })
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .select("name email createdAt");
+
     res.json({
       success: true,
       data: {
@@ -70,6 +92,9 @@ const getDashboardStats = async (req, res) => {
         totalRevenue: revenue[0]?.total || 0,
         orderStatus,
         monthlyRevenue: formattedRevenue,
+        salesByCategory,
+        topProducts,
+        recentCustomers,
       },
     });
   } catch (err) {

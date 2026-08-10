@@ -10,6 +10,8 @@ import ConfirmModal from "../components/admin/ConfirmModal";
 
 import "../styles/Admin.css";
 import RecentOrders from "../components/admin/RecentOrders";
+import TopProducts from "../components/admin/TopProducts";
+import RecentCustomers from "../components/admin/RecentCustomers";
 import AnalyticsCharts from "../components/admin/AnalyticsCharts";
 import NotificationBell from "../components/admin/NotificationBell";
 function Admin() {
@@ -214,7 +216,11 @@ function Admin() {
 
 <AnalyticsCharts stats={stats} />
 
-<RecentOrders />
+<div className="analytics-grid">
+  <RecentOrders />
+  <TopProducts products={stats?.topProducts} />
+  <RecentCustomers customers={stats?.recentCustomers} />
+</div>
 
       <ProductForm
         form={form}

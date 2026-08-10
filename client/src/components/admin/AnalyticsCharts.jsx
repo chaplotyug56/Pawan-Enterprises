@@ -2,6 +2,8 @@ import {
     ResponsiveContainer,
     LineChart,
     Line,
+    BarChart,
+    Bar,
     CartesianGrid,
     XAxis,
     YAxis,
@@ -27,6 +29,12 @@ import {
       stats?.orderStatus?.map((item) => ({
         name: item._id,
         value: item.count,
+      })) || [];
+
+    const categoryData =
+      stats?.salesByCategory?.map((item) => ({
+        name: item._id,
+        sales: item.sales,
       })) || [];
   
     return (
@@ -74,6 +82,20 @@ import {
               <Tooltip />
               <Legend />
             </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="chart-card">
+          <h2>Sales by Category</h2>
+  
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={categoryData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="sales" fill="#8e24aa" />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>

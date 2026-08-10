@@ -64,26 +64,14 @@ const getProducts = async (req, res) => {
 
     // Search
     if (search) {
-      query.$or = [
-        {
-          name: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          brand: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          category: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-      ];
+      const searchTerms = search.trim().split(/\s+/);
+      query.$and = searchTerms.map(term => ({
+        $or: [
+          { name: { $regex: term, $options: "i" } },
+          { brand: { $regex: term, $options: "i" } },
+          { category: { $regex: term, $options: "i" } },
+        ],
+      }));
     }
 
     // Category Filter

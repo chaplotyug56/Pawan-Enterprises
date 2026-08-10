@@ -72,10 +72,20 @@ const getDashboardStats = async (req, res) => {
     ]);
 
     // Top Selling Products
-    const topProducts = await Product.find()
+    const topProductsRaw = await Product.find()
       .sort({ salesCount: -1 })
       .limit(5)
       .select("name category price salesCount stock image");
+
+    const topProducts = topProductsRaw.map((product) => {
+      const obj = product.toObject();
+      if (obj.image) {
+        if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
+          obj.image = `//${req.get("host")}/api/images/${obj.image}`;
+        }
+      }
+      return obj;
+    });
 
     // Recent Customers
     const recentCustomers = await User.find({ role: "user" })

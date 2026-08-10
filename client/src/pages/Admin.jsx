@@ -34,7 +34,7 @@ function Admin() {
   });
   async function fetchProducts() {
     try {
-      const res = await api.get("/products");
+      const res = await api.get("/products", { params: { admin: true } });
       setProducts(res.data.data || []);
     } catch (err) {
       console.error(err);

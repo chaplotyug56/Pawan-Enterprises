@@ -58,6 +58,7 @@ const getProducts = async (req, res) => {
       maxPrice,
       inStock,
       sort,
+      admin,
     } = req.query;
 
     const query = {};
@@ -94,9 +95,9 @@ const getProducts = async (req, res) => {
 
     // Stock Filter
     if (inStock === "true") {
-      query.stock = {
-        $gt: 0,
-      };
+      query.stock = { $gt: 0 };
+    } else if (admin !== "true" && !search) {
+      query.stock = { $gt: 0 };
     }
 
     let products = await Product.find(query);
@@ -347,7 +348,7 @@ const getRelatedProducts = async (req, res) => {
 // =======================
 const getBestSellingProducts = async (req, res) => {
   try {
-    const products = await Product.find()
+    const products = await Product.find({ stock: { $gt: 0 } })
       .sort({ salesCount: -1 })
       .limit(8);
 

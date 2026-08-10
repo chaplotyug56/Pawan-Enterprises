@@ -27,6 +27,16 @@ const getDashboardStats = async (req, res) => {
       },
     ]);
 
+    // Revenue by Payment Method
+    const revenueByPayment = await Order.aggregate([
+      {
+        $group: {
+          _id: "$paymentMethod",
+          total: { $sum: "$totalPrice" },
+        },
+      },
+    ]);
+
     // Revenue by Month
     const monthlyRevenue = await Order.aggregate([
       {
@@ -105,6 +115,7 @@ const getDashboardStats = async (req, res) => {
         salesByCategory,
         topProducts,
         recentCustomers,
+        revenueByPayment,
       },
     });
   } catch (err) {

@@ -36,6 +36,12 @@ import {
         name: item._id,
         sales: item.sales,
       })) || [];
+
+    const paymentData =
+      stats?.revenueByPayment?.map((item) => ({
+        name: item._id?.toUpperCase(),
+        revenue: item.total,
+      })) || [];
   
     return (
       <div className="analytics-grid">
@@ -96,6 +102,32 @@ import {
               <Tooltip />
               <Bar dataKey="sales" fill="#8e24aa" />
             </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className="chart-card">
+          <h2>Revenue by Payment</h2>
+  
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={paymentData}
+                dataKey="revenue"
+                nameKey="name"
+                outerRadius={100}
+                label
+              >
+                {paymentData.map((entry, index) => (
+                  <Cell
+                    key={index}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+  
+              <Tooltip />
+              <Legend />
+            </PieChart>
           </ResponsiveContainer>
         </div>
       </div>

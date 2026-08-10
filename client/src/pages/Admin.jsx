@@ -134,6 +134,18 @@ function Admin() {
     }
   }
 
+  async function updateStock(id, newStock) {
+    if (newStock < 0) return;
+    setProducts(products.map(p => p._id === id ? { ...p, stock: newStock } : p));
+    try {
+      await api.put(`/products/${id}`, { stock: newStock });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update stock");
+      fetchProducts(); // Revert on failure
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -215,6 +227,7 @@ function Admin() {
         products={products}
         editProduct={editProduct}
         deleteProduct={deleteProduct}
+        updateStock={updateStock}
       />
 
       <ConfirmModal

@@ -4,6 +4,7 @@ function ProductTable({
   products,
   editProduct,
   deleteProduct,
+  updateStock,
 }) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
@@ -149,27 +150,32 @@ function ProductTable({
                   <td>₹{product.price}</td>
 
                   <td>
-
-                    <span
-                      className={
-                        product.stock === 0
-                          ? "badge danger"
-
-                          : product.stock < 5
-                          ? "badge warning"
-
-                          : "badge success"
-                      }
-                    >
-                      {product.stock === 0
-                        ? "Out"
-
-                        : product.stock < 5
-                        ? "Low"
-
-                        : "In Stock"}
-                    </span>
-
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <button 
+                        style={{ cursor: "pointer", padding: "4px 10px", background: "#f0f0f0", border: "1px solid #ddd", borderRadius: "4px", fontSize: "16px", fontWeight: "bold", color: "#333" }}
+                        onClick={() => updateStock(product._id, product.stock - 1)}
+                      >
+                        -
+                      </button>
+                      <span
+                        className={
+                          product.stock < 3
+                            ? "badge danger"
+                            : product.stock <= 10
+                            ? "badge warning"
+                            : "badge success"
+                        }
+                        style={{ minWidth: "30px", textAlign: "center" }}
+                      >
+                        {product.stock}
+                      </span>
+                      <button 
+                        style={{ cursor: "pointer", padding: "4px 10px", background: "#f0f0f0", border: "1px solid #ddd", borderRadius: "4px", fontSize: "16px", fontWeight: "bold", color: "#333" }}
+                        onClick={() => updateStock(product._id, product.stock + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
                   </td>
 
                   <td>

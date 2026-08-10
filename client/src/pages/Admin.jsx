@@ -216,11 +216,9 @@ function Admin() {
 
 <AnalyticsCharts stats={stats} />
 
-<div className="analytics-grid">
-  <RecentOrders />
-  <TopProducts products={stats?.topProducts} />
-  <RecentCustomers customers={stats?.recentCustomers} />
-</div>
+<RecentOrders />
+<TopProducts products={stats?.topProducts} />
+<RecentCustomers customers={stats?.recentCustomers} />
 
       <ProductForm
         form={form}

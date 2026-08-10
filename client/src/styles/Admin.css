@@ -444,7 +444,7 @@
                       }
                       
                       .orders-table th {
-                        background: #f7f7f7;
+                        /* Removed background override so it inherits blue */
                       }
                       
                       .status-pending,

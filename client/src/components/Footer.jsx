@@ -31,7 +31,7 @@ import {
   
             <p>
               <FaMapMarkerAlt />
-              &nbsp; Akola, Chittaurgarh(Rajasthan)
+              &nbsp; Akola, Chittaurgarh (Rajasthan)
             </p>
   
             <p>
@@ -41,7 +41,7 @@ import {
   
             <p>
               <FaEnvelope />
-              &nbsp; pawanenterprises@gmail.com
+              &nbsp; pawanenterprisesakola@gmail.com
             </p>
   
           </div>

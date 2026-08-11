@@ -159,7 +159,23 @@ function ProductForm({
             {form.hasVariants && (
               <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "15px" }}>
                 {form.variants?.map((variant, idx) => (
-                  <div key={idx} style={{ display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center", background: "#fff", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }}>
+                  <div 
+                    key={idx} 
+                    tabIndex={0}
+                    style={{ display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center", background: "#fff", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }}
+                    onPaste={(e) => {
+                      if (e.clipboardData.files && e.clipboardData.files.length > 0) {
+                        const file = e.clipboardData.files[0];
+                        if (file.type.startsWith("image/")) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const newVariants = [...form.variants];
+                          newVariants[idx].image = file;
+                          setForm(f => ({...f, variants: newVariants}));
+                        }
+                      }
+                    }}
+                  >
                     
                     <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "120px"}}>
                       <label style={{fontSize: "12px", color: "#666"}}>Color</label>
@@ -198,7 +214,7 @@ function ProductForm({
                     </div>
 
                     <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "150px"}}>
-                      <label style={{fontSize: "12px", color: "#666"}}>Variant Image</label>
+                      <label style={{fontSize: "12px", color: "#666"}}>Variant Image <span style={{color: "#aaa", fontStyle: "italic"}}>(or paste)</span></label>
                       <input type="file" accept="image/*" onChange={(e) => {
                         if (e.target.files && e.target.files.length > 0) {
                           const newVariants = [...form.variants];

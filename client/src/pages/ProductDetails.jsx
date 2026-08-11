@@ -337,6 +337,7 @@ function ProductDetails() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
+                      color: selectedSize === size ? "#0056b3" : "#333",
                       fontWeight: "bold",
                       fontSize: "14px"
                     }}

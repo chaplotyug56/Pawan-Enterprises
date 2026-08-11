@@ -8,6 +8,22 @@ const addProduct = async (req, res) => {
   console.log("🔥 addProduct API called");
 
   try {
+    let colors = [];
+    if (req.body.colors) {
+      try { colors = typeof req.body.colors === "string" ? JSON.parse(req.body.colors) : req.body.colors; } catch (e) {}
+    }
+    let sizes = [];
+    if (req.body.sizes) {
+      try { sizes = typeof req.body.sizes === "string" ? JSON.parse(req.body.sizes) : req.body.sizes; } catch (e) {}
+    }
+    let rates = [];
+    if (req.body.rates) {
+      try { rates = typeof req.body.rates === "string" ? JSON.parse(req.body.rates) : req.body.rates; } catch (e) {}
+    }
+    const hasColors = req.body.hasColors === "true" || req.body.hasColors === true;
+    const hasSizes = req.body.hasSizes === "true" || req.body.hasSizes === true;
+    const hasRates = req.body.hasRates === "true" || req.body.hasRates === true;
+
     let imagesIds = [];
     if (req.files?.length > 0) {
       for (const file of req.files) {
@@ -17,7 +33,15 @@ const addProduct = async (req, res) => {
           contentType: file.mimetype,
         });
         const savedImg = await newImg.save();
-        imagesIds.push(savedImg._id.toString());
+        
+        if (file.fieldname === "images") {
+          imagesIds.push(savedImg._id.toString());
+        } else if (file.fieldname.startsWith("colorImage_")) {
+          const idx = parseInt(file.fieldname.split("_")[1], 10);
+          if (colors[idx]) {
+            colors[idx].image = savedImg._id.toString();
+          }
+        }
       }
     }
 
@@ -25,6 +49,12 @@ const addProduct = async (req, res) => {
 
     const product = new Product({
       ...req.body,
+      hasColors,
+      colors,
+      hasSizes,
+      sizes,
+      hasRates,
+      rates,
       image: imageId,
       images: imagesIds,
     });
@@ -151,6 +181,15 @@ const getProducts = async (req, res) => {
         });
       }
 
+      if (obj.colors && obj.colors.length > 0) {
+        obj.colors = obj.colors.map((color) => {
+          if (color.image && !color.image.startsWith("http") && !color.image.startsWith("data:image")) {
+            color.image = `//${req.get("host")}/api/images/${color.image}`;
+          }
+          return color;
+        });
+      }
+
       return obj;
     });
 
@@ -200,6 +239,15 @@ const getProductById = async (req, res) => {
       });
     }
 
+    if (productObj.colors && productObj.colors.length > 0) {
+      productObj.colors = productObj.colors.map((color) => {
+        if (color.image && !color.image.startsWith("http") && !color.image.startsWith("data:image")) {
+          color.image = `//${req.get("host")}/api/images/${color.image}`;
+        }
+        return color;
+      });
+    }
+
     res.status(200).json({
       success: true,
       data: productObj,
@@ -226,9 +274,27 @@ const updateProduct = async (req, res) => {
       });
     }
 
-    // The req.body already contains the updated image and images strings (for old images)
+    let colors = [];
+    if (req.body.colors) {
+      try { colors = typeof req.body.colors === "string" ? JSON.parse(req.body.colors) : req.body.colors; } catch (e) {}
+    }
+    let sizes = [];
+    if (req.body.sizes) {
+      try { sizes = typeof req.body.sizes === "string" ? JSON.parse(req.body.sizes) : req.body.sizes; } catch (e) {}
+    }
+    let rates = [];
+    if (req.body.rates) {
+      try { rates = typeof req.body.rates === "string" ? JSON.parse(req.body.rates) : req.body.rates; } catch (e) {}
+    }
+
     const updateData = {
       ...req.body,
+      hasColors: req.body.hasColors === "true" || req.body.hasColors === true,
+      colors,
+      hasSizes: req.body.hasSizes === "true" || req.body.hasSizes === true,
+      sizes,
+      hasRates: req.body.hasRates === "true" || req.body.hasRates === true,
+      rates,
     };
 
     if (req.files?.length > 0) {
@@ -240,10 +306,21 @@ const updateProduct = async (req, res) => {
           contentType: file.mimetype,
         });
         const savedImg = await newImg.save();
-        newImageIds.push(savedImg._id.toString());
+        
+        if (file.fieldname === "images") {
+          newImageIds.push(savedImg._id.toString());
+        } else if (file.fieldname.startsWith("colorImage_")) {
+          const idx = parseInt(file.fieldname.split("_")[1], 10);
+          if (updateData.colors[idx]) {
+            updateData.colors[idx].image = savedImg._id.toString();
+          }
+        }
       }
-      updateData.images = newImageIds;
-      updateData.image = newImageIds[0];
+      if (newImageIds.length > 0) {
+        // Only override if new main images were actually uploaded
+        updateData.images = newImageIds;
+        updateData.image = newImageIds[0];
+      }
     }
 
     const updatedProduct =
@@ -328,6 +405,15 @@ const getRelatedProducts = async (req, res) => {
         }
       }
 
+      if (obj.colors && obj.colors.length > 0) {
+        obj.colors = obj.colors.map((color) => {
+          if (color.image && !color.image.startsWith("http") && !color.image.startsWith("data:image")) {
+            color.image = `//${req.get("host")}/api/images/${color.image}`;
+          }
+          return color;
+        });
+      }
+
       return obj;
     });
 
@@ -359,6 +445,15 @@ const getBestSellingProducts = async (req, res) => {
         if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
           obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
+      }
+
+      if (obj.colors && obj.colors.length > 0) {
+        obj.colors = obj.colors.map((color) => {
+          if (color.image && !color.image.startsWith("http") && !color.image.startsWith("data:image")) {
+            color.image = `//${req.get("host")}/api/images/${color.image}`;
+          }
+          return color;
+        });
       }
 
       return obj;

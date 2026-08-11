@@ -5,6 +5,7 @@ function ProductForm({
   handleChange,
   handleSubmit,
   isEditing,
+  setForm,
 }) {
   const [previews, setPreviews] = useState([]);
   const [discountPercent, setDiscountPercent] = useState("");
@@ -144,6 +145,90 @@ function ProductForm({
           value={form.description}
           onChange={handleChange}
         />
+
+        {/* OPTIONS SECTION */}
+        <div className="options-section" style={{ borderTop: "1px solid #eee", paddingTop: "20px", marginTop: "10px", display: "flex", flexDirection: "column", gap: "15px" }}>
+          <h3 style={{ marginBottom: "5px" }}>Product Options</h3>
+          
+          {/* COLORS */}
+          <div className="option-group" style={{ background: "#f9f9f9", padding: "15px", borderRadius: "8px" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "10px", fontWeight: "bold" }}>
+              <input type="checkbox" checked={form.hasColors || false} onChange={() => setForm(f => ({...f, hasColors: !f.hasColors}))} />
+              Enable Colors
+            </label>
+            {form.hasColors && (
+              <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                {form.colors?.map((color, idx) => (
+                  <div key={idx} style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    <input type="text" placeholder="Color Name (e.g. Red)" value={color.name} onChange={(e) => {
+                      const newColors = [...form.colors];
+                      newColors[idx].name = e.target.value;
+                      setForm(f => ({...f, colors: newColors}));
+                    }} required />
+                    <input type="file" accept="image/*" onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        const newColors = [...form.colors];
+                        newColors[idx].image = e.target.files[0];
+                        setForm(f => ({...f, colors: newColors}));
+                      }
+                    }} />
+                    {typeof color.image === "string" && color.image && (
+                      <img src={color.image.startsWith("http") ? color.image : `//${window.location.host}/api/images/${color.image}`} alt="Color" style={{ width: 30, height: 30, objectFit: "cover", borderRadius: "5px" }} />
+                    )}
+                    <button type="button" onClick={() => setForm(f => ({...f, colors: f.colors.filter((_, i) => i !== idx)}))} style={{ padding: "8px 12px", background: "#ff4d4f", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>✕</button>
+                  </div>
+                ))}
+                <button type="button" onClick={() => setForm(f => ({...f, colors: [...(f.colors || []), { name: "", image: "" }]}))} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#e6f7ff", color: "#1890ff", border: "1px solid #91d5ff", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Color</button>
+              </div>
+            )}
+          </div>
+
+          {/* SIZES */}
+          <div className="option-group" style={{ background: "#f9f9f9", padding: "15px", borderRadius: "8px" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "10px", fontWeight: "bold" }}>
+              <input type="checkbox" checked={form.hasSizes || false} onChange={() => setForm(f => ({...f, hasSizes: !f.hasSizes}))} />
+              Enable Sizes
+            </label>
+            {form.hasSizes && (
+              <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                {form.sizes?.map((size, idx) => (
+                  <div key={idx} style={{ display: "flex", gap: "10px" }}>
+                    <input type="text" placeholder="Size (e.g. Small, 100ml)" value={size} onChange={(e) => {
+                      const newSizes = [...form.sizes];
+                      newSizes[idx] = e.target.value;
+                      setForm(f => ({...f, sizes: newSizes}));
+                    }} required />
+                    <button type="button" onClick={() => setForm(f => ({...f, sizes: f.sizes.filter((_, i) => i !== idx)}))} style={{ padding: "8px 12px", background: "#ff4d4f", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>✕</button>
+                  </div>
+                ))}
+                <button type="button" onClick={() => setForm(f => ({...f, sizes: [...(f.sizes || []), ""]}))} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#f6ffed", color: "#52c41a", border: "1px solid #b7eb8f", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Size</button>
+              </div>
+            )}
+          </div>
+
+          {/* RATES */}
+          <div className="option-group" style={{ background: "#f9f9f9", padding: "15px", borderRadius: "8px" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "10px", fontWeight: "bold" }}>
+              <input type="checkbox" checked={form.hasRates || false} onChange={() => setForm(f => ({...f, hasRates: !f.hasRates}))} />
+              Enable Rates
+            </label>
+            {form.hasRates && (
+              <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                {form.rates?.map((rate, idx) => (
+                  <div key={idx} style={{ display: "flex", gap: "10px" }}>
+                    <input type="number" placeholder="Rate (₹)" value={rate} onChange={(e) => {
+                      const newRates = [...form.rates];
+                      newRates[idx] = Number(e.target.value);
+                      setForm(f => ({...f, rates: newRates}));
+                    }} required />
+                    <button type="button" onClick={() => setForm(f => ({...f, rates: f.rates.filter((_, i) => i !== idx)}))} style={{ padding: "8px 12px", background: "#ff4d4f", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>✕</button>
+                  </div>
+                ))}
+                <button type="button" onClick={() => setForm(f => ({...f, rates: [...(f.rates || []), ""]}))} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#fffb8f", color: "#faad14", border: "1px solid #ffe58f", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Rate</button>
+              </div>
+            )}
+          </div>
+        </div>
         
         <div className="file-input-wrapper" style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
           <label>Product Images (Max 5)</label>

@@ -72,11 +72,21 @@ const createOrder = async (req, res) => {
         });
       }
 
-      calculatedTotal += product.price * item.quantity;
+      let itemPrice = product.price;
+      if (product.hasRates && item.rate && product.rates.includes(Number(item.rate))) {
+        itemPrice = Number(item.rate);
+      }
+      
+      calculatedTotal += itemPrice * item.quantity;
 
       item.name = product.name;
-      item.price = product.price;
-      item.image = product.image;
+      item.price = itemPrice;
+      
+      if (product.hasColors && item.colorImage) {
+        item.image = item.colorImage;
+      } else {
+        item.image = product.image;
+      }
 
       product.stock -= item.quantity;
 

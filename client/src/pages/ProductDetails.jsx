@@ -4,6 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import { useCart } from "../context/CartContext";
 
+import { toast } from "react-toastify";
+
 import {
   FaShoppingCart,
   FaBolt,
@@ -27,6 +29,10 @@ function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
 
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedRate, setSelectedRate] = useState(null);
+
   const [reviews, setReviews] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
 
@@ -36,6 +42,9 @@ function ProductDetails() {
 
       setProduct(res.data.data);
       setSelectedImage(res.data.data.image);
+      setSelectedColor(null);
+      setSelectedSize(null);
+      setSelectedRate(null);
 
       saveRecentlyViewed(res.data.data);
 
@@ -56,6 +65,39 @@ function ProductDetails() {
   useEffect(() => {
     fetchProduct();
   }, [fetchProduct]);
+
+  const handleAddToCart = () => {
+    if (product.hasColors && !selectedColor) { toast.error("Please select a color"); return; }
+    if (product.hasSizes && !selectedSize) { toast.error("Please select a size"); return; }
+    if (product.hasRates && !selectedRate) { toast.error("Please select a rate"); return; }
+
+    const finalProduct = {
+      ...product,
+      color: selectedColor?.name,
+      colorImage: selectedColor?.image,
+      size: selectedSize,
+      rate: selectedRate,
+      price: selectedRate || product.price
+    };
+    addToCart(finalProduct);
+  };
+
+  const handleBuyNow = () => {
+    if (product.hasColors && !selectedColor) { toast.error("Please select a color"); return; }
+    if (product.hasSizes && !selectedSize) { toast.error("Please select a size"); return; }
+    if (product.hasRates && !selectedRate) { toast.error("Please select a rate"); return; }
+
+    const finalProduct = {
+      ...product,
+      color: selectedColor?.name,
+      colorImage: selectedColor?.image,
+      size: selectedSize,
+      rate: selectedRate,
+      price: selectedRate || product.price
+    };
+    buyNow(finalProduct);
+    navigate("/checkout");
+  };
 
   if (!product) {
     return <h2 className="loading">Loading...</h2>;
@@ -119,17 +161,17 @@ function ProductDetails() {
 )}
 
 <h2 className="our-price">
-  ₹{product.price}
+  ₹{selectedRate || product.price}
 </h2>
 
-{product.mrp > product.price && (
+{product.mrp > (selectedRate || product.price) && (
   <>
     <p className="mrp">
       MRP <del>₹{product.mrp}</del>
     </p>
 
     <p className="save">
-      You Save ₹{product.mrp - product.price}
+      You Save ₹{product.mrp - (selectedRate || product.price)}
     </p>
   </>
 )}
@@ -156,7 +198,92 @@ function ProductDetails() {
           {product.description}
         </p>
 
-        <div className="info">
+        {/* OPTIONS SELECTION */}
+        <div className="product-options-selectors">
+          {product.hasColors && product.colors?.length > 0 && (
+            <div className="option-section">
+              <h3>Select Colour {selectedColor && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- {selectedColor.name}</span>}</h3>
+              <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
+                {product.colors.map((color, idx) => (
+                  <button 
+                    key={idx}
+                    className={`option-chip ${selectedColor?.name === color.name ? 'selected' : ''}`}
+                    style={{
+                      padding: "8px 15px", 
+                      borderRadius: "20px", 
+                      border: selectedColor?.name === color.name ? "2px solid #0056b3" : "1px solid #ddd", 
+                      background: selectedColor?.name === color.name ? "#f0f8ff" : "#fff",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px"
+                    }}
+                    onClick={() => {
+                      setSelectedColor(color);
+                      if (color.image) setSelectedImage(color.image);
+                    }}
+                  >
+                    {color.image && (
+                      <img src={color.image} alt={color.name} style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }} />
+                    )}
+                    {color.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {product.hasSizes && product.sizes?.length > 0 && (
+            <div className="option-section" style={{ marginTop: "15px" }}>
+              <h3>Select Size {selectedSize && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- {selectedSize}</span>}</h3>
+              <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
+                {product.sizes.map((size, idx) => (
+                  <button 
+                    key={idx}
+                    className={`option-chip ${selectedSize === size ? 'selected' : ''}`}
+                    style={{
+                      padding: "8px 15px", 
+                      borderRadius: "5px", 
+                      border: selectedSize === size ? "2px solid #0056b3" : "1px solid #ddd", 
+                      background: selectedSize === size ? "#f0f8ff" : "#fff",
+                      cursor: "pointer"
+                    }}
+                    onClick={() => setSelectedSize(size)}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {product.hasRates && product.rates?.length > 0 && (
+            <div className="option-section" style={{ marginTop: "15px" }}>
+              <h3>Select Rate {selectedRate && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- ₹{selectedRate}</span>}</h3>
+              <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
+                {product.rates.map((rate, idx) => (
+                  <button 
+                    key={idx}
+                    className={`option-chip ${selectedRate === rate ? 'selected' : ''}`}
+                    style={{
+                      padding: "8px 15px", 
+                      borderRadius: "5px", 
+                      border: selectedRate === rate ? "2px solid #0056b3" : "1px solid #ddd", 
+                      background: selectedRate === rate ? "#f0f8ff" : "#fff",
+                      cursor: "pointer",
+                      fontWeight: "bold"
+                    }}
+                    onClick={() => setSelectedRate(rate)}
+                  >
+                    ₹{rate}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="info" style={{ marginTop: "20px" }}>
 
           <p>
             <FaTruck />
@@ -176,7 +303,7 @@ function ProductDetails() {
             <>
               <button
                 className="detail-add-btn"
-                onClick={() => addToCart(product)}
+                onClick={handleAddToCart}
               >
                 <FaShoppingCart />
                 Add To Cart
@@ -184,10 +311,7 @@ function ProductDetails() {
 
               <button
   className="detail-buy-btn"
-  onClick={() => {
-    buyNow(product);
-    navigate("/checkout");
-  }}
+  onClick={handleBuyNow}
 >
   <FaBolt />
   Buy Now

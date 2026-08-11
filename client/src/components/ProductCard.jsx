@@ -134,11 +134,18 @@ function ProductCard({ product, addToCart }) {
 
           <button
             className="cart-btn"
-            onClick={() => addToCart(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (product.hasColors || product.hasSizes || product.hasRates) {
+                navigate(`/product/${product._id}`);
+              } else {
+                addToCart(product);
+              }
+            }}
             disabled={product.stock === 0}
           >
             <FaShoppingCart />
-            Add
+            {product.hasColors || product.hasSizes || product.hasRates ? "Select Options" : "Add to Cart"}
           </button>
 
         </div>

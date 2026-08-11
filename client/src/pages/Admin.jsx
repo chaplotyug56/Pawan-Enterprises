@@ -33,6 +33,12 @@ function Admin() {
     price: "",
     stock: "",
     images: [],
+    hasColors: false,
+    colors: [],
+    hasSizes: false,
+    sizes: [],
+    hasRates: false,
+    rates: [],
   });
   async function fetchProducts() {
     try {
@@ -107,6 +113,12 @@ function Admin() {
         price: product.price,
         stock: product.stock,
         images: product.images && product.images.length > 0 ? product.images : (product.image ? [product.image] : []),
+        hasColors: product.hasColors || false,
+        colors: product.colors || [],
+        hasSizes: product.hasSizes || false,
+        sizes: product.sizes || [],
+        hasRates: product.hasRates || false,
+        rates: product.rates || [],
     });
 
     window.scrollTo({
@@ -159,6 +171,18 @@ function Admin() {
                 data.append("images", img);
             });
         }
+        else if (key === "colors") {
+            const colorsMetadata = form.colors.map(c => ({ name: c.name, image: typeof c.image === "string" ? c.image : "" }));
+            data.append("colors", JSON.stringify(colorsMetadata));
+            form.colors.forEach((c, i) => {
+                if (c.image instanceof File) {
+                    data.append(`colorImage_${i}`, c.image);
+                }
+            });
+        }
+        else if (key === "sizes" || key === "rates") {
+            data.append(key, JSON.stringify(form[key]));
+        }
         else if (key !== "image") {
             data.append(key, form[key]);
         }
@@ -181,7 +205,13 @@ function Admin() {
         description:"",
         price:"",
         stock:"",
-        images:[]
+        images:[],
+        hasColors: false,
+        colors: [],
+        hasSizes: false,
+        sizes: [],
+        hasRates: false,
+        rates: [],
     });
 
       setEditingId(null);
@@ -216,16 +246,16 @@ function Admin() {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         isEditing={isEditing}
+        setForm={setForm}
       />
 
-
+<div className="analytics-grid">
 <AnalyticsCharts stats={stats} />
 
 <RecentOrders />
 <TopProducts products={stats?.topProducts} />
 <RecentCustomers customers={stats?.recentCustomers} />
-
-      
+</div>
 
       <ProductTable
         products={products}

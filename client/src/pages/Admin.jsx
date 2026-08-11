@@ -211,7 +211,12 @@ function Admin() {
 </div>
 
 <DashboardCards stats={stats} />
-    
+    <ProductForm
+        form={form}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        isEditing={isEditing}
+      />
 
 
 <AnalyticsCharts stats={stats} />
@@ -220,12 +225,7 @@ function Admin() {
 <TopProducts products={stats?.topProducts} />
 <RecentCustomers customers={stats?.recentCustomers} />
 
-      <ProductForm
-        form={form}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        isEditing={isEditing}
-      />
+      
 
       <ProductTable
         products={products}

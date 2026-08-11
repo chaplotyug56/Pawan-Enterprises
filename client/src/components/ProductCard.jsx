@@ -132,7 +132,7 @@ function ProductCard({ product, addToCart }) {
         </div>
 
         <div className="actions">
-          {product.hasVariants ? (
+          {product.hasVariants || product.hasColors || product.hasSizes ? (
             <button
               className="cart-btn"
               onClick={(e) => {

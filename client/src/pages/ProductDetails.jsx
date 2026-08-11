@@ -33,35 +33,55 @@ function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState(null);
 
   const uniqueColors = useMemo(() => {
-    if (!product?.hasVariants) return [];
-    const colors = product.variants.map(v => v.color).filter(Boolean);
-    return [...new Set(colors)];
+    if (product?.hasVariants) {
+      const colors = product.variants.map(v => v.color).filter(Boolean);
+      return [...new Set(colors)];
+    }
+    if (product?.hasColors && product.colors) {
+      return product.colors.map(c => c.name);
+    }
+    return [];
   }, [product]);
 
   const availableSizes = useMemo(() => {
-    if (!product?.hasVariants) return [];
-    let variants = product.variants;
-    if (selectedColor) {
-      variants = variants.filter(v => v.color === selectedColor);
+    if (product?.hasVariants) {
+      let variants = product.variants;
+      if (selectedColor) {
+        variants = variants.filter(v => v.color === selectedColor);
+      }
+      const sizes = variants.map(v => v.size).filter(Boolean);
+      return [...new Set(sizes)];
     }
-    const sizes = variants.map(v => v.size).filter(Boolean);
-    return [...new Set(sizes)];
+    if (product?.hasSizes && product.sizes) {
+      return product.sizes;
+    }
+    return [];
   }, [product, selectedColor]);
 
   const currentVariant = useMemo(() => {
-    if (!product?.hasVariants) return null;
-    return product.variants.find(v => 
-      v.color === (selectedColor || "") && v.size === (selectedSize || "")
-    ) || product.variants[0]; // fallback to first if none strictly match yet
+    if (product?.hasVariants) {
+      return product.variants.find(v => 
+        v.color === (selectedColor || "") && v.size === (selectedSize || "")
+      ) || product.variants[0]; // fallback to first if none strictly match yet
+    }
+    return null;
   }, [product, selectedColor, selectedSize]);
 
+  // Backward compatibility for old product selected image
   useEffect(() => {
     if (currentVariant?.image) {
       setSelectedImage(currentVariant.image);
+    } else if (!product?.hasVariants && product?.hasColors && selectedColor) {
+      const colorObj = product.colors.find(c => c.name === selectedColor);
+      if (colorObj?.image) {
+        setSelectedImage(colorObj.image);
+      }
     } else if (product?.image) {
       setSelectedImage(product.image);
     }
-  }, [currentVariant, product]);
+  }, [currentVariant, product, selectedColor]);
+
+
 
   const [reviews, setReviews] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -96,7 +116,7 @@ function ProductDetails() {
   }, [fetchProduct]);
 
   const handleAddToCart = () => {
-    if (product.hasVariants) {
+    if (product.hasVariants || product.hasColors || product.hasSizes) {
       if (uniqueColors.length > 0 && !selectedColor) { toast.error("Please select a color"); return; }
       if (availableSizes.length > 0 && !selectedSize) { toast.error("Please select a size"); return; }
     }
@@ -106,13 +126,17 @@ function ProductDetails() {
       color: selectedColor,
       size: selectedSize,
       price: currentVariant ? currentVariant.price : product.price,
-      image: currentVariant?.image ? currentVariant.image : product.image
+      image: currentVariant?.image 
+        ? currentVariant.image 
+        : (!product.hasVariants && product.hasColors && selectedColor)
+          ? product.colors.find(c => c.name === selectedColor)?.image || product.image
+          : product.image
     };
     addToCart(finalProduct);
   };
 
   const handleBuyNow = () => {
-    if (product.hasVariants) {
+    if (product.hasVariants || product.hasColors || product.hasSizes) {
       if (uniqueColors.length > 0 && !selectedColor) { toast.error("Please select a color"); return; }
       if (availableSizes.length > 0 && !selectedSize) { toast.error("Please select a size"); return; }
     }
@@ -122,7 +146,11 @@ function ProductDetails() {
       color: selectedColor,
       size: selectedSize,
       price: currentVariant ? currentVariant.price : product.price,
-      image: currentVariant?.image ? currentVariant.image : product.image
+      image: currentVariant?.image 
+        ? currentVariant.image 
+        : (!product.hasVariants && product.hasColors && selectedColor)
+          ? product.colors.find(c => c.name === selectedColor)?.image || product.image
+          : product.image
     };
     buyNow(finalProduct);
     navigate("/checkout");
@@ -239,7 +267,15 @@ function ProductDetails() {
               <h3>Select Colour {selectedColor && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- {selectedColor}</span>}</h3>
               <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
                 {uniqueColors.map((color, idx) => {
-                  const colorVariant = product.variants.find(v => v.color === color);
+                  let colorImage = null;
+                  if (product.hasVariants) {
+                    const colorVariant = product.variants.find(v => v.color === color);
+                    colorImage = colorVariant?.image;
+                  } else if (product.hasColors) {
+                    const colorObj = product.colors.find(c => c.name === color);
+                    colorImage = colorObj?.image;
+                  }
+
                   return (
                     <button 
                       key={idx}
@@ -261,8 +297,8 @@ function ProductDetails() {
                         }
                       }}
                     >
-                      {colorVariant?.image && (
-                        <img src={colorVariant.image} alt={color} style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }} />
+                      {colorImage && (
+                        <img src={colorImage} alt={color} style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }} />
                       )}
                       {color}
                     </button>

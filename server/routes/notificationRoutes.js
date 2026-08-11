@@ -14,6 +14,7 @@ const {
 const {
   saveToken,
   removeToken,
+  testNotification
 } = require("../controllers/notificationTokenController");
 
 router.get("/", getNotifications);
@@ -25,5 +26,6 @@ router.put("/read-all", markAllAsRead);
 // FCM Token Management
 router.post("/token", protect, admin, saveToken);
 router.post("/token/remove", protect, admin, removeToken);
+router.get("/test", protect, admin, testNotification);
 
 module.exports = router;

@@ -59,7 +59,52 @@ const removeToken = async (req, res) => {
   }
 };
 
+const firebaseAdmin = require("../config/firebase");
+
+// ========================================
+// Test FCM Configuration
+// ========================================
+const testNotification = async (req, res) => {
+  try {
+    if (!firebaseAdmin) {
+      return res.status(500).json({ success: false, message: "Firebase Admin SDK is not initialized. Environment variables are likely missing or incorrect." });
+    }
+
+    const adminTokens = await NotificationToken.find({ isActive: true });
+    
+    if (adminTokens.length === 0) {
+      return res.status(404).json({ success: false, message: "No active notification tokens found in database. Click 'Enable Notifications' in Admin Dashboard first." });
+    }
+
+    const payload = {
+      notification: {
+        title: "🧪 Test Notification",
+        body: "If you see this, Firebase Cloud Messaging is working perfectly!"
+      },
+      tokens: adminTokens.map(t => t.token)
+    };
+
+    const response = await firebaseAdmin.messaging().sendEachForMulticast(payload);
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: "Test completed", 
+      result: response 
+    });
+
+  } catch (error) {
+    console.error("Test Notification Error:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Failed to send notification", 
+      error: error.message,
+      stack: error.stack
+    });
+  }
+};
+
 module.exports = {
   saveToken,
-  removeToken
+  removeToken,
+  testNotification
 };

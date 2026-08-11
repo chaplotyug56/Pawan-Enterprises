@@ -153,14 +153,14 @@ const getProducts = async (req, res) => {
       const obj = product.toObject();
 
       if (obj.image) {
-        if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
+        if (obj.image && !obj.image.startsWith("http") && !obj.image.startsWith("data:image") && !obj.image.startsWith("//")) {
           obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }
       
       if (obj.images && obj.images.length > 0) {
         obj.images = obj.images.map((img) => {
-          if (!img.startsWith("http") && !img.startsWith("data:image")) {
+          if (img && !img.startsWith("http") && !img.startsWith("data:image") && !img.startsWith("//")) {
             return `//${req.get("host")}/api/images/${img}`;
           }
           return img;
@@ -169,7 +169,7 @@ const getProducts = async (req, res) => {
 
       if (obj.variants && obj.variants.length > 0) {
         obj.variants = obj.variants.map((variant) => {
-          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image")) {
+          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image") && !variant.image.startsWith("//")) {
             variant.image = `//${req.get("host")}/api/images/${variant.image}`;
           }
           return variant;
@@ -209,7 +209,7 @@ const getProductById = async (req, res) => {
     const productObj = product.toObject();
 
     if (productObj.image) {
-      if (!productObj.image.startsWith("http") && !productObj.image.startsWith("data:image")) {
+      if (productObj.image && !productObj.image.startsWith("http") && !productObj.image.startsWith("data:image") && !productObj.image.startsWith("//")) {
         productObj.image = `//${req.get("host")}/api/images/${productObj.image}`;
       }
     }
@@ -218,7 +218,7 @@ const getProductById = async (req, res) => {
       productObj.images.length > 0
     ) {
       productObj.images = productObj.images.map((img) => {
-        if (!img.startsWith("http") && !img.startsWith("data:image")) {
+        if (img && !img.startsWith("http") && !img.startsWith("data:image") && !img.startsWith("//")) {
           return `//${req.get("host")}/api/images/${img}`;
         }
         return img;
@@ -227,7 +227,7 @@ const getProductById = async (req, res) => {
 
     if (productObj.variants && productObj.variants.length > 0) {
       productObj.variants = productObj.variants.map((variant) => {
-        if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image")) {
+        if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image") && !variant.image.startsWith("//")) {
           variant.image = `//${req.get("host")}/api/images/${variant.image}`;
         }
         return variant;
@@ -374,14 +374,14 @@ const getRelatedProducts = async (req, res) => {
       const obj = item.toObject();
 
       if (obj.image) {
-        if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
+        if (obj.image && !obj.image.startsWith("http") && !obj.image.startsWith("data:image") && !obj.image.startsWith("//")) {
           obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }
 
       if (obj.variants && obj.variants.length > 0) {
         obj.variants = obj.variants.map((variant) => {
-          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image")) {
+          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image") && !variant.image.startsWith("//")) {
             variant.image = `//${req.get("host")}/api/images/${variant.image}`;
           }
           return variant;
@@ -416,14 +416,14 @@ const getBestSellingProducts = async (req, res) => {
       const obj = product.toObject();
 
       if (obj.image) {
-        if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
+        if (obj.image && !obj.image.startsWith("http") && !obj.image.startsWith("data:image") && !obj.image.startsWith("//")) {
           obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }
 
       if (obj.variants && obj.variants.length > 0) {
         obj.variants = obj.variants.map((variant) => {
-          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image")) {
+          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image") && !variant.image.startsWith("//")) {
             variant.image = `//${req.get("host")}/api/images/${variant.image}`;
           }
           return variant;

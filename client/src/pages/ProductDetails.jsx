@@ -286,14 +286,23 @@ function ProductDetails() {
                       key={idx}
                       className={`option-chip ${selectedColor === color ? 'selected' : ''}`}
                       style={{
-                        padding: "8px 15px", 
-                        borderRadius: "20px", 
-                        border: selectedColor === color ? "2px solid #0056b3" : "1px solid #ddd", 
-                        background: selectedColor === color ? "#f0f8ff" : "#fff",
+                        width: "65px",
+                        height: "65px",
+                        borderRadius: "50%", 
+                        border: selectedColor === color ? "3px solid #0056b3" : "1px solid #ddd", 
+                        background: colorImage ? `url(${colorImage}) center/cover` : (selectedColor === color ? "#f0f8ff" : "#fff"),
                         cursor: "pointer",
                         display: "flex",
                         alignItems: "center",
-                        gap: "8px"
+                        justifyContent: "center",
+                        color: colorImage ? "#fff" : "#333",
+                        textShadow: colorImage ? "1px 1px 3px rgba(0,0,0,0.9), 0px 0px 5px rgba(0,0,0,0.6)" : "none",
+                        fontWeight: "bold",
+                        fontSize: "11px",
+                        lineHeight: "1.2",
+                        textAlign: "center",
+                        padding: "2px",
+                        overflow: "hidden"
                       }}
                       onClick={() => {
                         setSelectedColor(color);
@@ -302,9 +311,6 @@ function ProductDetails() {
                         }
                       }}
                     >
-                      {colorImage && (
-                        <img src={colorImage} alt={color} style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }} />
-                      )}
                       {color}
                     </button>
                   );
@@ -322,11 +328,17 @@ function ProductDetails() {
                     key={idx}
                     className={`option-chip ${selectedSize === size ? 'selected' : ''}`}
                     style={{
-                      padding: "8px 15px", 
-                      borderRadius: "5px", 
-                      border: selectedSize === size ? "2px solid #0056b3" : "1px solid #ddd", 
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%", 
+                      border: selectedSize === size ? "3px solid #0056b3" : "1px solid #ddd", 
                       background: selectedSize === size ? "#f0f8ff" : "#fff",
-                      cursor: "pointer"
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: "bold",
+                      fontSize: "14px"
                     }}
                     onClick={() => setSelectedSize(size)}
                   >

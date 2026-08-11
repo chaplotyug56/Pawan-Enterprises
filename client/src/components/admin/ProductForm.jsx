@@ -213,6 +213,15 @@ function ProductForm({
                       }} required />
                     </div>
 
+                    <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "100px"}}>
+                      <label style={{fontSize: "12px", color: "#666"}}>Stock</label>
+                      <input type="number" placeholder="Stock" value={variant.stock} onChange={(e) => {
+                        const newVariants = [...form.variants];
+                        newVariants[idx].stock = Number(e.target.value);
+                        setForm(f => ({...f, variants: newVariants}));
+                      }} required />
+                    </div>
+
                     <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "150px"}}>
                       <label style={{fontSize: "12px", color: "#666"}}>Variant Image</label>
                       <div style={{ position: "relative", width: "100%", height: "38px", border: "1px dashed #0056b3", borderRadius: "5px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f0f8ff", cursor: "pointer", overflow: "hidden" }}>
@@ -236,7 +245,7 @@ function ProductForm({
 
                   </div>
                 ))}
-                <button type="button" onClick={() => setForm(f => ({...f, variants: [...(f.variants || []), { color: "", size: "", mrp: "", price: "", image: "" }]}))} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#e6f7ff", color: "#1890ff", border: "1px solid #91d5ff", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Variant</button>
+                <button type="button" onClick={() => setForm(f => ({...f, variants: [...(f.variants || []), { color: "", size: "", mrp: "", price: "", stock: "", image: "" }]}))} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#e6f7ff", color: "#1890ff", border: "1px solid #91d5ff", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Variant</button>
               </div>
             )}
           </div>

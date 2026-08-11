@@ -240,21 +240,26 @@ function ProductDetails() {
           })()}
         </div>
 
-        <p
-          className={
-            product.stock > 5
-              ? "stock in-stock"
-              : product.stock > 0
-              ? "stock low-stock"
-              : "stock out-stock"
-          }
-        >
-          {product.stock > 5
-            ? `In Stock (${product.stock})`
-            : product.stock > 0
-            ? `Only ${product.stock} left`
-            : "Out of Stock"}
-        </p>
+        {(() => {
+          const displayStock = (product.hasVariants && currentVariant) ? currentVariant.stock : product.stock;
+          return (
+            <p
+              className={
+                displayStock > 5
+                  ? "stock in-stock"
+                  : displayStock > 0
+                  ? "stock low-stock"
+                  : "stock out-stock"
+              }
+            >
+              {displayStock > 5
+                ? `In Stock (${displayStock})`
+                : displayStock > 0
+                ? `Only ${displayStock} left`
+                : "Out of Stock"}
+            </p>
+          );
+        })()}
 
         <p className="description">
           {product.description}
@@ -349,7 +354,7 @@ function ProductDetails() {
 
         <div className="detail-actions">
 
-          {product.stock > 0 ? (
+          {((product.hasVariants && currentVariant) ? currentVariant.stock : product.stock) > 0 ? (
             <>
               <button
                 className="detail-add-btn"
@@ -360,9 +365,9 @@ function ProductDetails() {
               </button>
 
               <button
-  className="detail-buy-btn"
-  onClick={handleBuyNow}
->
+                className="detail-buy-btn"
+                onClick={handleBuyNow}
+              >
   <FaBolt />
   Buy Now
 </button>

@@ -65,24 +65,36 @@ const createOrder = async (req, res) => {
         });
       }
 
-      if (product.stock < item.quantity) {
-        return res.status(400).json({
-          success: false,
-          message: `${product.name} is out of stock`,
-        });
-      }
-
       let itemPrice = product.price;
       let itemImage = product.image;
+      let targetVariant = null;
 
       if (product.hasVariants && product.variants?.length > 0) {
-        const variant = product.variants.find(
+        targetVariant = product.variants.find(
           (v) => v.color === (item.color || "") && v.size === (item.size || "")
         );
-        if (variant) {
-          itemPrice = variant.price;
-          if (variant.image) itemImage = variant.image;
+        if (targetVariant) {
+          itemPrice = targetVariant.price;
+          if (targetVariant.image) itemImage = targetVariant.image;
+          
+          if (targetVariant.stock < item.quantity) {
+            return res.status(400).json({
+              success: false,
+              message: `${product.name} (Variant) is out of stock`,
+            });
+          }
+          targetVariant.stock -= item.quantity;
         }
+      }
+
+      if (!product.hasVariants || !targetVariant) {
+        if (product.stock < item.quantity) {
+          return res.status(400).json({
+            success: false,
+            message: `${product.name} is out of stock`,
+          });
+        }
+        product.stock -= item.quantity;
       }
       
       calculatedTotal += itemPrice * item.quantity;
@@ -90,8 +102,6 @@ const createOrder = async (req, res) => {
       item.name = product.name;
       item.price = itemPrice;
       item.image = itemImage;
-
-      product.stock -= item.quantity;
 
 // Increase total sold quantity
 if (product.salesCount == null || isNaN(product.salesCount)) {

@@ -2,7 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 
-const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
+const { protect } = require("../middleware/authMiddleware");
+const { admin } = require("../middleware/adminMiddleware");
 
 const {
   getNotifications,
@@ -22,7 +23,7 @@ router.put("/:id/read", markAsRead);
 router.put("/read-all", markAllAsRead);
 
 // FCM Token Management
-router.post("/token", isAuthenticatedUser, authorizeRoles("admin"), saveToken);
-router.post("/token/remove", isAuthenticatedUser, authorizeRoles("admin"), removeToken);
+router.post("/token", protect, admin, saveToken);
+router.post("/token/remove", protect, admin, removeToken);
 
 module.exports = router;

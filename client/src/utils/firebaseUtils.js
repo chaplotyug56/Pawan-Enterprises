@@ -1,8 +1,7 @@
 import { messaging, getToken, onMessage } from "../config/firebase";
 
-// Optional: Provide a VAPID key if you have generated one in Firebase Console (Web Push certificates)
-// For Firebase it often works without it if the project config is complete, but it's best practice.
-// const VAPID_KEY = "YOUR_VAPID_KEY_HERE"; 
+// The VAPID key (Web Push certificate) provided from Firebase Console
+const VAPID_KEY = "BIT_fbkTEwOHsMAz2bBzi79Tsb8SKcU102yCEDk4Rz_U4d3JfIpbDfyZRBFmqjHFHZC2hEaTspOY0vpMRoXqcG0"; 
 
 export const requestNotificationPermission = async () => {
   try {
@@ -16,7 +15,7 @@ export const requestNotificationPermission = async () => {
       console.log("Notification permission granted.");
       // Get the FCM token
       const currentToken = await getToken(messaging, { 
-        // vapidKey: VAPID_KEY 
+        vapidKey: VAPID_KEY 
       });
       
       if (currentToken) {

@@ -2,6 +2,8 @@ console.log("✅ Loaded orderController.js");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Notification = require("../models/Notification");
+const NotificationToken = require("../models/NotificationToken");
+const firebaseAdmin = require("../config/firebase");
 const Counter = require("../models/Counter");
 const { sendWhatsAppMessage } = require("../services/whatsappService");
 const generateInvoice = require("../utils/invoiceGenerator");
@@ -211,6 +213,57 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
       console.error(
         whatsappError.response?.data || whatsappError.message
       );
+    }
+
+    // Send FCM Push Notification to Admins
+    if (firebaseAdmin) {
+      try {
+        console.log("📲 Attempting to send FCM Notification...");
+        const adminTokens = await NotificationToken.find({ isActive: true });
+        
+        if (adminTokens.length > 0) {
+          const tokens = adminTokens.map(t => t.token);
+          
+          const payload = {
+            notification: {
+              title: "🛒 New Order Received!",
+              body: `Order #${customOrderId} • ${shippingAddress.fullName} • ₹${calculatedTotal}`
+            },
+            data: {
+              orderId: String(order._id),
+              orderNumber: customOrderId,
+              customerName: shippingAddress.fullName,
+              totalAmount: String(calculatedTotal),
+              click_action: "/admin"
+            },
+            tokens: tokens
+          };
+
+          const response = await firebaseAdmin.messaging().sendMulticast(payload);
+          console.log(`✅ FCM Notification sent: ${response.successCount} successes, ${response.failureCount} failures`);
+          
+          // Cleanup invalid tokens
+          if (response.failureCount > 0) {
+            const failedTokens = [];
+            response.responses.forEach((resp, idx) => {
+              if (!resp.success) {
+                failedTokens.push(tokens[idx]);
+              }
+            });
+            if (failedTokens.length > 0) {
+              await NotificationToken.updateMany(
+                { token: { $in: failedTokens } },
+                { isActive: false }
+              );
+              console.log(`🗑️ Deactivated ${failedTokens.length} invalid FCM tokens`);
+            }
+          }
+        } else {
+          console.log("ℹ️ No active FCM tokens found for Admins");
+        }
+      } catch (fcmError) {
+        console.error("🔥 FCM Notification Error:", fcmError);
+      }
     }
 
     return res.status(201).json({

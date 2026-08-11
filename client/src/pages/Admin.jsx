@@ -14,6 +14,9 @@ import TopProducts from "../components/admin/TopProducts";
 import RecentCustomers from "../components/admin/RecentCustomers";
 import AnalyticsCharts from "../components/admin/AnalyticsCharts";
 import NotificationBell from "../components/admin/NotificationBell";
+import NotificationSettings from "../components/admin/NotificationSettings";
+import { onForegroundMessage } from "../utils/firebaseUtils";
+
 function Admin() {
   const [products, setProducts] = useState([]);
   const [stats, setStats] = useState({});
@@ -71,6 +74,25 @@ function Admin() {
   useEffect(() => {
     loadDashboard();
 
+    // Listen for foreground push notifications
+    const unsubscribe = onForegroundMessage((payload) => {
+      const title = payload?.notification?.title || "New Notification";
+      const body = payload?.notification?.body || "";
+      toast.info(
+        <div>
+          <strong>{title}</strong>
+          <br />
+          {body}
+        </div>,
+        { autoClose: 5000, closeOnClick: true, icon: "🛒" }
+      );
+      // Auto refresh dashboard to show new order
+      fetchDashboard();
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -230,6 +252,8 @@ function Admin() {
   
   <NotificationBell />
 </div>
+
+<NotificationSettings />
 
 <DashboardCards stats={stats} />
     <ProductForm

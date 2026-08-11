@@ -152,7 +152,7 @@ function ProductForm({
           
           <div className="option-group" style={{ background: "#f9f9f9", padding: "15px", borderRadius: "8px" }}>
             <label style={{ display: "flex", alignItems: "center", gap: "10px", fontWeight: "bold" }}>
-              <input type="checkbox" checked={form.hasVariants || false} onChange={() => setForm(f => ({...f, hasVariants: !f.hasVariants}))} />
+              <input type="checkbox" checked={form.hasVariants || false} onChange={() => setForm(f => ({...f, hasVariants: !f.hasVariants}))} style={{ width: "auto", margin: 0, cursor: "pointer" }} />
               Enable Variants (Color, Size, specific Prices & Images)
             </label>
             

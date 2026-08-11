@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import api from "../services/api";
@@ -31,7 +31,37 @@ function ProductDetails() {
 
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedRate, setSelectedRate] = useState(null);
+
+  const uniqueColors = useMemo(() => {
+    if (!product?.hasVariants) return [];
+    const colors = product.variants.map(v => v.color).filter(Boolean);
+    return [...new Set(colors)];
+  }, [product]);
+
+  const availableSizes = useMemo(() => {
+    if (!product?.hasVariants) return [];
+    let variants = product.variants;
+    if (selectedColor) {
+      variants = variants.filter(v => v.color === selectedColor);
+    }
+    const sizes = variants.map(v => v.size).filter(Boolean);
+    return [...new Set(sizes)];
+  }, [product, selectedColor]);
+
+  const currentVariant = useMemo(() => {
+    if (!product?.hasVariants) return null;
+    return product.variants.find(v => 
+      v.color === (selectedColor || "") && v.size === (selectedSize || "")
+    ) || product.variants[0]; // fallback to first if none strictly match yet
+  }, [product, selectedColor, selectedSize]);
+
+  useEffect(() => {
+    if (currentVariant?.image) {
+      setSelectedImage(currentVariant.image);
+    } else if (product?.image) {
+      setSelectedImage(product.image);
+    }
+  }, [currentVariant, product]);
 
   const [reviews, setReviews] = useState([]);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -44,7 +74,6 @@ function ProductDetails() {
       setSelectedImage(res.data.data.image);
       setSelectedColor(null);
       setSelectedSize(null);
-      setSelectedRate(null);
 
       saveRecentlyViewed(res.data.data);
 
@@ -67,33 +96,33 @@ function ProductDetails() {
   }, [fetchProduct]);
 
   const handleAddToCart = () => {
-    if (product.hasColors && !selectedColor) { toast.error("Please select a color"); return; }
-    if (product.hasSizes && !selectedSize) { toast.error("Please select a size"); return; }
-    if (product.hasRates && !selectedRate) { toast.error("Please select a rate"); return; }
+    if (product.hasVariants) {
+      if (uniqueColors.length > 0 && !selectedColor) { toast.error("Please select a color"); return; }
+      if (availableSizes.length > 0 && !selectedSize) { toast.error("Please select a size"); return; }
+    }
 
     const finalProduct = {
       ...product,
-      color: selectedColor?.name,
-      colorImage: selectedColor?.image,
+      color: selectedColor,
       size: selectedSize,
-      rate: selectedRate,
-      price: selectedRate || product.price
+      price: currentVariant ? currentVariant.price : product.price,
+      image: currentVariant?.image ? currentVariant.image : product.image
     };
     addToCart(finalProduct);
   };
 
   const handleBuyNow = () => {
-    if (product.hasColors && !selectedColor) { toast.error("Please select a color"); return; }
-    if (product.hasSizes && !selectedSize) { toast.error("Please select a size"); return; }
-    if (product.hasRates && !selectedRate) { toast.error("Please select a rate"); return; }
+    if (product.hasVariants) {
+      if (uniqueColors.length > 0 && !selectedColor) { toast.error("Please select a color"); return; }
+      if (availableSizes.length > 0 && !selectedSize) { toast.error("Please select a size"); return; }
+    }
 
     const finalProduct = {
       ...product,
-      color: selectedColor?.name,
-      colorImage: selectedColor?.image,
+      color: selectedColor,
       size: selectedSize,
-      rate: selectedRate,
-      price: selectedRate || product.price
+      price: currentVariant ? currentVariant.price : product.price,
+      image: currentVariant?.image ? currentVariant.image : product.image
     };
     buyNow(finalProduct);
     navigate("/checkout");
@@ -151,32 +180,37 @@ function ProductDetails() {
         </div>
 
         <div className="price-section">
+          {(() => {
+            const displayPrice = currentVariant ? currentVariant.price : product.price;
+            const displayMrp = currentVariant ? currentVariant.mrp : product.mrp;
+            
+            return (
+              <>
+                {displayMrp > displayPrice && (
+                  <div className="discount-tag">
+                    {Math.round(((displayMrp - displayPrice) / displayMrp) * 100)}% OFF
+                  </div>
+                )}
 
-{product.mrp > product.price && (
-  <div className="discount-tag">
-    {Math.round(
-      ((product.mrp - product.price) / product.mrp) * 100
-    )}% OFF
-  </div>
-)}
+                <h2 className="our-price">
+                  ₹{displayPrice}
+                </h2>
 
-<h2 className="our-price">
-  ₹{selectedRate || product.price}
-</h2>
+                {displayMrp > displayPrice && (
+                  <>
+                    <p className="mrp">
+                      MRP <del>₹{displayMrp}</del>
+                    </p>
 
-{product.mrp > (selectedRate || product.price) && (
-  <>
-    <p className="mrp">
-      MRP <del>₹{product.mrp}</del>
-    </p>
-
-    <p className="save">
-      You Save ₹{product.mrp - (selectedRate || product.price)}
-    </p>
-  </>
-)}
-
-</div>
+                    <p className="save">
+                      You Save ₹{displayMrp - displayPrice}
+                    </p>
+                  </>
+                )}
+              </>
+            );
+          })()}
+        </div>
 
         <p
           className={
@@ -200,44 +234,49 @@ function ProductDetails() {
 
         {/* OPTIONS SELECTION */}
         <div className="product-options-selectors">
-          {product.hasColors && product.colors?.length > 0 && (
+          {uniqueColors.length > 0 && (
             <div className="option-section">
-              <h3>Select Colour {selectedColor && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- {selectedColor.name}</span>}</h3>
+              <h3>Select Colour {selectedColor && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- {selectedColor}</span>}</h3>
               <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
-                {product.colors.map((color, idx) => (
-                  <button 
-                    key={idx}
-                    className={`option-chip ${selectedColor?.name === color.name ? 'selected' : ''}`}
-                    style={{
-                      padding: "8px 15px", 
-                      borderRadius: "20px", 
-                      border: selectedColor?.name === color.name ? "2px solid #0056b3" : "1px solid #ddd", 
-                      background: selectedColor?.name === color.name ? "#f0f8ff" : "#fff",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px"
-                    }}
-                    onClick={() => {
-                      setSelectedColor(color);
-                      if (color.image) setSelectedImage(color.image);
-                    }}
-                  >
-                    {color.image && (
-                      <img src={color.image} alt={color.name} style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }} />
-                    )}
-                    {color.name}
-                  </button>
-                ))}
+                {uniqueColors.map((color, idx) => {
+                  const colorVariant = product.variants.find(v => v.color === color);
+                  return (
+                    <button 
+                      key={idx}
+                      className={`option-chip ${selectedColor === color ? 'selected' : ''}`}
+                      style={{
+                        padding: "8px 15px", 
+                        borderRadius: "20px", 
+                        border: selectedColor === color ? "2px solid #0056b3" : "1px solid #ddd", 
+                        background: selectedColor === color ? "#f0f8ff" : "#fff",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px"
+                      }}
+                      onClick={() => {
+                        setSelectedColor(color);
+                        if (!availableSizes.includes(selectedSize)) {
+                          setSelectedSize(null);
+                        }
+                      }}
+                    >
+                      {colorVariant?.image && (
+                        <img src={colorVariant.image} alt={color} style={{ width: "24px", height: "24px", borderRadius: "50%", objectFit: "cover" }} />
+                      )}
+                      {color}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {product.hasSizes && product.sizes?.length > 0 && (
+          {availableSizes.length > 0 && (
             <div className="option-section" style={{ marginTop: "15px" }}>
               <h3>Select Size {selectedSize && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- {selectedSize}</span>}</h3>
               <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
-                {product.sizes.map((size, idx) => (
+                {availableSizes.map((size, idx) => (
                   <button 
                     key={idx}
                     className={`option-chip ${selectedSize === size ? 'selected' : ''}`}
@@ -251,31 +290,6 @@ function ProductDetails() {
                     onClick={() => setSelectedSize(size)}
                   >
                     {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {product.hasRates && product.rates?.length > 0 && (
-            <div className="option-section" style={{ marginTop: "15px" }}>
-              <h3>Select Rate {selectedRate && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- ₹{selectedRate}</span>}</h3>
-              <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
-                {product.rates.map((rate, idx) => (
-                  <button 
-                    key={idx}
-                    className={`option-chip ${selectedRate === rate ? 'selected' : ''}`}
-                    style={{
-                      padding: "8px 15px", 
-                      borderRadius: "5px", 
-                      border: selectedRate === rate ? "2px solid #0056b3" : "1px solid #ddd", 
-                      background: selectedRate === rate ? "#f0f8ff" : "#fff",
-                      cursor: "pointer",
-                      fontWeight: "bold"
-                    }}
-                    onClick={() => setSelectedRate(rate)}
-                  >
-                    ₹{rate}
                   </button>
                 ))}
               </div>

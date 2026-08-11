@@ -29,7 +29,6 @@ const orderSchema = new mongoose.Schema(
         color: String,
         colorImage: String,
         size: String,
-        rate: Number,
 
         quantity: Number,
       },

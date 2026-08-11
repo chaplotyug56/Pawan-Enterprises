@@ -148,83 +148,76 @@ function ProductForm({
 
         {/* OPTIONS SECTION */}
         <div className="options-section" style={{ borderTop: "1px solid #eee", paddingTop: "20px", marginTop: "10px", display: "flex", flexDirection: "column", gap: "15px" }}>
-          <h3 style={{ marginBottom: "5px" }}>Product Options</h3>
+          <h3 style={{ marginBottom: "5px" }}>Product Variants (Amazon-Style)</h3>
           
-          {/* COLORS */}
           <div className="option-group" style={{ background: "#f9f9f9", padding: "15px", borderRadius: "8px" }}>
             <label style={{ display: "flex", alignItems: "center", gap: "10px", fontWeight: "bold" }}>
-              <input type="checkbox" checked={form.hasColors || false} onChange={() => setForm(f => ({...f, hasColors: !f.hasColors}))} />
-              Enable Colors
+              <input type="checkbox" checked={form.hasVariants || false} onChange={() => setForm(f => ({...f, hasVariants: !f.hasVariants}))} />
+              Enable Variants (Color, Size, specific Prices & Images)
             </label>
-            {form.hasColors && (
-              <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "10px" }}>
-                {form.colors?.map((color, idx) => (
-                  <div key={idx} style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                    <input type="text" placeholder="Color Name (e.g. Red)" value={color.name} onChange={(e) => {
-                      const newColors = [...form.colors];
-                      newColors[idx].name = e.target.value;
-                      setForm(f => ({...f, colors: newColors}));
-                    }} required />
-                    <input type="file" accept="image/*" onChange={(e) => {
-                      if (e.target.files && e.target.files.length > 0) {
-                        const newColors = [...form.colors];
-                        newColors[idx].image = e.target.files[0];
-                        setForm(f => ({...f, colors: newColors}));
-                      }
-                    }} />
-                    {typeof color.image === "string" && color.image && (
-                      <img src={color.image.startsWith("http") ? color.image : `//${window.location.host}/api/images/${color.image}`} alt="Color" style={{ width: 30, height: 30, objectFit: "cover", borderRadius: "5px" }} />
-                    )}
-                    <button type="button" onClick={() => setForm(f => ({...f, colors: f.colors.filter((_, i) => i !== idx)}))} style={{ padding: "8px 12px", background: "#ff4d4f", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>✕</button>
-                  </div>
-                ))}
-                <button type="button" onClick={() => setForm(f => ({...f, colors: [...(f.colors || []), { name: "", image: "" }]}))} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#e6f7ff", color: "#1890ff", border: "1px solid #91d5ff", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Color</button>
-              </div>
-            )}
-          </div>
+            
+            {form.hasVariants && (
+              <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "15px" }}>
+                {form.variants?.map((variant, idx) => (
+                  <div key={idx} style={{ display: "flex", flexWrap: "wrap", gap: "10px", alignItems: "center", background: "#fff", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }}>
+                    
+                    <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "120px"}}>
+                      <label style={{fontSize: "12px", color: "#666"}}>Color</label>
+                      <input type="text" placeholder="e.g. Red" value={variant.color} onChange={(e) => {
+                        const newVariants = [...form.variants];
+                        newVariants[idx].color = e.target.value;
+                        setForm(f => ({...f, variants: newVariants}));
+                      }} />
+                    </div>
 
-          {/* SIZES */}
-          <div className="option-group" style={{ background: "#f9f9f9", padding: "15px", borderRadius: "8px" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "10px", fontWeight: "bold" }}>
-              <input type="checkbox" checked={form.hasSizes || false} onChange={() => setForm(f => ({...f, hasSizes: !f.hasSizes}))} />
-              Enable Sizes
-            </label>
-            {form.hasSizes && (
-              <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "10px" }}>
-                {form.sizes?.map((size, idx) => (
-                  <div key={idx} style={{ display: "flex", gap: "10px" }}>
-                    <input type="text" placeholder="Size (e.g. Small, 100ml)" value={size} onChange={(e) => {
-                      const newSizes = [...form.sizes];
-                      newSizes[idx] = e.target.value;
-                      setForm(f => ({...f, sizes: newSizes}));
-                    }} required />
-                    <button type="button" onClick={() => setForm(f => ({...f, sizes: f.sizes.filter((_, i) => i !== idx)}))} style={{ padding: "8px 12px", background: "#ff4d4f", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>✕</button>
-                  </div>
-                ))}
-                <button type="button" onClick={() => setForm(f => ({...f, sizes: [...(f.sizes || []), ""]}))} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#f6ffed", color: "#52c41a", border: "1px solid #b7eb8f", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Size</button>
-              </div>
-            )}
-          </div>
+                    <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "120px"}}>
+                      <label style={{fontSize: "12px", color: "#666"}}>Size</label>
+                      <input type="text" placeholder="e.g. XL or 1kg" value={variant.size} onChange={(e) => {
+                        const newVariants = [...form.variants];
+                        newVariants[idx].size = e.target.value;
+                        setForm(f => ({...f, variants: newVariants}));
+                      }} />
+                    </div>
 
-          {/* RATES */}
-          <div className="option-group" style={{ background: "#f9f9f9", padding: "15px", borderRadius: "8px" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "10px", fontWeight: "bold" }}>
-              <input type="checkbox" checked={form.hasRates || false} onChange={() => setForm(f => ({...f, hasRates: !f.hasRates}))} />
-              Enable Rates
-            </label>
-            {form.hasRates && (
-              <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "10px" }}>
-                {form.rates?.map((rate, idx) => (
-                  <div key={idx} style={{ display: "flex", gap: "10px" }}>
-                    <input type="number" placeholder="Rate (₹)" value={rate} onChange={(e) => {
-                      const newRates = [...form.rates];
-                      newRates[idx] = Number(e.target.value);
-                      setForm(f => ({...f, rates: newRates}));
-                    }} required />
-                    <button type="button" onClick={() => setForm(f => ({...f, rates: f.rates.filter((_, i) => i !== idx)}))} style={{ padding: "8px 12px", background: "#ff4d4f", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>✕</button>
+                    <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "100px"}}>
+                      <label style={{fontSize: "12px", color: "#666"}}>MRP (₹)</label>
+                      <input type="number" placeholder="MRP" value={variant.mrp} onChange={(e) => {
+                        const newVariants = [...form.variants];
+                        newVariants[idx].mrp = Number(e.target.value);
+                        setForm(f => ({...f, variants: newVariants}));
+                      }} required />
+                    </div>
+
+                    <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "100px"}}>
+                      <label style={{fontSize: "12px", color: "#666"}}>Price (₹)</label>
+                      <input type="number" placeholder="Price" value={variant.price} onChange={(e) => {
+                        const newVariants = [...form.variants];
+                        newVariants[idx].price = Number(e.target.value);
+                        setForm(f => ({...f, variants: newVariants}));
+                      }} required />
+                    </div>
+
+                    <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "150px"}}>
+                      <label style={{fontSize: "12px", color: "#666"}}>Variant Image</label>
+                      <input type="file" accept="image/*" onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          const newVariants = [...form.variants];
+                          newVariants[idx].image = e.target.files[0];
+                          setForm(f => ({...f, variants: newVariants}));
+                        }
+                      }} />
+                    </div>
+
+                    <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "5px"}}>
+                      {typeof variant.image === "string" && variant.image && (
+                        <img src={variant.image.startsWith("http") ? variant.image : `//${window.location.host}/api/images/${variant.image}`} alt="Variant" style={{ width: 40, height: 40, objectFit: "cover", borderRadius: "5px", marginRight: "10px" }} />
+                      )}
+                      <button type="button" onClick={() => setForm(f => ({...f, variants: f.variants.filter((_, i) => i !== idx)}))} style={{ padding: "8px 12px", background: "#ff4d4f", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>✕</button>
+                    </div>
+
                   </div>
                 ))}
-                <button type="button" onClick={() => setForm(f => ({...f, rates: [...(f.rates || []), ""]}))} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#fffb8f", color: "#faad14", border: "1px solid #ffe58f", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Rate</button>
+                <button type="button" onClick={() => setForm(f => ({...f, variants: [...(f.variants || []), { color: "", size: "", mrp: "", price: "", image: "" }]}))} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#e6f7ff", color: "#1890ff", border: "1px solid #91d5ff", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Variant</button>
               </div>
             )}
           </div>

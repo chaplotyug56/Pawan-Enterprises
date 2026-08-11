@@ -33,12 +33,8 @@ function Admin() {
     price: "",
     stock: "",
     images: [],
-    hasColors: false,
-    colors: [],
-    hasSizes: false,
-    sizes: [],
-    hasRates: false,
-    rates: [],
+    hasVariants: false,
+    variants: [],
   });
   async function fetchProducts() {
     try {
@@ -113,12 +109,8 @@ function Admin() {
         price: product.price,
         stock: product.stock,
         images: product.images && product.images.length > 0 ? product.images : (product.image ? [product.image] : []),
-        hasColors: product.hasColors || false,
-        colors: product.colors || [],
-        hasSizes: product.hasSizes || false,
-        sizes: product.sizes || [],
-        hasRates: product.hasRates || false,
-        rates: product.rates || [],
+        hasVariants: product.hasVariants || false,
+        variants: product.variants || [],
     });
 
     window.scrollTo({
@@ -171,17 +163,20 @@ function Admin() {
                 data.append("images", img);
             });
         }
-        else if (key === "colors") {
-            const colorsMetadata = form.colors.map(c => ({ name: c.name, image: typeof c.image === "string" ? c.image : "" }));
-            data.append("colors", JSON.stringify(colorsMetadata));
-            form.colors.forEach((c, i) => {
-                if (c.image instanceof File) {
-                    data.append(`colorImage_${i}`, c.image);
+        else if (key === "variants") {
+            const variantsMetadata = form.variants.map(v => ({ 
+                color: v.color, 
+                size: v.size,
+                mrp: v.mrp,
+                price: v.price,
+                image: typeof v.image === "string" ? v.image : "" 
+            }));
+            data.append("variants", JSON.stringify(variantsMetadata));
+            form.variants.forEach((v, i) => {
+                if (v.image instanceof File) {
+                    data.append(`variantImage_${i}`, v.image);
                 }
             });
-        }
-        else if (key === "sizes" || key === "rates") {
-            data.append(key, JSON.stringify(form[key]));
         }
         else if (key !== "image") {
             data.append(key, form[key]);
@@ -206,12 +201,8 @@ function Admin() {
         price:"",
         stock:"",
         images:[],
-        hasColors: false,
-        colors: [],
-        hasSizes: false,
-        sizes: [],
-        hasRates: false,
-        rates: [],
+        hasVariants: false,
+        variants: [],
     });
 
       setEditingId(null);

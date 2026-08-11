@@ -8,21 +8,11 @@ const addProduct = async (req, res) => {
   console.log("🔥 addProduct API called");
 
   try {
-    let colors = [];
-    if (req.body.colors) {
-      try { colors = typeof req.body.colors === "string" ? JSON.parse(req.body.colors) : req.body.colors; } catch (e) {}
+    let variants = [];
+    if (req.body.variants) {
+      try { variants = typeof req.body.variants === "string" ? JSON.parse(req.body.variants) : req.body.variants; } catch (e) {}
     }
-    let sizes = [];
-    if (req.body.sizes) {
-      try { sizes = typeof req.body.sizes === "string" ? JSON.parse(req.body.sizes) : req.body.sizes; } catch (e) {}
-    }
-    let rates = [];
-    if (req.body.rates) {
-      try { rates = typeof req.body.rates === "string" ? JSON.parse(req.body.rates) : req.body.rates; } catch (e) {}
-    }
-    const hasColors = req.body.hasColors === "true" || req.body.hasColors === true;
-    const hasSizes = req.body.hasSizes === "true" || req.body.hasSizes === true;
-    const hasRates = req.body.hasRates === "true" || req.body.hasRates === true;
+    const hasVariants = req.body.hasVariants === "true" || req.body.hasVariants === true;
 
     let imagesIds = [];
     if (req.files?.length > 0) {
@@ -36,10 +26,10 @@ const addProduct = async (req, res) => {
         
         if (file.fieldname === "images") {
           imagesIds.push(savedImg._id.toString());
-        } else if (file.fieldname.startsWith("colorImage_")) {
+        } else if (file.fieldname.startsWith("variantImage_")) {
           const idx = parseInt(file.fieldname.split("_")[1], 10);
-          if (colors[idx]) {
-            colors[idx].image = savedImg._id.toString();
+          if (variants[idx]) {
+            variants[idx].image = savedImg._id.toString();
           }
         }
       }
@@ -49,12 +39,8 @@ const addProduct = async (req, res) => {
 
     const product = new Product({
       ...req.body,
-      hasColors,
-      colors,
-      hasSizes,
-      sizes,
-      hasRates,
-      rates,
+      hasVariants,
+      variants,
       image: imageId,
       images: imagesIds,
     });
@@ -181,12 +167,12 @@ const getProducts = async (req, res) => {
         });
       }
 
-      if (obj.colors && obj.colors.length > 0) {
-        obj.colors = obj.colors.map((color) => {
-          if (color.image && !color.image.startsWith("http") && !color.image.startsWith("data:image")) {
-            color.image = `//${req.get("host")}/api/images/${color.image}`;
+      if (obj.variants && obj.variants.length > 0) {
+        obj.variants = obj.variants.map((variant) => {
+          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image")) {
+            variant.image = `//${req.get("host")}/api/images/${variant.image}`;
           }
-          return color;
+          return variant;
         });
       }
 
@@ -239,12 +225,12 @@ const getProductById = async (req, res) => {
       });
     }
 
-    if (productObj.colors && productObj.colors.length > 0) {
-      productObj.colors = productObj.colors.map((color) => {
-        if (color.image && !color.image.startsWith("http") && !color.image.startsWith("data:image")) {
-          color.image = `//${req.get("host")}/api/images/${color.image}`;
+    if (productObj.variants && productObj.variants.length > 0) {
+      productObj.variants = productObj.variants.map((variant) => {
+        if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image")) {
+          variant.image = `//${req.get("host")}/api/images/${variant.image}`;
         }
-        return color;
+        return variant;
       });
     }
 
@@ -274,27 +260,15 @@ const updateProduct = async (req, res) => {
       });
     }
 
-    let colors = [];
-    if (req.body.colors) {
-      try { colors = typeof req.body.colors === "string" ? JSON.parse(req.body.colors) : req.body.colors; } catch (e) {}
-    }
-    let sizes = [];
-    if (req.body.sizes) {
-      try { sizes = typeof req.body.sizes === "string" ? JSON.parse(req.body.sizes) : req.body.sizes; } catch (e) {}
-    }
-    let rates = [];
-    if (req.body.rates) {
-      try { rates = typeof req.body.rates === "string" ? JSON.parse(req.body.rates) : req.body.rates; } catch (e) {}
+    let variants = [];
+    if (req.body.variants) {
+      try { variants = typeof req.body.variants === "string" ? JSON.parse(req.body.variants) : req.body.variants; } catch (e) {}
     }
 
     const updateData = {
       ...req.body,
-      hasColors: req.body.hasColors === "true" || req.body.hasColors === true,
-      colors,
-      hasSizes: req.body.hasSizes === "true" || req.body.hasSizes === true,
-      sizes,
-      hasRates: req.body.hasRates === "true" || req.body.hasRates === true,
-      rates,
+      hasVariants: req.body.hasVariants === "true" || req.body.hasVariants === true,
+      variants,
     };
 
     if (req.files?.length > 0) {
@@ -309,10 +283,10 @@ const updateProduct = async (req, res) => {
         
         if (file.fieldname === "images") {
           newImageIds.push(savedImg._id.toString());
-        } else if (file.fieldname.startsWith("colorImage_")) {
+        } else if (file.fieldname.startsWith("variantImage_")) {
           const idx = parseInt(file.fieldname.split("_")[1], 10);
-          if (updateData.colors[idx]) {
-            updateData.colors[idx].image = savedImg._id.toString();
+          if (updateData.variants[idx]) {
+            updateData.variants[idx].image = savedImg._id.toString();
           }
         }
       }
@@ -405,12 +379,12 @@ const getRelatedProducts = async (req, res) => {
         }
       }
 
-      if (obj.colors && obj.colors.length > 0) {
-        obj.colors = obj.colors.map((color) => {
-          if (color.image && !color.image.startsWith("http") && !color.image.startsWith("data:image")) {
-            color.image = `//${req.get("host")}/api/images/${color.image}`;
+      if (obj.variants && obj.variants.length > 0) {
+        obj.variants = obj.variants.map((variant) => {
+          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image")) {
+            variant.image = `//${req.get("host")}/api/images/${variant.image}`;
           }
-          return color;
+          return variant;
         });
       }
 
@@ -447,12 +421,12 @@ const getBestSellingProducts = async (req, res) => {
         }
       }
 
-      if (obj.colors && obj.colors.length > 0) {
-        obj.colors = obj.colors.map((color) => {
-          if (color.image && !color.image.startsWith("http") && !color.image.startsWith("data:image")) {
-            color.image = `//${req.get("host")}/api/images/${color.image}`;
+      if (obj.variants && obj.variants.length > 0) {
+        obj.variants = obj.variants.map((variant) => {
+          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image")) {
+            variant.image = `//${req.get("host")}/api/images/${variant.image}`;
           }
-          return color;
+          return variant;
         });
       }
 

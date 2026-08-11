@@ -17,7 +17,7 @@ import {
       <div className="cart-item">
   
         <img
-          src={item.colorImage || item.image}
+          src={item.image}
           alt={item.name}
           className="cart-image"
         />

@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FaShoppingCart,
   FaHeart,
@@ -11,6 +11,7 @@ import "../styles/ProductCard.css";
 
 function ProductCard({ product, addToCart }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const isHome = location.pathname === "/";
 
   const {
@@ -131,23 +132,28 @@ function ProductCard({ product, addToCart }) {
         </div>
 
         <div className="actions">
-
-          <button
-            className="cart-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (product.hasColors || product.hasSizes || product.hasRates) {
+          {product.hasVariants ? (
+            <button
+              className="cart-btn"
+              onClick={(e) => {
+                e.stopPropagation();
                 navigate(`/product/${product._id}`);
-              } else {
+              }}
+            >
+              Select Options
+            </button>
+          ) : (
+            <button
+              className="cart-btn"
+              onClick={(e) => {
+                e.stopPropagation();
                 addToCart(product);
-              }
-            }}
-            disabled={product.stock === 0}
-          >
-            <FaShoppingCart />
-            {product.hasColors || product.hasSizes || product.hasRates ? "Select Options" : "Add to Cart"}
-          </button>
-
+              }}
+              disabled={product.stock === 0}
+            >
+              <FaShoppingCart /> Add to Cart
+            </button>
+          )}
         </div>
 
       </div>

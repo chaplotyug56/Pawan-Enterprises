@@ -73,20 +73,23 @@ const createOrder = async (req, res) => {
       }
 
       let itemPrice = product.price;
-      if (product.hasRates && item.rate && product.rates.includes(Number(item.rate))) {
-        itemPrice = Number(item.rate);
+      let itemImage = product.image;
+
+      if (product.hasVariants && product.variants?.length > 0) {
+        const variant = product.variants.find(
+          (v) => v.color === (item.color || "") && v.size === (item.size || "")
+        );
+        if (variant) {
+          itemPrice = variant.price;
+          if (variant.image) itemImage = variant.image;
+        }
       }
       
       calculatedTotal += itemPrice * item.quantity;
 
       item.name = product.name;
       item.price = itemPrice;
-      
-      if (product.hasColors && item.colorImage) {
-        item.image = item.colorImage;
-      } else {
-        item.image = product.image;
-      }
+      item.image = itemImage;
 
       product.stock -= item.quantity;
 

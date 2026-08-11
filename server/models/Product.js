@@ -82,22 +82,15 @@ const productSchema = new mongoose.Schema(
         default:0
     },
 
-    hasColors: { type: Boolean, default: false },
-    colors: [
+    hasVariants: { type: Boolean, default: false },
+    variants: [
       {
-        name: { type: String, required: true },
+        color: { type: String, default: "" },
+        size: { type: String, default: "" },
+        mrp: { type: Number, required: true },
+        price: { type: Number, required: true },
         image: { type: String, default: "" },
-      },
-    ],
-    
-    hasSizes: { type: Boolean, default: false },
-    sizes: [
-      { type: String },
-    ],
-
-    hasRates: { type: Boolean, default: false },
-    rates: [
-      { type: Number },
+      }
     ],
 
     createdAt: {

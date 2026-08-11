@@ -25,11 +25,11 @@ export function CartProvider({ children }) {
   const addToCart = (product) => {
     setCart((prev) => {
       // Create a unique cart item identifier based on options
-      const cartItemId = `${product._id}-${product.color || ''}-${product.size || ''}-${product.rate || ''}`;
+      const cartItemId = `${product._id}-${product.color || ''}-${product.size || ''}`;
       
       const existing = prev.find(
         (item) => {
-          const itemId = `${item._id}-${item.color || ''}-${item.size || ''}-${item.rate || ''}`;
+          const itemId = `${item._id}-${item.color || ''}-${item.size || ''}`;
           return itemId === cartItemId;
         }
       );
@@ -38,7 +38,7 @@ export function CartProvider({ children }) {
         toast.success("✅ Quantity updated in cart");
   
         return prev.map((item) => {
-          const itemId = `${item._id}-${item.color || ''}-${item.size || ''}-${item.rate || ''}`;
+          const itemId = `${item._id}-${item.color || ''}-${item.size || ''}`;
           return itemId === cartItemId
             ? {
                 ...item,
@@ -62,7 +62,7 @@ export function CartProvider({ children }) {
   };
 
   const buyNow = (product) => {
-    const cartItemId = `${product._id}-${product.color || ''}-${product.size || ''}-${product.rate || ''}`;
+    const cartItemId = `${product._id}-${product.color || ''}-${product.size || ''}`;
     setCart([
       {
         ...product,

@@ -239,7 +239,7 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
             tokens: tokens
           };
 
-          const response = await firebaseAdmin.messaging().sendMulticast(payload);
+          const response = await firebaseAdmin.messaging().sendEachForMulticast(payload);
           console.log(`✅ FCM Notification sent: ${response.successCount} successes, ${response.failureCount} failures`);
           
           // Cleanup invalid tokens

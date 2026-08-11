@@ -214,19 +214,22 @@ function ProductForm({
                     </div>
 
                     <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "150px"}}>
-                      <label style={{fontSize: "12px", color: "#666"}}>Variant Image <span style={{color: "#aaa", fontStyle: "italic"}}>(or paste)</span></label>
-                      <input type="file" accept="image/*" onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                          const newVariants = [...form.variants];
-                          newVariants[idx].image = e.target.files[0];
-                          setForm(f => ({...f, variants: newVariants}));
-                        }
-                      }} />
+                      <label style={{fontSize: "12px", color: "#666"}}>Variant Image</label>
+                      <div style={{ position: "relative", width: "100%", height: "38px", border: "1px dashed #0056b3", borderRadius: "5px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f0f8ff", cursor: "pointer", overflow: "hidden" }}>
+                        <span style={{ fontSize: "11px", color: "#0056b3", fontWeight: "bold" }}>Click or Paste Image</span>
+                        <input type="file" accept="image/*" style={{ position: "absolute", opacity: 0, width: "100%", height: "100%", cursor: "pointer" }} onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            const newVariants = [...form.variants];
+                            newVariants[idx].image = e.target.files[0];
+                            setForm(f => ({...f, variants: newVariants}));
+                          }
+                        }} />
+                      </div>
                     </div>
 
                     <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "5px"}}>
-                      {typeof variant.image === "string" && variant.image && (
-                        <img src={variant.image.startsWith("http") ? variant.image : `//${window.location.host}/api/images/${variant.image}`} alt="Variant" style={{ width: 40, height: 40, objectFit: "cover", borderRadius: "5px", marginRight: "10px" }} />
+                      {variant.image && (
+                        <img src={typeof variant.image === "string" ? (variant.image.startsWith("http") ? variant.image : `//${window.location.host}/api/images/${variant.image}`) : URL.createObjectURL(variant.image)} alt="Variant" style={{ width: 40, height: 40, objectFit: "cover", borderRadius: "5px", marginRight: "10px" }} />
                       )}
                       <button type="button" onClick={() => setForm(f => ({...f, variants: f.variants.filter((_, i) => i !== idx)}))} style={{ padding: "8px 12px", background: "#ff4d4f", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>✕</button>
                     </div>

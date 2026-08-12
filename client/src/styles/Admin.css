@@ -305,10 +305,10 @@ tbody tr:last-child td, .orders-table tbody tr:last-child td {
 .product-form select,
 .product-form textarea {
     width: 100%;
-    padding: 14px 18px;
+    padding: 16px 20px;
     border: 1px solid #cbd5e1;
     border-radius: 12px;
-    font-size: 15px;
+    font-size: 16px;
     color: #334155;
     box-sizing: border-box;
     outline: none;

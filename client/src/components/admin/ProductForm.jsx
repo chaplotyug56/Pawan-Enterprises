@@ -96,7 +96,7 @@ function ProductForm({
   return (
     <div className="admin-card product-management-form">
       <h2>{isEditing ? "Update Product" : "Add Product"}</h2>
-      <form onSubmit={handleSubmit} onPaste={handlePaste} style={{ display: "flex", flexDirection: "column", gap: "25px" }}>
+      <form className="product-form" onSubmit={handleSubmit} onPaste={handlePaste} style={{ display: "flex", flexDirection: "column", gap: "25px" }}>
 
         {/* CARD 1: Basic Information */}
         <div style={{ background: "#f9fafb", border: "1px solid #eee", padding: "20px", borderRadius: "10px" }}>

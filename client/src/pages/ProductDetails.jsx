@@ -12,7 +12,6 @@ import {
   FaStar,
   FaTruck,
   FaShieldAlt,
-  FaInfoCircle,
 } from "react-icons/fa";
 
 import "../styles/ProductDetails.css";
@@ -348,10 +347,10 @@ function ProductDetails() {
               <h3>Select Size {selectedSize && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- {selectedSize}</span>}</h3>
               <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
                 {availableSizes.map((size, idx) => {
-                  let sizeImage = null;
+                  let hasSizeImage = false;
                   if (product.hasVariants) {
                     const sizeVariant = product.variants.find(v => v.size === size && (!selectedColor || v.color === selectedColor));
-                    sizeImage = sizeVariant?.image;
+                    hasSizeImage = !!sizeVariant?.image;
                   }
 
                   return (

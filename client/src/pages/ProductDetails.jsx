@@ -347,12 +347,6 @@ function ProductDetails() {
               <h3>Select Size {selectedSize && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- {selectedSize}</span>}</h3>
               <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
                 {availableSizes.map((size, idx) => {
-                  let hasSizeImage = false;
-                  if (product.hasVariants) {
-                    const sizeVariant = product.variants.find(v => v.size === size && (!selectedColor || v.color === selectedColor));
-                    hasSizeImage = !!sizeVariant?.image;
-                  }
-
                   return (
                     <button 
                       key={idx}

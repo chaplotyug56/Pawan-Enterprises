@@ -41,6 +41,7 @@ function ProductDetails() {
         if (firstVariant.size) setSelectedSize(firstVariant.size);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
   const uniqueColors = useMemo(() => {

@@ -40,6 +40,13 @@ const addProduct = async (req, res) => {
     const product = new Product({
       ...req.body,
       hasVariants,
+      allowOutOfStockPurchase: req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true,
+      deliveryAvailable: req.body.deliveryAvailable === "true" || req.body.deliveryAvailable === true,
+      featured: req.body.featured === "true" || req.body.featured === true,
+      bestSeller: req.body.bestSeller === "true" || req.body.bestSeller === true,
+      newArrival: req.body.newArrival === "true" || req.body.newArrival === true,
+      showOnHomepage: req.body.showOnHomepage === "true" || req.body.showOnHomepage === true,
+      active: req.body.active === "true" || req.body.active === true,
       variants,
       image: imageId,
       images: imagesIds,
@@ -271,6 +278,13 @@ const updateProduct = async (req, res) => {
     const updateData = {
       ...req.body,
       hasVariants: req.body.hasVariants === "true" || req.body.hasVariants === true,
+      allowOutOfStockPurchase: req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true,
+      deliveryAvailable: req.body.deliveryAvailable === "true" || req.body.deliveryAvailable === true,
+      featured: req.body.featured === "true" || req.body.featured === true,
+      bestSeller: req.body.bestSeller === "true" || req.body.bestSeller === true,
+      newArrival: req.body.newArrival === "true" || req.body.newArrival === true,
+      showOnHomepage: req.body.showOnHomepage === "true" || req.body.showOnHomepage === true,
+      active: req.body.active === "true" || req.body.active === true,
       variants,
     };
 

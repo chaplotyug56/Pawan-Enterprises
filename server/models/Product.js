@@ -13,6 +13,11 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
+    subCategory: {
+      type: String,
+      default: "",
+    },
+
     description: {
       type: String,
       default: "",
@@ -28,9 +33,24 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
+    gstPercent: {
+      type: Number,
+      default: 0,
+    },
+
     stock: {
       type: Number,
       default: 0,
+    },
+
+    lowStockThreshold: {
+      type: Number,
+      default: 5,
+    },
+
+    allowOutOfStockPurchase: {
+      type: Boolean,
+      default: false,
     },
 
     image: {
@@ -58,6 +78,31 @@ const productSchema = new mongoose.Schema(
         default: "",
       },
       
+      weight: {
+        type: Number,
+        default: 0,
+      },
+
+      manufacturer: {
+        type: String,
+        default: "",
+      },
+
+      countryOfOrigin: {
+        type: String,
+        default: "",
+      },
+
+      expiryDate: {
+        type: String,
+        default: "",
+      },
+
+      productType: {
+        type: String,
+        default: "",
+      },
+      
       sku: {
         type: String,
         default: "",
@@ -68,9 +113,49 @@ const productSchema = new mongoose.Schema(
         default: false,
       },
       
+      bestSeller: {
+        type: Boolean,
+        default: false,
+      },
+
+      newArrival: {
+        type: Boolean,
+        default: false,
+      },
+
+      showOnHomepage: {
+        type: Boolean,
+        default: false,
+      },
+
       active: {
         type: Boolean,
         default: true,
+      },
+      
+      deliveryAvailable: {
+        type: Boolean,
+        default: true,
+      },
+
+      deliveryCharge: {
+        type: Number,
+        default: 0,
+      },
+
+      freeDeliveryAbove: {
+        type: Number,
+        default: 1000,
+      },
+
+      estimatedDeliveryTime: {
+        type: String,
+        default: "3-5 Business Days",
+      },
+
+      deliveryRadiusKm: {
+        type: Number,
+        default: 0,
       },
     averageRating:{
         type:Number,
@@ -90,6 +175,7 @@ const productSchema = new mongoose.Schema(
         mrp: { type: Number, required: true },
         price: { type: Number, required: true },
         stock: { type: Number, default: 0 },
+        sku: { type: String, default: "" },
         image: { type: String, default: "" },
       }
     ],

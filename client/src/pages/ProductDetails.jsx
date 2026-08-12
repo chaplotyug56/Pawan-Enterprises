@@ -12,6 +12,7 @@ import {
   FaStar,
   FaTruck,
   FaShieldAlt,
+  FaInfoCircle,
 } from "react-icons/fa";
 
 import "../styles/ProductDetails.css";
@@ -179,7 +180,7 @@ function ProductDetails() {
 
       <div className="details-image">
         <img
-          src={selectedImage}
+          src={selectedImage?.startsWith("http") || selectedImage?.startsWith("//") ? selectedImage : `//${window.location.host}/api/images/${selectedImage}`}
           alt={product.name}
           className="main-product-image"
         />
@@ -189,7 +190,7 @@ function ProductDetails() {
             {product.images.map((img, idx) => (
               <img
                 key={idx}
-                src={img}
+                src={img?.startsWith("http") || img?.startsWith("//") ? img : `//${window.location.host}/api/images/${img}`}
                 alt={`${product.name} ${idx + 1}`}
                 className={`thumbnail ${selectedImage === img ? 'active' : ''}`}
                 onClick={() => setSelectedImage(img)}
@@ -204,10 +205,11 @@ function ProductDetails() {
       <div className="details-content">
 
         <span className="category">
-          {product.category}
+          {product.category} {product.subCategory && ` > ${product.subCategory}`}
         </span>
 
         <h1>{product.name}</h1>
+        {product.brand && <p style={{ color: "#666", fontSize: "14px", marginTop: "-5px", marginBottom: "15px" }}>By <strong>{product.brand}</strong></p>}
 
         <div className="rating">
           <FaStar />
@@ -227,22 +229,22 @@ function ProductDetails() {
             return (
               <>
                 {displayMrp > displayPrice && (
-                  <div className="discount-tag">
+                  <div className="discount-tag" style={{ display: "inline-block", background: "#28a745", color: "white", padding: "4px 8px", borderRadius: "4px", fontSize: "14px", fontWeight: "bold", marginBottom: "5px" }}>
                     {Math.round(((displayMrp - displayPrice) / displayMrp) * 100)}% OFF
                   </div>
                 )}
 
-                <h2 className="our-price">
+                <h2 className="our-price" style={{ color: "#dc3545", fontSize: "32px", margin: "5px 0" }}>
                   ₹{displayPrice}
                 </h2>
 
                 {displayMrp > displayPrice && (
                   <>
-                    <p className="mrp">
+                    <p className="mrp" style={{ color: "#666", fontSize: "16px", marginBottom: "2px" }}>
                       MRP <del>₹{displayMrp}</del>
                     </p>
 
-                    <p className="save">
+                    <p className="save" style={{ color: "#28a745", fontWeight: "bold", fontSize: "14px", marginTop: 0 }}>
                       You Save ₹{displayMrp - displayPrice}
                     </p>
                   </>
@@ -257,23 +259,33 @@ function ProductDetails() {
           return (
             <p
               className={
-                displayStock > 5
+                displayStock > (product.lowStockThreshold || 5)
                   ? "stock in-stock"
                   : displayStock > 0
                   ? "stock low-stock"
                   : "stock out-stock"
               }
+              style={{
+                display: "inline-block",
+                padding: "5px 12px",
+                borderRadius: "20px",
+                fontSize: "14px",
+                fontWeight: "600",
+                background: displayStock > (product.lowStockThreshold || 5) ? "#e6f4ea" : displayStock > 0 ? "#fdf6b2" : "#fde8e8",
+                color: displayStock > (product.lowStockThreshold || 5) ? "#1e4620" : displayStock > 0 ? "#723b13" : "#9b1c1c",
+                marginTop: "10px"
+              }}
             >
-              {displayStock > 5
-                ? `In Stock (${displayStock})`
+              {displayStock > (product.lowStockThreshold || 5)
+                ? "In Stock"
                 : displayStock > 0
-                ? `Only ${displayStock} left`
+                ? `Low Stock - Only ${displayStock} left`
                 : "Out of Stock"}
             </p>
           );
         })()}
 
-        <p className="description">
+        <p className="description" style={{ marginTop: "15px", lineHeight: "1.6", color: "#444" }}>
           {product.description}
         </p>
 
@@ -302,7 +314,7 @@ function ProductDetails() {
                         height: "65px",
                         borderRadius: "50%", 
                         border: selectedColor === color ? "3px solid #0056b3" : "1px solid #ddd", 
-                        background: colorImage ? `url(${colorImage}) center/cover` : (selectedColor === color ? "#f0f8ff" : "#fff"),
+                        background: colorImage ? `url(${colorImage?.startsWith("http") || colorImage?.startsWith("//") ? colorImage : `//${window.location.host}/api/images/${colorImage}`}) center/cover` : (selectedColor === color ? "#f0f8ff" : "#fff"),
                         cursor: "pointer",
                         display: "flex",
                         alignItems: "center",
@@ -347,23 +359,19 @@ function ProductDetails() {
                       key={idx}
                       className={`option-chip ${selectedSize === size ? 'selected' : ''}`}
                       style={{
-                        width: "60px",
-                        height: "60px",
-                        borderRadius: "50%", 
-                        border: selectedSize === size ? "3px solid #0056b3" : "1px solid #ddd", 
-                        background: sizeImage ? `url(${sizeImage}) center/cover` : (selectedSize === size ? "#f0f8ff" : "#fff"),
+                        minWidth: "60px",
+                        height: "40px",
+                        borderRadius: "20px", 
+                        border: selectedSize === size ? "2px solid #0056b3" : "1px solid #ddd", 
+                        background: selectedSize === size ? "#e6f2ff" : "#fff",
                         cursor: "pointer",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: sizeImage ? "#fff" : (selectedSize === size ? "#0056b3" : "#333"),
-                        textShadow: sizeImage ? "1px 1px 3px rgba(0,0,0,0.9), 0px 0px 5px rgba(0,0,0,0.6)" : "none",
+                        color: selectedSize === size ? "#0056b3" : "#333",
                         fontWeight: "bold",
-                        fontSize: "12px",
-                        lineHeight: "1.1",
-                        textAlign: "center",
-                        padding: "2px",
-                        overflow: "hidden"
+                        fontSize: "14px",
+                        padding: "0 15px",
                       }}
                       onClick={() => setSelectedSize(size)}
                     >
@@ -376,26 +384,51 @@ function ProductDetails() {
           )}
         </div>
 
-        <div className="info" style={{ marginTop: "20px" }}>
+        <div className="info" style={{ marginTop: "20px", background: "#f8f9fa", padding: "15px", borderRadius: "8px", border: "1px solid #eee" }}>
+          
+          {product.deliveryAvailable !== false && (
+             <p style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px", color: "#333", fontWeight: "500" }}>
+               <FaTruck style={{ color: "#0056b3" }} />
+               {product.freeDeliveryAbove > 0 ? `Free Delivery Above ₹${product.freeDeliveryAbove}` : "Free Delivery"}
+               {product.estimatedDeliveryTime && <span style={{ fontSize: "12px", color: "#666", marginLeft: "auto", fontWeight: "normal" }}>({product.estimatedDeliveryTime})</span>}
+             </p>
+          )}
 
-          <p>
-            <FaTruck />
-            Free Delivery Above ₹1000
-          </p>
-
-          <p>
-            <FaShieldAlt />
-            Genuine Product
+          <p style={{ display: "flex", alignItems: "center", gap: "10px", color: "#333", fontWeight: "500", marginBottom: 0 }}>
+            <FaShieldAlt style={{ color: "#28a745" }} />
+            100% Genuine Product
           </p>
 
         </div>
 
-        <div className="detail-actions">
+        {/* EXTRA DETAILS LIST */}
+        <div style={{ marginTop: "20px" }}>
+           <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
+             {(currentVariant?.sku || product.sku) && (
+               <li style={{ display: "flex", fontSize: "14px" }}><span style={{ width: "120px", color: "#666" }}>SKU:</span> <strong>{currentVariant?.sku || product.sku}</strong></li>
+             )}
+             {product.weight > 0 && (
+               <li style={{ display: "flex", fontSize: "14px" }}><span style={{ width: "120px", color: "#666" }}>Weight:</span> <strong>{product.weight} {product.unit}</strong></li>
+             )}
+             {product.manufacturer && (
+               <li style={{ display: "flex", fontSize: "14px" }}><span style={{ width: "120px", color: "#666" }}>Manufacturer:</span> <strong>{product.manufacturer}</strong></li>
+             )}
+             {product.countryOfOrigin && (
+               <li style={{ display: "flex", fontSize: "14px" }}><span style={{ width: "120px", color: "#666" }}>Origin:</span> <strong>{product.countryOfOrigin}</strong></li>
+             )}
+             {product.expiryDate && (
+               <li style={{ display: "flex", fontSize: "14px" }}><span style={{ width: "120px", color: "#666" }}>Expiry:</span> <strong>{product.expiryDate}</strong></li>
+             )}
+           </ul>
+        </div>
 
-          {((product.hasVariants && currentVariant) ? currentVariant.stock : product.stock) > 0 ? (
+        <div className="detail-actions" style={{ marginTop: "25px", display: "flex", gap: "15px" }}>
+
+          {(((product.hasVariants && currentVariant) ? currentVariant.stock : product.stock) > 0 || product.allowOutOfStockPurchase) ? (
             <>
               <button
                 className="detail-add-btn"
+                style={{ flex: 1, padding: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", background: "#fff", color: "#0056b3", border: "2px solid #0056b3", borderRadius: "5px", fontSize: "16px", fontWeight: "bold", cursor: "pointer", transition: "0.2s" }}
                 onClick={handleAddToCart}
               >
                 <FaShoppingCart />
@@ -404,16 +437,18 @@ function ProductDetails() {
 
               <button
                 className="detail-buy-btn"
+                style={{ flex: 1, padding: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", background: "#0056b3", color: "#fff", border: "none", borderRadius: "5px", fontSize: "16px", fontWeight: "bold", cursor: "pointer", transition: "0.2s" }}
                 onClick={handleBuyNow}
               >
-  <FaBolt />
-  Buy Now
-</button>
+                <FaBolt />
+                Buy Now
+              </button>
             </>
           ) : (
             <>
               <button
                 className="detail-add-btn disabled-btn"
+                style={{ flex: 1, padding: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", background: "#f0f0f0", color: "#999", border: "2px solid #ddd", borderRadius: "5px", fontSize: "16px", fontWeight: "bold", cursor: "not-allowed" }}
                 disabled
               >
                 Out of Stock
@@ -421,6 +456,7 @@ function ProductDetails() {
 
               <button
                 className="detail-buy-btn disabled-btn"
+                style={{ flex: 1, padding: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", background: "#f0f0f0", color: "#999", border: "2px solid #ddd", borderRadius: "5px", fontSize: "16px", fontWeight: "bold", cursor: "not-allowed" }}
                 disabled
               >
                 <FaBolt />
@@ -433,7 +469,7 @@ function ProductDetails() {
 
         {/* REVIEW FORM */}
 
-        <div className="review-section">
+        <div className="review-section" style={{ marginTop: "40px" }}>
 
           <ReviewForm
             productId={product._id}
@@ -444,23 +480,29 @@ function ProductDetails() {
 
         {/* CUSTOMER REVIEWS */}
 
-        <h3>Customer Reviews</h3>
+        <h3 style={{ marginTop: "30px", borderBottom: "2px solid #eee", paddingBottom: "10px" }}>Customer Reviews</h3>
 
         {reviews.length === 0 ? (
-          <p>No reviews yet.</p>
+          <p style={{ color: "#666", marginTop: "15px" }}>No reviews yet. Be the first to review this product!</p>
         ) : (
-          reviews.map((review) => (
-            <div
-              className="review-card"
-              key={review._id}
-            >
-              <h4>{review.user?.name}</h4>
-
-              <p>{"⭐".repeat(review.rating)}</p>
-
-              <p>{review.comment}</p>
-            </div>
-          ))
+          <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "15px" }}>
+            {reviews.map((review) => (
+              <div
+                className="review-card"
+                key={review._id}
+                style={{ background: "#f9f9f9", padding: "15px", borderRadius: "8px", border: "1px solid #eaeaea" }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
+                  <h4 style={{ margin: 0, color: "#333" }}>{review.user?.name}</h4>
+                  <span style={{ fontSize: "12px", color: "#999" }}>{new Date(review.createdAt).toLocaleDateString()}</span>
+                </div>
+  
+                <p style={{ margin: "5px 0", color: "#ffc107" }}>{"★".repeat(review.rating)}{"☆".repeat(5-review.rating)}</p>
+  
+                <p style={{ margin: "5px 0 0", color: "#555", fontSize: "14px" }}>{review.comment}</p>
+              </div>
+            ))}
+          </div>
         )}
 
       </div>
@@ -468,11 +510,11 @@ function ProductDetails() {
       {/* RELATED PRODUCTS */}
 
       {relatedProducts.length > 0 && (
-        <div className="related-products">
+        <div className="related-products" style={{ width: "100%", marginTop: "50px" }}>
 
-          <h2>You May Also Like</h2>
+          <h2 style={{ borderBottom: "2px solid #eee", paddingBottom: "10px", marginBottom: "20px" }}>You May Also Like</h2>
 
-          <div className="products-grid">
+          <div className="products-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "20px" }}>
 
             {relatedProducts.map((item) => (
               <ProductCard

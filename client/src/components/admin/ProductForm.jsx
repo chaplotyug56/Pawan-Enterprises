@@ -177,6 +177,42 @@ function ProductForm({
         <div style={{ background: "#f9fafb", border: "1px solid #eee", padding: "20px", borderRadius: "10px" }}>
           <h3 style={{ marginBottom: "15px", borderBottom: "1px solid #ddd", paddingBottom: "10px" }}>3. Images</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginBottom: "10px" }}>
+              <label>Add Image from URL</label>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <input 
+                  type="text" 
+                  id="imageUrlInput"
+                  placeholder="https://example.com/image.jpg" 
+                  style={{ flex: 1 }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const val = e.target.value.trim();
+                      if (val) {
+                        handleChange({ target: { name: "images", value: [...(form.images || []), val] } });
+                        e.target.value = "";
+                      }
+                    }
+                  }}
+                />
+                <button 
+                  type="button" 
+                  onClick={(e) => {
+                    const input = document.getElementById('imageUrlInput');
+                    const val = input.value.trim();
+                    if (val) {
+                      handleChange({ target: { name: "images", value: [...(form.images || []), val] } });
+                      input.value = "";
+                    }
+                  }}
+                  style={{ padding: "0 20px", background: "#0056b3", color: "white", border: "none", borderRadius: "12px", cursor: "pointer", fontWeight: "bold" }}
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+
             <div style={{ position: "relative", width: "100%", height: "120px", border: "2px dashed #0056b3", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f0f8ff", cursor: "pointer", overflow: "hidden" }}>
               <span style={{ fontSize: "16px", color: "#0056b3", fontWeight: "bold" }}>Click or Paste Images (Ctrl+V)</span>
               <input type="file" name="images" multiple accept="image/*" style={{ position: "absolute", opacity: 0, width: "100%", height: "100%", cursor: "pointer" }} onChange={(e) => {

@@ -301,7 +301,7 @@ tbody tr:last-child td, .orders-table tbody tr:last-child td {
     gap: 20px;
 }
 
-.product-form input,
+.product-form input:not([type="checkbox"]),
 .product-form select,
 .product-form textarea {
     width: 100%;
@@ -316,12 +316,19 @@ tbody tr:last-child td, .orders-table tbody tr:last-child td {
     background: #f8fafc;
 }
 
-.product-form input:focus,
+.product-form input:not([type="checkbox"]):focus,
 .product-form select:focus,
 .product-form textarea:focus {
     border-color: #6366f1;
     background: #ffffff;
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.product-form input[type="checkbox"] {
+    width: auto;
+    cursor: pointer;
+    transform: scale(1.2);
+    margin-right: 5px;
 }
 
 .product-form textarea {

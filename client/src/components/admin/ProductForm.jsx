@@ -438,7 +438,7 @@ function ProductForm({
           {isEditing && (
              <button type="button" onClick={() => {
                setForm({
-                  name: "", category: "", subCategory: "", brand: "", sku: "", description: "", mrp: "", price: "", gstPercent: 0, stock: "", lowStockThreshold: 5, allowOutOfStockPurchase: false, images: [], hasVariants: false, variants: [], deliveryAvailable: true, deliveryCharge: 0, freeDeliveryAbove: 1000, estimatedDeliveryTime: "3-5 Business Days", deliveryRadiusKm: 0, weight: "", unit: "", manufacturer: "", countryOfOrigin: "", expiryDate: "", productType: "", featured: false, bestSeller: false, newArrival: false, showOnHomepage: false, active: true
+                  name: "", category: "", subCategory: "", brand: "", sku: "", description: "", mrp: "", price: "", gstPercent: 0, stock: "", lowStockThreshold: 5, allowOutOfStockPurchase: false, images: [], hasVariants: false, variants: [], deliveryAvailable: true, deliveryCharge: 0, freeDeliveryAbove: 1000, estimatedDeliveryTime: "1 Business Day", deliveryRadiusKm: 0, weight: "", unit: "", manufacturer: "", countryOfOrigin: "", expiryDate: "", productType: "", featured: false, bestSeller: false, newArrival: false, showOnHomepage: false, active: true
                });
                // Force window reload or clear edit state via prop if available. Assuming Admin.jsx handles it via a cancel mechanism, or we just clear.
                window.location.reload();

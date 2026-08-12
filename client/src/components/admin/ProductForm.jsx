@@ -238,7 +238,7 @@ function ProductForm({
 
                     <div style={{display: "flex", alignItems: "flex-end", paddingBottom: "5px"}}>
                       {variant.image && (
-                        <img src={typeof variant.image === "string" ? (variant.image.startsWith("http") ? variant.image : `//${window.location.host}/api/images/${variant.image}`) : URL.createObjectURL(variant.image)} alt="Variant" style={{ width: 40, height: 40, objectFit: "cover", borderRadius: "5px", marginRight: "10px" }} />
+                        <img src={typeof variant.image === "string" ? (variant.image.startsWith("http") || variant.image.startsWith("//") ? variant.image : `//${window.location.host}/api/images/${variant.image}`) : URL.createObjectURL(variant.image)} alt="Variant" style={{ width: 40, height: 40, objectFit: "cover", borderRadius: "5px", marginRight: "10px" }} />
                       )}
                       <button type="button" onClick={() => setForm(f => ({...f, variants: f.variants.filter((_, i) => i !== idx)}))} style={{ padding: "8px 12px", background: "#ff4d4f", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>✕</button>
                     </div>

@@ -225,11 +225,14 @@ const getProductById = async (req, res) => {
       });
     }
 
+    console.log("PRODUCT VARIANTS LENGTH:", productObj.variants ? productObj.variants.length : "undefined");
     if (productObj.variants && productObj.variants.length > 0) {
       productObj.variants = productObj.variants.map((variant) => {
+        console.log("Variant image before:", variant.image);
         if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image") && !variant.image.startsWith("//")) {
           variant.image = `//${req.get("host")}/api/images/${variant.image}`;
         }
+        console.log("Variant image after:", variant.image);
         return variant;
       });
     }

@@ -32,6 +32,17 @@ function ProductDetails() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
 
+  // Set default variants when product loads
+  useEffect(() => {
+    if (product?.hasVariants && product.variants?.length > 0) {
+      if (!selectedColor && !selectedSize) {
+        const firstVariant = product.variants[0];
+        if (firstVariant.color) setSelectedColor(firstVariant.color);
+        if (firstVariant.size) setSelectedSize(firstVariant.size);
+      }
+    }
+  }, [product]);
+
   const uniqueColors = useMemo(() => {
     if (product?.hasVariants) {
       const colors = product.variants.map(v => v.color).filter(Boolean);
@@ -323,29 +334,42 @@ function ProductDetails() {
             <div className="option-section" style={{ marginTop: "15px" }}>
               <h3>Select Size {selectedSize && <span style={{fontSize: "14px", fontWeight: "normal", color: "#666"}}>- {selectedSize}</span>}</h3>
               <div className="option-chips" style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
-                {availableSizes.map((size, idx) => (
-                  <button 
-                    key={idx}
-                    className={`option-chip ${selectedSize === size ? 'selected' : ''}`}
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      borderRadius: "50%", 
-                      border: selectedSize === size ? "3px solid #0056b3" : "1px solid #ddd", 
-                      background: selectedSize === size ? "#f0f8ff" : "#fff",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: selectedSize === size ? "#0056b3" : "#333",
-                      fontWeight: "bold",
-                      fontSize: "14px"
-                    }}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
+                {availableSizes.map((size, idx) => {
+                  let sizeImage = null;
+                  if (product.hasVariants) {
+                    const sizeVariant = product.variants.find(v => v.size === size && (!selectedColor || v.color === selectedColor));
+                    sizeImage = sizeVariant?.image;
+                  }
+
+                  return (
+                    <button 
+                      key={idx}
+                      className={`option-chip ${selectedSize === size ? 'selected' : ''}`}
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        borderRadius: "50%", 
+                        border: selectedSize === size ? "3px solid #0056b3" : "1px solid #ddd", 
+                        background: sizeImage ? `url(${sizeImage}) center/cover` : (selectedSize === size ? "#f0f8ff" : "#fff"),
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: sizeImage ? "#fff" : (selectedSize === size ? "#0056b3" : "#333"),
+                        textShadow: sizeImage ? "1px 1px 3px rgba(0,0,0,0.9), 0px 0px 5px rgba(0,0,0,0.6)" : "none",
+                        fontWeight: "bold",
+                        fontSize: "12px",
+                        lineHeight: "1.1",
+                        textAlign: "center",
+                        padding: "2px",
+                        overflow: "hidden"
+                      }}
+                      onClick={() => setSelectedSize(size)}
+                    >
+                      {size}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}

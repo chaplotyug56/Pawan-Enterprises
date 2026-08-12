@@ -191,6 +191,7 @@ function Admin() {
                 size: v.size,
                 mrp: v.mrp,
                 price: v.price,
+                stock: v.stock,
                 image: typeof v.image === "string" ? v.image : "" 
             }));
             data.append("variants", JSON.stringify(variantsMetadata));

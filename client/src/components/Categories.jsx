@@ -31,7 +31,7 @@ import {
       color: "#F8BBD0",
     },
     {
-      name: "Gift Items",
+      name: "Others",
       icon: <FaGift />,
       color: "#E1BEE7",
     },

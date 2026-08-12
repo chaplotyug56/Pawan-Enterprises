@@ -115,7 +115,7 @@ function ProductForm({
                 <option value="Stationery">Stationery</option>
                 <option value="Grocery">Grocery</option>
                 <option value="Household">Household</option>
-                <option value="Gift Items">Gift Items</option>
+                <option value="Others">Others</option>
               </select>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>

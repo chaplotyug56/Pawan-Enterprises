@@ -120,7 +120,7 @@ function ProductTable({
             <option value="Stationery">Stationery</option>
             <option value="Grocery">Grocery</option>
             <option value="Household">Household</option>
-            <option value="Gift Items">Gift Items</option>
+            <option value="Others">Others</option>
           </select>
           
           <select value={stockFilter} onChange={(e) => setStockFilter(e.target.value)}>

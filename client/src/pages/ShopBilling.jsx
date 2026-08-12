@@ -11,7 +11,10 @@ function ShopBilling() {
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("shopBillingCart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
@@ -22,6 +25,10 @@ function ShopBilling() {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("shopBillingCart", JSON.stringify(cart));
+  }, [cart]);
 
   async function fetchProducts() {
     try {
@@ -143,6 +150,7 @@ function ShopBilling() {
         await api.put(`/orders/${res.data.order._id}`, { paymentStatus: "Paid", status: "Delivered" });
         toast.success("Bill generated successfully!");
         setCart([]);
+        localStorage.removeItem("shopBillingCart");
         setCustomerName("");
         setCustomerPhone("");
         navigate("/admin/orders");
@@ -274,13 +282,29 @@ function ShopBilling() {
               </div>
             )}
 
-            <button 
-              className="generate-btn" 
-              onClick={handleGenerateBill}
-              disabled={isSubmitting || cart.length === 0}
-            >
-              {isSubmitting ? "Generating..." : "Generate Bill & Complete"}
-            </button>
+            <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+              <button 
+                className="generate-btn" 
+                style={{ flex: 2 }}
+                onClick={handleGenerateBill}
+                disabled={isSubmitting || cart.length === 0}
+              >
+                {isSubmitting ? "Generating..." : "Generate Bill"}
+              </button>
+              
+              <button
+                style={{ flex: 1, padding: "14px", background: "#fef2f2", color: "#dc2626", border: "none", borderRadius: "10px", cursor: "pointer", fontWeight: "600", opacity: cart.length === 0 ? 0.5 : 1 }}
+                disabled={cart.length === 0 || isSubmitting}
+                onClick={() => {
+                   if (window.confirm("Are you sure you want to clear the entire bill?")) {
+                       setCart([]);
+                       localStorage.removeItem("shopBillingCart");
+                   }
+                }}
+              >
+                Clear All
+              </button>
+            </div>
           </div>
         </div>
 

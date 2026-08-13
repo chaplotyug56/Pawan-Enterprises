@@ -26,6 +26,11 @@ export function CartProvider({ children }) {
     }, [cart, user]);
 
   const addToCart = (product) => {
+    if (user && user.role === "staff") {
+      toast.error("Staff accounts cannot place orders.");
+      return;
+    }
+
     setCart((prev) => {
       // Create a unique cart item identifier based on options
       const cartItemId = `${product._id}-${product.color || ''}-${product.size || ''}`;
@@ -65,6 +70,11 @@ export function CartProvider({ children }) {
   };
 
   const buyNow = (product) => {
+    if (user && user.role === "staff") {
+      toast.error("Staff accounts cannot place orders.");
+      return;
+    }
+
     const cartItemId = `${product._id}-${product.color || ''}-${product.size || ''}`;
     setCart([
       {

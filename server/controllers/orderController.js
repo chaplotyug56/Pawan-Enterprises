@@ -13,6 +13,13 @@ const generateInvoice = require("../utils/invoiceGenerator");
 const createOrder = async (req, res) => {
     console.log("🚀 createOrder() called");
   try {
+    if (req.user && req.user.role === "staff") {
+      return res.status(403).json({
+        success: false,
+        message: "Staff accounts are not permitted to place orders."
+      });
+    }
+
     let {
         items,
         shippingAddress,

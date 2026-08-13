@@ -36,9 +36,22 @@ const addProduct = async (req, res) => {
     }
 
     let imageId = imagesIds.length > 0 ? imagesIds[0] : "";
+    
+    let productMrp = req.body.mrp;
+    let productPrice = req.body.price;
+    let productStock = req.body.stock;
+    
+    if (hasVariants && variants && variants.length > 0) {
+      productMrp = variants[0].mrp;
+      productPrice = variants[0].price;
+      productStock = variants.reduce((acc, v) => acc + (Number(v.stock) || 0), 0);
+    }
 
     const product = new Product({
       ...req.body,
+      mrp: productMrp,
+      price: productPrice,
+      stock: productStock,
       hasVariants,
       allowOutOfStockPurchase: req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true,
       deliveryAvailable: req.body.deliveryAvailable === "true" || req.body.deliveryAvailable === true,
@@ -278,10 +291,25 @@ const updateProduct = async (req, res) => {
     if (req.body.variants) {
       try { variants = typeof req.body.variants === "string" ? JSON.parse(req.body.variants) : req.body.variants; } catch (e) {}
     }
+    
+    const hasVariants = req.body.hasVariants === "true" || req.body.hasVariants === true;
+    
+    let productMrp = req.body.mrp;
+    let productPrice = req.body.price;
+    let productStock = req.body.stock;
+    
+    if (hasVariants && variants && variants.length > 0) {
+      productMrp = variants[0].mrp;
+      productPrice = variants[0].price;
+      productStock = variants.reduce((acc, v) => acc + (Number(v.stock) || 0), 0);
+    }
 
     const updateData = {
       ...req.body,
-      hasVariants: req.body.hasVariants === "true" || req.body.hasVariants === true,
+      mrp: productMrp !== undefined ? productMrp : product.mrp,
+      price: productPrice !== undefined ? productPrice : product.price,
+      stock: productStock !== undefined ? productStock : product.stock,
+      hasVariants,
       allowOutOfStockPurchase: req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true,
       deliveryAvailable: req.body.deliveryAvailable === "true" || req.body.deliveryAvailable === true,
       featured: req.body.featured === "true" || req.body.featured === true,

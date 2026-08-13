@@ -104,8 +104,15 @@ function ProductDetails() {
 
       setProduct(res.data.data);
       setSelectedImage(res.data.data.image);
-      setSelectedColor(null);
-      setSelectedSize(null);
+      
+      if (res.data.data.hasVariants && res.data.data.variants && res.data.data.variants.length > 0) {
+        const first = res.data.data.variants[0];
+        setSelectedColor(first.color || null);
+        setSelectedSize(first.size || null);
+      } else {
+        setSelectedColor(null);
+        setSelectedSize(null);
+      }
 
       saveRecentlyViewed(res.data.data);
 

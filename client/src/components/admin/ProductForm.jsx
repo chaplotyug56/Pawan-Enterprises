@@ -138,7 +138,8 @@ function ProductForm({
         </div>
 
         {/* CARD 2: Pricing */}
-        <div style={{ background: "#f9fafb", border: "1px solid #eee", padding: "20px", borderRadius: "10px" }}>
+        {!form.hasVariants && (
+          <div style={{ background: "#f9fafb", border: "1px solid #eee", padding: "20px", borderRadius: "10px" }}>
           <h3 style={{ marginBottom: "15px", borderBottom: "1px solid #ddd", paddingBottom: "10px" }}>2. Pricing</h3>
           <div className="form-grid">
             <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
@@ -172,6 +173,7 @@ function ProductForm({
             <p className="error-text">Selling Price cannot be greater than MRP!</p>
           )}
         </div>
+        )}
 
         {/* CARD 3: Images */}
         <div className="form-card">
@@ -276,6 +278,12 @@ function ProductForm({
                     }} required />
                   </div>
                   <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "80px"}}>
+                    <label style={{fontSize: "12px", color: "#666"}}>Discount</label>
+                    <div style={{ fontSize: "14px", fontWeight: "bold", color: "#28a745", padding: "8px 0" }}>
+                      {variant.mrp > variant.price ? `${Math.round(((variant.mrp - variant.price) / variant.mrp) * 100)}% OFF` : '-'}
+                    </div>
+                  </div>
+                  <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "80px"}}>
                     <label style={{fontSize: "12px", color: "#666"}}>Stock</label>
                     <input type="number" placeholder="Stock" value={variant.stock} onChange={(e) => {
                       const newVariants = [...form.variants];
@@ -312,12 +320,18 @@ function ProductForm({
                   </div>
                 </div>
               ))}
-              <button type="button" onClick={() => handleChange({ target: { name: "variants", value: [...(form.variants || []), { color: "", size: "", mrp: "", price: "", stock: 0, sku: "", image: "" }] }})} style={{ alignSelf: "flex-start", padding: "8px 15px", background: "#e6f7ff", color: "#1890ff", border: "1px solid #91d5ff", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Variant</button>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <button type="button" onClick={() => handleChange({ target: { name: "variants", value: [...(form.variants || []), { color: "", size: "", mrp: "", price: "", stock: 0, sku: "", image: "" }] }})} style={{ padding: "8px 15px", background: "#e6f7ff", color: "#1890ff", border: "1px solid #91d5ff", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>+ Add Variant</button>
+                <div style={{ padding: "8px 15px", background: "#f0f8ff", borderRadius: "5px", fontWeight: "bold", color: "#0056b3", border: "1px solid #bae6fd" }}>
+                  Total Stock: {form.variants?.reduce((acc, v) => acc + (Number(v.stock) || 0), 0) || 0} units
+                </div>
+              </div>
             </div>
           )}
         </div>
 
         {/* CARD 5: Inventory */}
+        {!form.hasVariants && (
         <div style={{ background: "#f9fafb", border: "1px solid #eee", padding: "20px", borderRadius: "10px" }}>
           <h3 style={{ marginBottom: "15px", borderBottom: "1px solid #ddd", paddingBottom: "10px" }}>5. Inventory</h3>
           <div className="form-grid">
@@ -335,6 +349,7 @@ function ProductForm({
             Allow Purchase When Out of Stock
           </label>
         </div>
+        )}
 
         {/* CARD 6: Delivery */}
         <div style={{ background: "#f9fafb", border: "1px solid #eee", padding: "20px", borderRadius: "10px" }}>

@@ -25,27 +25,24 @@ function MyOrders() {
       console.error(err);
     }
   };
-  async function downloadInvoice(id, orderId) {
-    try {
-      const res = await api.get(`/orders/${id}/invoice`, {
-        responseType: "blob",
-      });
-  
-      const url = window.URL.createObjectURL(new Blob([res.data]));
-  
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `Invoice-${orderId}.pdf`;
-  
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-  
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error(err);
-      toast.error("Unable to download invoice");
-    }
+  function downloadInvoice(id, orderId) {
+    toast.promise(
+      api.get(`/orders/${id}/invoice`, { responseType: "blob" }).then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `Invoice-${orderId}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      }),
+      {
+        pending: 'Downloading Invoice...',
+        success: 'Invoice Downloaded',
+        error: 'Unable to download invoice'
+      }
+    );
   }
 
   return (

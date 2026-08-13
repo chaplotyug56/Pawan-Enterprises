@@ -63,7 +63,7 @@ function Register() {
     if (auth) {
       handleRedirectResult();
     }
-  }, [auth, firebaseAuth, navigate]);
+  }, [firebaseAuth, navigate]);
 
   const handleGoogleLogin = async () => {
     if (!auth) {

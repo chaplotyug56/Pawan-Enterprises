@@ -93,6 +93,7 @@ const createOrder = async (req, res) => {
             });
           }
           targetVariant.stock -= item.quantity;
+          product.stock -= item.quantity; // Decrease overall stock
         }
       }
 
@@ -104,6 +105,13 @@ const createOrder = async (req, res) => {
           });
         }
         product.stock -= item.quantity;
+      }
+      
+      // Auto-hide if out of stock
+      if (product.stock <= 0 && !product.allowOutOfStockPurchase) {
+        product.active = false;
+      } else if (product.stock > 0) {
+        product.active = true;
       }
       
       calculatedTotal += itemPrice * item.quantity;

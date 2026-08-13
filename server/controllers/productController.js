@@ -47,19 +47,22 @@ const addProduct = async (req, res) => {
       productStock = variants.reduce((acc, v) => acc + (Number(v.stock) || 0), 0);
     }
 
+    const allowOutOfStock = req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true;
+    const isOutOfStock = Number(productStock) <= 0 && !allowOutOfStock;
+
     const product = new Product({
       ...req.body,
       mrp: productMrp,
       price: productPrice,
       stock: productStock,
       hasVariants,
-      allowOutOfStockPurchase: req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true,
+      allowOutOfStockPurchase: allowOutOfStock,
       deliveryAvailable: req.body.deliveryAvailable === "true" || req.body.deliveryAvailable === true,
       featured: req.body.featured === "true" || req.body.featured === true,
       bestSeller: req.body.bestSeller === "true" || req.body.bestSeller === true,
       newArrival: req.body.newArrival === "true" || req.body.newArrival === true,
       showOnHomepage: req.body.showOnHomepage === "true" || req.body.showOnHomepage === true,
-      active: req.body.active === "true" || req.body.active === true,
+      active: !isOutOfStock, // Auto-hide if out of stock
       variants,
       image: imageId,
       images: imagesIds,
@@ -304,19 +307,26 @@ const updateProduct = async (req, res) => {
       productStock = variants.reduce((acc, v) => acc + (Number(v.stock) || 0), 0);
     }
 
+    const finalStock = productStock !== undefined ? Number(productStock) : product.stock;
+    const finalAllowOutOfStock = req.body.allowOutOfStockPurchase !== undefined 
+      ? (req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true)
+      : product.allowOutOfStockPurchase;
+    
+    const isOutOfStock = finalStock <= 0 && !finalAllowOutOfStock;
+
     const updateData = {
       ...req.body,
       mrp: productMrp !== undefined ? productMrp : product.mrp,
       price: productPrice !== undefined ? productPrice : product.price,
       stock: productStock !== undefined ? productStock : product.stock,
       hasVariants,
-      allowOutOfStockPurchase: req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true,
+      allowOutOfStockPurchase: finalAllowOutOfStock,
       deliveryAvailable: req.body.deliveryAvailable === "true" || req.body.deliveryAvailable === true,
       featured: req.body.featured === "true" || req.body.featured === true,
       bestSeller: req.body.bestSeller === "true" || req.body.bestSeller === true,
       newArrival: req.body.newArrival === "true" || req.body.newArrival === true,
       showOnHomepage: req.body.showOnHomepage === "true" || req.body.showOnHomepage === true,
-      active: req.body.active === "true" || req.body.active === true,
+      active: !isOutOfStock, // Auto-hide if out of stock
       variants,
     };
 

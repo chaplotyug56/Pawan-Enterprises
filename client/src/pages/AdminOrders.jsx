@@ -3,6 +3,9 @@ import { useSearchParams } from "react-router-dom";
 import api from "../services/api";
 import "../styles/AdminOrders.css";
 import { toast } from "react-toastify";
+import NotificationBell from "../components/admin/NotificationBell";
+import NotificationSettings from "../components/admin/NotificationSettings";
+
 function AdminOrders() {
   const [searchParams] = useSearchParams();
   const [orders, setOrders] = useState([]);
@@ -104,7 +107,11 @@ function AdminOrders() {
 
   return (
     <div className="admin-orders">
-      <h1>Manage Orders</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h1 style={{ margin: 0 }}>Manage Orders</h1>
+        <NotificationBell />
+      </div>
+      <NotificationSettings />
       <input
   type="text"
   placeholder="Search by customer, email or Order ID..."

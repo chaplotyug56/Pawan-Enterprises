@@ -14,6 +14,7 @@ import Admin from "./pages/Admin";
 import AdminReport from "./pages/AdminReport";
 import Checkout from "./pages/Checkout";
 import AdminOrders from "./pages/AdminOrders";
+import StaffDashboard from "./pages/StaffDashboard";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -47,6 +48,7 @@ function App() {
         <Route path="/admin/settings" element={<AdminSettings />} />
         <Route path="/admin/billing" element={<ProtectedRoute><ShopBilling /></ProtectedRoute>} />
         <Route path="/admin/shop-bills" element={<ProtectedRoute><AdminShopBills /></ProtectedRoute>} />
+        <Route path="/staff" element={<ProtectedRoute><StaffDashboard /></ProtectedRoute>} />
 
         <Route
   path="/wishlist"

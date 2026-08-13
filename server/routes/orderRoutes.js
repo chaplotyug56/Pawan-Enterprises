@@ -10,7 +10,7 @@ const {
 } = require("../controllers/orderController");
 
 const { protect } = require("../middleware/authMiddleware");
-const { admin } = require("../middleware/adminMiddleware");
+const { admin, adminOrStaff } = require("../middleware/adminMiddleware");
 
 router.post(
   "/",
@@ -23,7 +23,7 @@ router.post(
 router.get("/", protect, getOrders);
 
 // Admin
-router.get("/all", protect, admin, getAllOrders);
+router.get("/all", protect, adminOrStaff, getAllOrders);
 router.get(
   "/:id/invoice",
   protect,

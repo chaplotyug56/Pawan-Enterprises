@@ -1,0 +1,7 @@
+✅ Loaded orderController.js
+◇ injected env (3) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+✅ Product routes loaded
+✅ User routes loaded
+✅ Order routes loaded
+🚀 Server running at http://localhost:8000
+✅ MongoDB Connected Successfully

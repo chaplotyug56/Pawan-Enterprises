@@ -1,0 +1,8 @@
+✅ Loaded orderController.js
+◇ injected env (0) from .env // tip: ⌘ suppress logs { quiet: true }
+✅ Product routes loaded
+✅ User routes loaded
+✅ Order routes loaded
+No MONGODB_URI found, using in-memory MongoDB...
+🚀 Server running at http://localhost:8000
+✅ MongoDB Connected Successfully

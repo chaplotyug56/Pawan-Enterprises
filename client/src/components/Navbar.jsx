@@ -26,6 +26,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   const isAdmin = user?.role === "admin";
+  const isStaff = user?.role === "staff";
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -230,6 +231,12 @@ function Navbar() {
               Reviews
             </NavLink>
           </>
+        )}
+
+        {isStaff && (
+          <NavLink to="/staff" onClick={() => setMenuOpen(false)}>
+            Delivery Dashboard
+          </NavLink>
         )}
 
         {!user && (

@@ -65,6 +65,12 @@ const createOrder = async (req, res) => {
 
     // Check stock and calculate total
     for (const item of items) {
+      if (!item.product) {
+        // Custom product
+        calculatedTotal += item.price * item.quantity;
+        continue;
+      }
+
       const product = await Product.findById(item.product);
 
       if (!product) {

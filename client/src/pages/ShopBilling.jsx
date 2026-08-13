@@ -19,6 +19,12 @@ function ShopBilling() {
   const [customerPhone, setCustomerPhone] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
   
+  // Custom Product State
+  const [customName, setCustomName] = useState("");
+  const [customMrp, setCustomMrp] = useState("");
+  const [customPrice, setCustomPrice] = useState("");
+  const [customDiscount, setCustomDiscount] = useState("");
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
@@ -83,6 +89,35 @@ function ShopBilling() {
     setSuggestions([]);
   };
 
+  const addCustomProduct = () => {
+    if (!customName.trim() || !customPrice) {
+      toast.error("Name and Our Price are mandatory");
+      return;
+    }
+    const price = parseFloat(customPrice);
+    if (isNaN(price) || price < 0) {
+      toast.error("Invalid price");
+      return;
+    }
+    const newItem = {
+      _id: "custom_" + Date.now(),
+      name: customName,
+      price: price,
+      mrp: customMrp ? parseFloat(customMrp) : price,
+      discount: customDiscount,
+      quantity: 1,
+      stock: 999999, // practically infinite for billing
+      isCustom: true,
+      image: "https://via.placeholder.com/150?text=Custom+Item"
+    };
+    setCart([...cart, newItem]);
+    
+    setCustomName("");
+    setCustomMrp("");
+    setCustomPrice("");
+    setCustomDiscount("");
+  };
+
   const updateQuantity = (id, delta) => {
     setCart(cart.map(item => {
       if (item._id === id) {
@@ -120,13 +155,18 @@ function ShopBilling() {
     setIsSubmitting(true);
     
     try {
-      const items = cart.map(item => ({
-        product: item._id,
-        name: item.name,
-        price: item.price,
-        image: item.image,
-        quantity: item.quantity
-      }));
+      const items = cart.map(item => {
+        const baseItem = {
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          quantity: item.quantity
+        };
+        if (!item.isCustom) {
+          baseItem.product = item._id;
+        }
+        return baseItem;
+      });
 
       const shippingAddress = {
         fullName: customerName,
@@ -230,6 +270,45 @@ function ShopBilling() {
                 ))}
               </div>
             )}
+          </div>
+
+          <div className="billing-card" style={{ marginTop: '20px' }}>
+            <h3>Add Custom Product (Current Bill Only)</h3>
+            <div className="input-group" style={{ marginBottom: '10px' }}>
+              <input 
+                type="text" 
+                placeholder="Product Name *" 
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+              />
+              <input 
+                type="number" 
+                placeholder="Our Price *" 
+                value={customPrice}
+                onChange={(e) => setCustomPrice(e.target.value)}
+              />
+            </div>
+            <div className="input-group" style={{ marginBottom: '10px' }}>
+              <input 
+                type="number" 
+                placeholder="MRP (Optional)" 
+                value={customMrp}
+                onChange={(e) => setCustomMrp(e.target.value)}
+              />
+              <input 
+                type="text" 
+                placeholder="Discount (Optional)" 
+                value={customDiscount}
+                onChange={(e) => setCustomDiscount(e.target.value)}
+              />
+            </div>
+            <button 
+              className="secondary-btn" 
+              onClick={addCustomProduct}
+              style={{ width: '100%', padding: '10px' }}
+            >
+              + Add Custom Product
+            </button>
           </div>
 
         </div>

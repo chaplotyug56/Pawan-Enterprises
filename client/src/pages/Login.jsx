@@ -55,7 +55,7 @@ function Login() {
       }
     } catch (err) {
       console.error(err);
-      toast.error(err.message || "Google Sign-In Failed");
+      toast.error(err.response?.data?.message || err.message || "Google Sign-In Failed");
     }
   };
 

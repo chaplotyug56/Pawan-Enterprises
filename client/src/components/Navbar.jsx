@@ -56,9 +56,19 @@ function Navbar() {
       return;
     }
 
-    const filtered = products.filter((product) =>
-      product.name.toLowerCase().includes(search.toLowerCase())
-    );
+    const lowerSearch = search.toLowerCase();
+    const filtered = products.filter((product) => {
+      if (product.name.toLowerCase().includes(lowerSearch)) return true;
+      if (product.sku && product.sku.toLowerCase().includes(lowerSearch)) return true;
+      if (product.variants && product.variants.length > 0) {
+        return product.variants.some(v => 
+          (v.size && v.size.toLowerCase().includes(lowerSearch)) || 
+          (v.color && v.color.toLowerCase().includes(lowerSearch)) || 
+          (v.sku && v.sku.toLowerCase().includes(lowerSearch))
+        );
+      }
+      return false;
+    });
 
     setSuggestions(filtered.slice(0, 6));
   }, [search, products]);

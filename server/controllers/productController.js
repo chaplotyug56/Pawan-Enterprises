@@ -94,6 +94,10 @@ const getProducts = async (req, res) => {
           { name: { $regex: term, $options: "i" } },
           { brand: { $regex: term, $options: "i" } },
           { category: { $regex: term, $options: "i" } },
+          { sku: { $regex: term, $options: "i" } },
+          { "variants.size": { $regex: term, $options: "i" } },
+          { "variants.color": { $regex: term, $options: "i" } },
+          { "variants.sku": { $regex: term, $options: "i" } }
         ],
       }));
     }

@@ -44,9 +44,19 @@ function ShopBilling() {
       setSuggestions([]);
       return;
     }
-    const filtered = products.filter((p) =>
-      p.name.toLowerCase().includes(search.toLowerCase())
-    );
+    const lowerSearch = search.toLowerCase();
+    const filtered = products.filter((p) => {
+      if (p.name.toLowerCase().includes(lowerSearch)) return true;
+      if (p.sku && p.sku.toLowerCase().includes(lowerSearch)) return true;
+      if (p.variants && p.variants.length > 0) {
+        return p.variants.some(v => 
+          (v.size && v.size.toLowerCase().includes(lowerSearch)) || 
+          (v.color && v.color.toLowerCase().includes(lowerSearch)) || 
+          (v.sku && v.sku.toLowerCase().includes(lowerSearch))
+        );
+      }
+      return false;
+    });
     setSuggestions(filtered.slice(0, 8));
   }, [search, products]);
 

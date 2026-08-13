@@ -37,6 +37,10 @@ function Login() {
   };
 
   const handleGoogleLogin = async () => {
+    if (!auth) {
+      toast.error("Google Sign-In is not configured (Missing Firebase API Key)");
+      return;
+    }
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const token = await result.user.getIdToken();

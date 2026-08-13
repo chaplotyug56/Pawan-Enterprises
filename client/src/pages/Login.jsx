@@ -34,6 +34,8 @@ function Login() {
           "Invalid Credentials"
       );
     }
+  };
+
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);

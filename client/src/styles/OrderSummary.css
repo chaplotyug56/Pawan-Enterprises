@@ -57,3 +57,12 @@
     font-size:17px;
     
     }
+    
+    @media (max-width: 900px) {
+        .summary {
+            padding: 20px;
+            position: relative; /* Remove sticky on mobile to avoid covering content */
+            top: 0;
+            margin-bottom: 20px;
+        }
+    }

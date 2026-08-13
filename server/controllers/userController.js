@@ -148,12 +148,12 @@ const firebaseLogin = async (req, res) => {
     }
 
     const firebaseConfig = require("../config/firebase");
-    if (!firebaseConfig.admin) {
+    if (!firebaseConfig.auth) {
       return res.status(500).json({ success: false, message: firebaseConfig.initializationError });
     }
 
     // Verify token
-    const decodedToken = await firebaseConfig.admin.auth().verifyIdToken(token);
+    const decodedToken = await firebaseConfig.auth.verifyIdToken(token);
     const { email, name, picture, phone_number, uid } = decodedToken;
 
     let userEmail = email ? email.toLowerCase() : `${uid}@firebase.local`;

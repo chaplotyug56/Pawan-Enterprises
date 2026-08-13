@@ -94,27 +94,8 @@ function Checkout() {
 
       if (res.data.success) {
         clearCart();
-        toast.success("Order Placed Successfully");
 
-        try {
-          const orderId = res.data.order?.orderId || "New Order";
-          let message = `*New Order Placed!*\n`;
-          message += `*Order ID:* ${orderId}\n`;
-          message += `*Name:* ${finalAddress.fullName}\n`;
-          message += `*Total Amount:* ₹${totalAmount}\n\n`;
-          message += `*Items:*\n`;
-          cart.forEach(item => {
-            message += `- ${item.name} (x${item.quantity})\n`;
-          });
-          
-          const addressParts = [finalAddress.houseNo, finalAddress.building, finalAddress.street, finalAddress.landmark, finalAddress.city, finalAddress.pincode].filter(Boolean);
-          message += `\n*Address:*\n${addressParts.join(", ")}`;
-          
-          const waLink = `https://wa.me/919929119290?text=${encodeURIComponent(message)}`;
-          window.open(waLink, '_blank');
-        } catch (e) {
-          console.error("WhatsApp Link Error:", e);
-        }
+        toast.success("Order Placed Successfully");
 
         navigate("/my-orders");
       }

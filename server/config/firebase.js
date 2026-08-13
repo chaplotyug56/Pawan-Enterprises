@@ -1,9 +1,11 @@
 const admin = require("firebase-admin");
+let initializationError = "Unknown error";
 
 function initializeFirebaseAdmin() {
   try {
     if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !process.env.FIREBASE_PRIVATE_KEY) {
-      console.warn("⚠️ Firebase Admin SDK is NOT initialized: Missing environment variables.");
+      initializationError = "Missing Env: " + (!process.env.FIREBASE_PROJECT_ID ? "PROJECT_ID " : "") + (!process.env.FIREBASE_CLIENT_EMAIL ? "CLIENT_EMAIL " : "") + (!process.env.FIREBASE_PRIVATE_KEY ? "PRIVATE_KEY" : "");
+      console.warn("⚠️ Firebase Admin SDK is NOT initialized:", initializationError);
       return null;
     }
 
@@ -20,6 +22,7 @@ function initializeFirebaseAdmin() {
     }
     return admin;
   } catch (error) {
+    initializationError = "Firebase Init Error: " + error.message;
     console.error("🔥 Error initializing Firebase Admin:", error);
     return null;
   }
@@ -27,4 +30,4 @@ function initializeFirebaseAdmin() {
 
 const firebaseAdmin = initializeFirebaseAdmin();
 
-module.exports = firebaseAdmin;
+module.exports = { admin: firebaseAdmin, initializationError };

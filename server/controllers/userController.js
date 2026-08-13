@@ -147,13 +147,13 @@ const firebaseLogin = async (req, res) => {
       return res.status(400).json({ success: false, message: "Firebase token is required" });
     }
 
-    const firebaseAdmin = require("../config/firebase");
-    if (!firebaseAdmin) {
-      return res.status(500).json({ success: false, message: "Firebase Admin is not configured on the server" });
+    const firebaseConfig = require("../config/firebase");
+    if (!firebaseConfig.admin) {
+      return res.status(500).json({ success: false, message: firebaseConfig.initializationError });
     }
 
     // Verify token
-    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+    const decodedToken = await firebaseConfig.admin.auth().verifyIdToken(token);
     const { email, name, picture, phone_number, uid } = decodedToken;
 
     let userEmail = email ? email.toLowerCase() : `${uid}@firebase.local`;

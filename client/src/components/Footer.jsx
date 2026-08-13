@@ -36,7 +36,7 @@ import {
   
             <p>
               <FaPhoneAlt />
-              &nbsp; +91 8209707984
+              &nbsp; <a href="tel:+919929119290" style={{ color: "inherit", textDecoration: "none" }}>+91 9929119290</a>
             </p>
   
             <p>

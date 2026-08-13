@@ -28,7 +28,7 @@ function HeroBanner() {
           </Link>
 
           <a
-            href="https://wa.me/918209707984?text=Hello%20Pawan%20Enterprises"
+            href="https://wa.me/919929119290?text=Hello%20Pawan%20Enterprises"
             target="_blank"
             rel="noopener noreferrer"
             className="call-btn"

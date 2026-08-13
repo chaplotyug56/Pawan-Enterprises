@@ -142,7 +142,7 @@ function ShopBilling() {
   const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   const finalTotal = cartTotal;
 
-  const handleGenerateBill = async (e) => {
+  const handleGenerateBill = async (e, printAfter = false) => {
     e.preventDefault();
 
     if (cart.length === 0) {
@@ -205,7 +205,23 @@ function ShopBilling() {
         localStorage.removeItem("shopBillingCart");
         setCustomerName("");
         setCustomerPhone("");
-        navigate("/admin/orders");
+        
+        if (printAfter) {
+          toast.promise(
+            api.get(`/orders/${res.data.order._id}/invoice`, { responseType: "blob" }).then((resBlob) => {
+              const url = window.URL.createObjectURL(new Blob([resBlob.data], { type: "application/pdf" }));
+              window.open(url, '_blank');
+              navigate("/admin/shop-bills");
+            }),
+            {
+              pending: 'Preparing printable bill...',
+              success: 'Bill ready for printing',
+              error: 'Failed to prepare bill'
+            }
+          );
+        } else {
+          navigate("/admin/shop-bills");
+        }
       }
 
     } catch (err) {
@@ -373,18 +389,28 @@ function ShopBilling() {
               </div>
             )}
 
-            <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-              <button 
-                className="generate-btn" 
-                style={{ flex: 2 }}
-                onClick={handleGenerateBill}
-                disabled={isSubmitting || cart.length === 0}
-              >
-                {isSubmitting ? "Generating..." : "Generate Bill"}
-              </button>
+            <div style={{ display: "flex", gap: "10px", marginTop: "15px", flexDirection: "column" }}>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button 
+                  className="generate-btn" 
+                  style={{ flex: 1 }}
+                  onClick={(e) => handleGenerateBill(e, false)}
+                  disabled={isSubmitting || cart.length === 0}
+                >
+                  {isSubmitting ? "Generating..." : "Generate Bill"}
+                </button>
+                <button 
+                  className="generate-btn" 
+                  style={{ flex: 1, backgroundColor: "#28a745" }}
+                  onClick={(e) => handleGenerateBill(e, true)}
+                  disabled={isSubmitting || cart.length === 0}
+                >
+                  {isSubmitting ? "Generating..." : "🖨️ Generate & Print"}
+                </button>
+              </div>
               
               <button
-                style={{ flex: 1, padding: "14px", background: "#fef2f2", color: "#dc2626", border: "none", borderRadius: "10px", cursor: "pointer", fontWeight: "600", opacity: cart.length === 0 ? 0.5 : 1 }}
+                style={{ padding: "14px", background: "#fef2f2", color: "#dc2626", border: "none", borderRadius: "10px", cursor: "pointer", fontWeight: "600", opacity: cart.length === 0 ? 0.5 : 1 }}
                 disabled={cart.length === 0 || isSubmitting}
                 onClick={() => {
                    if (window.confirm("Are you sure you want to clear the entire bill?")) {

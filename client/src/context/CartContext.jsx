@@ -6,21 +6,24 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
     const { user } = useAuth();
 
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState(() => {
+        const key = user ? `cart_${user._id}` : "cart_guest";
+        const saved = localStorage.getItem(key);
+        return saved ? JSON.parse(saved) : [];
+    });
 
+    // When user changes (e.g. login/logout), load their cart
     useEffect(() => {
         const key = user ? `cart_${user._id}` : "cart_guest";
-      
         const saved = localStorage.getItem(key);
-      
         setCart(saved ? JSON.parse(saved) : []);
-      }, [user]);
+    }, [user]);
 
-      useEffect(() => {
+    // When cart changes, save it
+    useEffect(() => {
         const key = user ? `cart_${user._id}` : "cart_guest";
-      
         localStorage.setItem(key, JSON.stringify(cart));
-      }, [cart, user]);
+    }, [cart, user]);
 
   const addToCart = (product) => {
     setCart((prev) => {

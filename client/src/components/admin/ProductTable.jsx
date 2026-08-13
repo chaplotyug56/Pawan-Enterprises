@@ -9,7 +9,7 @@ function ProductTable({
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [stockFilter, setStockFilter] = useState("All");
-  const [sortOrder, setSortOrder] = useState("Newest");
+  const [sortOrder, setSortOrder] = useState("NameAsc");
 
   const [showAll, setShowAll] = useState(false);
 

@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 import { auth, googleProvider } from "../firebase";
-import { signInWithRedirect, getRedirectResult } from "firebase/auth";
-import { useEffect } from "react";
+import { signInWithPopup } from "firebase/auth";
 import "../styles/Auth.css";
 import { useNavigate } from "react-router-dom";
 
@@ -39,39 +38,23 @@ function Register() {
         }
     };
 
-  useEffect(() => {
-    const handleRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result) {
-          const token = await result.user.getIdToken();
-          const data = await firebaseAuth(token);
-          toast.success("Login Successful via Google");
-
-          if (data.user.role === "admin") {
-            navigate("/admin");
-          } else {
-            navigate("/");
-          }
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error(err.message || "Google Sign-In Failed");
-      }
-    };
-    
-    if (auth) {
-      handleRedirectResult();
-    }
-  }, [firebaseAuth, navigate]);
-
   const handleGoogleLogin = async () => {
     if (!auth) {
       toast.error("Google Sign-In is not configured (Missing Firebase API Key)");
       return;
     }
     try {
-      await signInWithRedirect(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const token = await result.user.getIdToken();
+      
+      const data = await firebaseAuth(token);
+      toast.success("Login Successful via Google");
+
+      if (data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       console.error(err);
       toast.error(err.message || "Google Sign-In Failed");

@@ -137,6 +137,78 @@ const loginUser = async (req, res) => {
 };
 
 // ========================================
+// Firebase Login / Auth
+// ========================================
+const firebaseLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    if (!token) {
+      return res.status(400).json({ success: false, message: "Firebase token is required" });
+    }
+
+    const firebaseAdmin = require("../config/firebase");
+    if (!firebaseAdmin) {
+      return res.status(500).json({ success: false, message: "Firebase Admin is not configured on the server" });
+    }
+
+    // Verify token
+    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+    const { email, name, picture, phone_number, uid } = decodedToken;
+
+    let userEmail = email ? email.toLowerCase() : `${uid}@firebase.local`;
+
+    // Check if user exists
+    let user = await User.findOne({
+      $or: [
+        { email: userEmail },
+        { phone: phone_number || uid }
+      ]
+    });
+
+    if (!user) {
+      // Create user if they don't exist
+      user = await User.create({
+        name: name || "Firebase User",
+        email: userEmail,
+        password: await bcrypt.hash(uid + process.env.JWT_SECRET, 10), // Random password
+        phone: phone_number || "N/A",
+      });
+    }
+
+    // Generate local JWT
+    const localToken = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    const userData = user.toObject();
+    delete userData.password;
+
+    return res.status(200).json({
+      success: true,
+      message: "Firebase Login Successful",
+      token: localToken,
+      user: userData,
+    });
+
+  } catch (error) {
+    console.error("Firebase Login Error:", error);
+    if (res.headersSent) return;
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Invalid Firebase Token",
+    });
+  }
+};
+
+// ========================================
 // Get Profile
 // ========================================
 const getProfile = async (req, res) => {
@@ -521,4 +593,5 @@ module.exports = {
   deleteAddress,
   updateAddress,
   setDefaultAddress,
+  firebaseLogin,
 };

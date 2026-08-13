@@ -44,6 +44,13 @@ export function AuthProvider({ children }) {
     return res.data;
   };
 
+  const firebaseAuth = async (firebaseToken) => {
+    const res = await api.post("/users/firebase-auth", { token: firebaseToken });
+    setUser(res.data.user);
+    setToken(res.data.token);
+    return res.data;
+  };
+
   const register = async (data) => {
     const res = await api.post(
       "/users/register",
@@ -66,6 +73,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         logout,
+        firebaseAuth,
       }}
     >
       {children}

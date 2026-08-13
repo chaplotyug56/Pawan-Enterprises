@@ -14,11 +14,14 @@ const {
     deleteAddress,
     updateAddress,
     setDefaultAddress,
+    firebaseLogin,
   } = require("../controllers/userController");
 
 router.post("/register", registerUser);
 
 router.post("/login", loginUser);
+
+router.post("/firebase-auth", firebaseLogin);
 
 router.get("/profile", protect, getProfile);
 

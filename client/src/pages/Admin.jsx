@@ -3,23 +3,16 @@ import { toast } from "react-toastify";
 
 import api from "../services/api";
 
-import DashboardCards from "../components/admin/DashboardCards";
 import ProductForm from "../components/admin/ProductForm";
 import ProductTable from "../components/admin/ProductTable";
 import ConfirmModal from "../components/admin/ConfirmModal";
-
-import "../styles/Admin.css";
-import RecentOrders from "../components/admin/RecentOrders";
-import TopProducts from "../components/admin/TopProducts";
-import RecentCustomers from "../components/admin/RecentCustomers";
-import AnalyticsCharts from "../components/admin/AnalyticsCharts";
 import NotificationBell from "../components/admin/NotificationBell";
 import NotificationSettings from "../components/admin/NotificationSettings";
-import { onForegroundMessage } from "../utils/firebaseUtils";
+
+import "../styles/Admin.css";
 
 function Admin() {
   const [products, setProducts] = useState([]);
-  const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
 
   const [editingId, setEditingId] = useState(null);
@@ -71,23 +64,10 @@ function Admin() {
     }
   }
 
-  async function fetchDashboard() {
-    try {
-      const res = await api.get("/dashboard");
-      setStats(res.data.data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
   async function loadDashboard() {
     try {
       setLoading(true);
-
-      await Promise.all([
-        fetchProducts(),
-        fetchDashboard(),
-      ]);
+      await fetchProducts();
     } finally {
       setLoading(false);
     }
@@ -95,27 +75,6 @@ function Admin() {
 
   useEffect(() => {
     loadDashboard();
-
-    // Listen for foreground push notifications
-    const unsubscribe = onForegroundMessage((payload) => {
-      const title = payload?.notification?.title || "New Notification";
-      const body = payload?.notification?.body || "";
-      toast.info(
-        <div>
-          <strong>{title}</strong>
-          <br />
-          {body}
-        </div>,
-        { autoClose: 5000, closeOnClick: true, icon: "🛒" }
-      );
-      // Auto refresh dashboard to show new order
-      fetchDashboard();
-    });
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleChange(e) {
@@ -317,29 +276,19 @@ function Admin() {
   return (
     <div className="admin-container">
       <div className="admin-header">
-  <h1 className="admin-title">Admin Dashboard</h1>
-  
-  <NotificationBell />
-</div>
+        <h1 className="admin-title">Manage Products</h1>
+        <NotificationBell />
+      </div>
 
-<NotificationSettings />
+      <NotificationSettings />
 
-<DashboardCards stats={stats} />
-    <ProductForm
+      <ProductForm
         form={form}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         isEditing={isEditing}
         setForm={setForm}
       />
-
-<div className="analytics-grid">
-<AnalyticsCharts stats={stats} />
-
-<RecentOrders />
-<TopProducts products={stats?.topProducts} />
-<RecentCustomers customers={stats?.recentCustomers} />
-</div>
 
       <ProductTable
         products={products}

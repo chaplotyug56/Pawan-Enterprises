@@ -207,7 +207,11 @@ function Navbar() {
         {isAdmin && (
           <>
             <NavLink to="/admin" onClick={() => setMenuOpen(false)}>
-              Admin Dashboard
+              Manage Products
+            </NavLink>
+
+            <NavLink to="/admin/report" onClick={() => setMenuOpen(false)}>
+              Reports & Analytics
             </NavLink>
 
             <NavLink to="/admin/orders" onClick={() => setMenuOpen(false)}>

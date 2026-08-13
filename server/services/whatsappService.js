@@ -13,6 +13,13 @@ const sendWhatsAppMessage = async ({
 }) => {
     console.log("📲 sendWhatsAppMessage() called");
   try {
+    if (!process.env.PHONE_NUMBER_ID || !process.env.WHATSAPP_TOKEN || !process.env.ADMIN_WHATSAPP) {
+      console.warn("⚠️ WhatsApp credentials missing. Skipping message.");
+      return;
+    }
+
+    const adminPhone = process.env.ADMIN_WHATSAPP.replace(/\\D/g, ''); // Remove + and spaces
+
     const message = `🛒 *NEW ORDER*
 
 ━━━━━━━━━━━━━━
@@ -49,10 +56,10 @@ console.log("PHONE_NUMBER_ID:", process.env.PHONE_NUMBER_ID);
 console.log("ADMIN_WHATSAPP:", process.env.ADMIN_WHATSAPP);
 console.log("TOKEN EXISTS:", !!process.env.WHATSAPP_TOKEN);
    const response = await axios.post(
-      `https://graph.facebook.com/v23.0/${process.env.PHONE_NUMBER_ID}/messages`,
+      `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
       {
         messaging_product: "whatsapp",
-        to: process.env.ADMIN_WHATSAPP,
+        to: adminPhone,
         type: "text",
         text: {
           body: message,

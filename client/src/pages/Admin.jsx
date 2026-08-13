@@ -64,17 +64,14 @@ function Admin() {
     }
   }
 
-  async function loadDashboard() {
-    try {
+  useEffect(() => {
+    async function load() {
       setLoading(true);
       await fetchProducts();
-    } finally {
       setLoading(false);
     }
-  }
-
-  useEffect(() => {
-    loadDashboard();
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleChange(e) {
@@ -155,7 +152,7 @@ function Admin() {
 
       toast.success("Product deleted successfully");
 
-      await loadDashboard();
+      await fetchProducts();
     } catch (err) {
       console.error(err);
       toast.error("Delete failed");
@@ -258,7 +255,7 @@ function Admin() {
       setEditingId(null);
       setIsEditing(false);
 
-      await loadDashboard();
+      await fetchProducts();
     } catch (err) {
       console.error(err);
       toast.error("Operation failed");

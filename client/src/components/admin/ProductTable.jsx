@@ -99,12 +99,12 @@ function ProductTable({
   return (
     <div className="admin-card">
       <div className="table-header" style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div className="table-header-top">
           <h2>Product Inventory ({filteredProducts.length})</h2>
           <button style={{ padding: "8px 15px", background: "#28a745", color: "white", border: "none", borderRadius: "5px", cursor: "pointer", fontWeight: "bold" }} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>+ Add New Product</button>
         </div>
 
-        <div className="table-filters" style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+        <div className="table-filters">
           <input
             type="text"
             placeholder="Search by name or SKU..."

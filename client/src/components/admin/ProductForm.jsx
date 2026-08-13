@@ -169,17 +169,17 @@ function ProductForm({
             </div>
           </div>
           {Number(form.price) > Number(form.mrp) && (
-            <p style={{ color: "red", marginTop: "10px", fontSize: "14px" }}>Selling Price cannot be greater than MRP!</p>
+            <p className="error-text">Selling Price cannot be greater than MRP!</p>
           )}
         </div>
 
         {/* CARD 3: Images */}
-        <div style={{ background: "#f9fafb", border: "1px solid #eee", padding: "20px", borderRadius: "10px" }}>
-          <h3 style={{ marginBottom: "15px", borderBottom: "1px solid #ddd", paddingBottom: "10px" }}>3. Images</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginBottom: "10px" }}>
+        <div className="form-card">
+          <h3>3. Images</h3>
+          <div className="image-container">
+            <div className="form-group">
               <label>Add Image from URL</label>
-              <div style={{ display: "flex", gap: "10px" }}>
+              <div className="image-url-input">
                 <input 
                   type="text" 
                   id="imageUrlInput"
@@ -250,7 +250,7 @@ function ProductForm({
           {form.hasVariants && (
             <div style={{ marginTop: "15px", display: "flex", flexDirection: "column", gap: "15px" }}>
               {form.variants?.map((variant, idx) => (
-                <div key={idx} style={{ display: "flex", gap: "15px", flexWrap: "wrap", padding: "15px", border: "1px solid #ddd", borderRadius: "8px", background: "#fff" }}>
+                <div key={idx} className="variant-row">
                   <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "100px"}}>
                     <label style={{fontSize: "12px", color: "#666"}}>Size/Name *</label>
                     <input type="text" placeholder="e.g. 1 Litre" value={variant.size} onChange={(e) => {
@@ -293,7 +293,7 @@ function ProductForm({
                   </div>
                   <div style={{display: "flex", flexDirection: "column", gap: "5px", flex: 1, minWidth: "120px"}}>
                     <label style={{fontSize: "12px", color: "#666"}}>Image</label>
-                    <div style={{ position: "relative", width: "100%", height: "38px", border: "1px dashed #0056b3", borderRadius: "5px", display: "flex", alignItems: "center", justifyContent: "center", background: "#f0f8ff", cursor: "pointer", overflow: "hidden" }}>
+                    <div className="variant-image-upload">
                       <span style={{ fontSize: "11px", color: "#0056b3", fontWeight: "bold" }}>Upload</span>
                       <input type="file" accept="image/*" style={{ position: "absolute", opacity: 0, width: "100%", height: "100%", cursor: "pointer" }} onChange={(e) => {
                         if (e.target.files && e.target.files.length > 0) {

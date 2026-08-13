@@ -393,6 +393,73 @@ tbody tr:last-child td, .orders-table tbody tr:last-child td {
 /* ---------------------------------------------------
    Notification Bell & Dropdown
 --------------------------------------------------- */
+.image-url-input {
+    display: flex;
+    gap: 10px;
+}
+
+.variant-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.variant-image-upload {
+    position: relative;
+    width: 100%;
+    height: 38px;
+    border: 1px dashed #0056b3;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f8ff;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .image-url-input {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .image-url-input button {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .variant-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .variant-row > div {
+        width: 100%;
+        min-width: 100% !important;
+    }
+
+    /* Product Table Responsiveness */
+    .table-header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .table-filters {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .table-filters input, .table-filters select {
+        width: 100%;
+    }
+}
+
 .notification-bell {
     position: relative;
     cursor: pointer;

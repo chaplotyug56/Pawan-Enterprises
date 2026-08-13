@@ -50,18 +50,20 @@ function ShopBilling() {
       setSuggestions([]);
       return;
     }
-    const lowerSearch = search.toLowerCase();
+    const searchTerms = search.toLowerCase().trim().split(/\\s+/);
     const filtered = products.filter((p) => {
-      if (p.name.toLowerCase().includes(lowerSearch)) return true;
-      if (p.sku && p.sku.toLowerCase().includes(lowerSearch)) return true;
-      if (p.variants && p.variants.length > 0) {
-        return p.variants.some(v => 
-          (v.size && v.size.toLowerCase().includes(lowerSearch)) || 
-          (v.color && v.color.toLowerCase().includes(lowerSearch)) || 
-          (v.sku && v.sku.toLowerCase().includes(lowerSearch))
-        );
-      }
-      return false;
+      return searchTerms.every(term => {
+        if (p.name.toLowerCase().includes(term)) return true;
+        if (p.sku && p.sku.toLowerCase().includes(term)) return true;
+        if (p.variants && p.variants.length > 0) {
+          return p.variants.some(v => 
+            (v.size && v.size.toLowerCase().includes(term)) || 
+            (v.color && v.color.toLowerCase().includes(term)) || 
+            (v.sku && v.sku.toLowerCase().includes(term))
+          );
+        }
+        return false;
+      });
     });
     setSuggestions(filtered.slice(0, 8));
   }, [search, products]);

@@ -79,11 +79,16 @@ function AdminShopBills() {
     const dbOrderId = order._id || "";
     const displayOrderId = order.orderId || "";
   
+    const searchTerms = search.toLowerCase().trim().split(/\\s+/);
+    const matchesSearch = searchTerms.every(term => 
+      customer.toLowerCase().includes(term) ||
+      email.toLowerCase().includes(term) ||
+      dbOrderId.toLowerCase().includes(term) ||
+      displayOrderId.toLowerCase().includes(term)
+    );
+  
     return (
-      (customer.toLowerCase().includes(search.toLowerCase()) ||
-      email.toLowerCase().includes(search.toLowerCase()) ||
-      dbOrderId.toLowerCase().includes(search.toLowerCase()) ||
-      displayOrderId.toLowerCase().includes(search.toLowerCase())) &&
+      matchesSearch &&
       order.shippingAddress?.houseNo === "In-Store"
     );
   }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

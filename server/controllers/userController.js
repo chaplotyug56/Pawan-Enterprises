@@ -356,7 +356,6 @@ const addAddress = async (req, res) => {
     if (
       !fullName ||
       !phone ||
-      !houseNo ||
       !street ||
       !city ||
       !pincode

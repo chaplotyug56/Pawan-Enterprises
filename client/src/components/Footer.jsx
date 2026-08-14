@@ -21,6 +21,9 @@ import {
               Your trusted general store for Cosmetics, Grocery,
               Stationery, Paints and Household Essentials.
             </p>
+            <p>
+              <strong>Fssai license no. - 12222019000032</strong>
+            </p>
           </div>
   
           {/* Contact */}

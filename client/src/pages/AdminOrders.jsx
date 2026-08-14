@@ -215,7 +215,7 @@ function AdminOrders() {
 
     <img
       className="payment-screenshot-preview"
-      src={`${process.env.REACT_APP_API_URL.replace('/api', '')}${order.paymentScreenshot}`}
+      src={`${process.env.REACT_APP_API_URL}/images/${order.paymentScreenshot}`}
       alt="Payment Screenshot"
       style={{
         width: "220px",
@@ -268,7 +268,7 @@ function AdminOrders() {
 
         <img
           className="payment-screenshot-preview"
-          src={`${process.env.REACT_APP_API_URL.replace('/api', '')}${order.paymentScreenshot}`}
+          src={`${process.env.REACT_APP_API_URL}/images/${order.paymentScreenshot}`}
           alt="Payment Screenshot"
           style={{
             width: "220px",
@@ -279,7 +279,7 @@ function AdminOrders() {
           }}
           onClick={() =>
             window.open(
-              `${process.env.REACT_APP_API_URL.replace('/api', '')}${order.paymentScreenshot}`,
+              `${process.env.REACT_APP_API_URL}/images/${order.paymentScreenshot}`,
               "_blank"
             )
           }
@@ -335,7 +335,8 @@ function AdminOrders() {
     <br />
 
     <img
-      src={`//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}${order.paymentScreenshot}`}
+      className="payment-screenshot-preview"
+      src={`${process.env.REACT_APP_API_URL}/images/${order.paymentScreenshot}`}
       alt="Payment"
       style={{
         width: "250px",
@@ -346,7 +347,7 @@ function AdminOrders() {
       }}
       onClick={() =>
         window.open(
-          `${process.env.REACT_APP_API_URL.replace('/api', '')}${order.paymentScreenshot}`,
+          `${process.env.REACT_APP_API_URL}/images/${order.paymentScreenshot}`,
           "_blank"
         )
       }

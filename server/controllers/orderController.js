@@ -42,9 +42,17 @@ const createOrder = async (req, res) => {
       }
       
       // Uploaded screenshot (optional)
-      const paymentScreenshot = req.file
-        ? `/uploads/${req.file.filename}`
-        : "";
+      let paymentScreenshot = "";
+      if (req.file) {
+        const Image = require("../models/Image");
+        const newImg = new Image({
+          name: req.file.originalname,
+          data: req.file.buffer,
+          contentType: req.file.mimetype,
+        });
+        const savedImg = await newImg.save();
+        paymentScreenshot = savedImg._id.toString();
+      }
     // Validate Items
     if (!items || items.length === 0) {
       return res.status(400).json({

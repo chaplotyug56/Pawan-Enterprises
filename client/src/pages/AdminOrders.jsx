@@ -214,7 +214,8 @@ function AdminOrders() {
     </p>
 
     <img
-      src={`//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}${order.paymentScreenshot}`}
+      className="payment-screenshot-preview"
+      src={`${process.env.REACT_APP_API_URL.replace('/api', '')}${order.paymentScreenshot}`}
       alt="Payment Screenshot"
       style={{
         width: "220px",
@@ -225,7 +226,7 @@ function AdminOrders() {
       }}
       onClick={() =>
         window.open(
-          `//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}${order.paymentScreenshot}`,
+          `${process.env.REACT_APP_API_URL.replace('/api', '')}${order.paymentScreenshot}`,
           "_blank"
         )
       }
@@ -266,7 +267,8 @@ function AdminOrders() {
         <br />
 
         <img
-          src={`//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}${order.paymentScreenshot}`}
+          className="payment-screenshot-preview"
+          src={`${process.env.REACT_APP_API_URL.replace('/api', '')}${order.paymentScreenshot}`}
           alt="Payment Screenshot"
           style={{
             width: "220px",
@@ -277,7 +279,7 @@ function AdminOrders() {
           }}
           onClick={() =>
             window.open(
-              `http://localhost:8000${order.paymentScreenshot}`,
+              `${process.env.REACT_APP_API_URL.replace('/api', '')}${order.paymentScreenshot}`,
               "_blank"
             )
           }
@@ -344,7 +346,7 @@ function AdminOrders() {
       }}
       onClick={() =>
         window.open(
-          `http://localhost:8000${order.paymentScreenshot}`,
+          `${process.env.REACT_APP_API_URL.replace('/api', '')}${order.paymentScreenshot}`,
           "_blank"
         )
       }

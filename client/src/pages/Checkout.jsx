@@ -50,17 +50,20 @@ function Checkout() {
       if (!location) {
         return toast.error("Please verify your location");
       }
-      if (payment === "upi") {
-        if (!paymentTime) {
-          return toast.error("Please enter payment time.");
-        }
-
-        
+      let finalPaymentTime = paymentTime;
+      if (payment === "upi" && !finalPaymentTime) {
+         const now = new Date();
+         const hours = String(now.getHours()).padStart(2, "0");
+         const minutes = String(now.getMinutes()).padStart(2, "0");
+         finalPaymentTime = `${hours}:${minutes}`;
+         setPaymentTime(finalPaymentTime);
       }
 
       const items = cart.map((item) => ({
         product: item._id,
         quantity: item.quantity,
+        color: item.color || "",
+        size: item.size || ""
       }));
 
 
@@ -82,7 +85,7 @@ function Checkout() {
       data.append("shippingAddress", JSON.stringify(finalAddress));
       data.append("location", JSON.stringify(location));
       data.append("paymentMethod", payment);
-      data.append("paymentTime", paymentTime);
+      data.append("paymentTime", finalPaymentTime);
 
       if (paymentScreenshot) {
         data.append("paymentScreenshot", paymentScreenshot);

@@ -53,11 +53,11 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use((req, res, next) => {
   if (!process.env.MONGODB_URI) {
-    return res.status(500).json({ success: false, message: "CRITICAL: MONGODB_URI environment variable is missing in Vercel! Please add it in Vercel Settings -> Environment Variables." });
+    return res.status(500).send("<h2>CRITICAL ERROR: MONGODB_URI missing!</h2><p>Please add MONGODB_URI in Vercel Settings -> Environment Variables.</p>");
   }
   if (mongoose.connection.readyState === 0) {
     // If not connected, don't let it buffer forever and timeout Vercel
-    return res.status(500).json({ success: false, message: "CRITICAL: MongoDB is not connected. The MONGODB_URI might be invalid or the database is rejecting the connection." });
+    return res.status(500).send("<h2>CRITICAL ERROR: MongoDB is not connected.</h2><p>Your MONGODB_URI in Vercel is invalid, or the MongoDB Atlas IP Whitelist is blocking the connection. Make sure 0.0.0.0/0 is added in MongoDB Atlas.</p>");
   }
   next();
 });

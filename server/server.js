@@ -90,7 +90,6 @@ const connectDB = async () => {
     await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 5000,
-      bufferCommands: false, // Don't buffer commands to avoid lambda timeouts
       family: 4, // Force IPv4, because Node 18+ prefers IPv6 which can cause 90s connection hangs with MongoDB Atlas
     });
     console.log("✅ MongoDB Connected Successfully");

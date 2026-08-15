@@ -10,10 +10,15 @@ import { toast } from "react-toastify";
  * @param {number|string} options.amount - The exact amount to pay
  * @param {string} [options.transactionNote] - Optional note/order ID
  */
-export const openUPIApp = ({ upiId, merchantName, amount, transactionNote = "" }) => {
+export const openUPIApp = ({
+  upiId,
+  merchantName,
+  amount,
+  transactionNote = "",
+}) => {
   // Construct the standard UPI Deep Link
   const upiLink = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(
-    merchantName
+    merchantName,
   )}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
 
   // Record the time before trying to open the app
@@ -35,7 +40,7 @@ export const openUPIApp = ({ upiId, merchantName, amount, transactionNote = "" }
     if (endTime - startTime < 2500) {
       toast.info(
         "Could not automatically open a UPI app. Please scan the QR code instead.",
-        { autoClose: 5000 }
+        { autoClose: 5000 },
       );
     }
   }, 2000);

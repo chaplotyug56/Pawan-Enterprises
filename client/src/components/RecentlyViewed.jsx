@@ -13,7 +13,6 @@ function RecentlyViewed() {
   return (
     <section className="recently-viewed section">
       <div className="container">
-
         <div className="section-title">
           <h2>Recently Viewed</h2>
           <p>Your recently viewed products</p>
@@ -28,7 +27,6 @@ function RecentlyViewed() {
             />
           ))}
         </div>
-
       </div>
     </section>
   );

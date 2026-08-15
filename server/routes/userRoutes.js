@@ -4,18 +4,18 @@ const router = express.Router();
 const { protect } = require("../middleware/authMiddleware");
 
 const {
-    registerUser,
-    loginUser,
-    getProfile,
-    updateProfile,
-    changePassword,
-    addAddress,
-    getAddresses,
-    deleteAddress,
-    updateAddress,
-    setDefaultAddress,
-    firebaseLogin,
-  } = require("../controllers/userController");
+  registerUser,
+  loginUser,
+  getProfile,
+  updateProfile,
+  changePassword,
+  addAddress,
+  getAddresses,
+  deleteAddress,
+  updateAddress,
+  setDefaultAddress,
+  firebaseLogin,
+} = require("../controllers/userController");
 
 router.post("/register", registerUser);
 
@@ -37,10 +37,6 @@ router.delete("/addresses/:id", protect, deleteAddress);
 
 router.put("/addresses/:id", protect, updateAddress);
 
-router.put(
-    "/addresses/:id/default",
-    protect,
-    setDefaultAddress
-  );
+router.put("/addresses/:id/default", protect, setDefaultAddress);
 
 module.exports = router;

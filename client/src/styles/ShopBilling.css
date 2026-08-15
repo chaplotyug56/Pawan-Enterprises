@@ -7,7 +7,7 @@
 }
 
 .billing-header h1 {
-  color: #1565C0;
+  color: #1565c0;
   font-size: 32px;
   margin-bottom: 10px;
 }
@@ -28,7 +28,7 @@
   background: white;
   border-radius: 12px;
   padding: 25px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   margin-bottom: 25px;
 }
 
@@ -56,7 +56,7 @@
 }
 
 .input-group input:focus {
-  border-color: #1565C0;
+  border-color: #1565c0;
 }
 
 .pos-search {
@@ -100,7 +100,7 @@
 
 .pos-item:hover {
   background: #f9f9f9;
-  border-color: #1565C0;
+  border-color: #1565c0;
 }
 
 .pos-item img {
@@ -124,7 +124,7 @@
 .pos-item-info p {
   font-size: 15px;
   font-weight: 600;
-  color: #1565C0;
+  color: #1565c0;
 }
 
 .stock-badge {
@@ -283,7 +283,7 @@
 }
 
 .payment-option.active {
-  border-color: #1565C0;
+  border-color: #1565c0;
   background: #e3f2fd;
 }
 
@@ -294,20 +294,20 @@
   margin-bottom: 20px;
   padding: 20px;
   background: #fff;
-  border: 1px dashed #1565C0;
+  border: 1px dashed #1565c0;
   border-radius: 8px;
 }
 
 .custom-qr-container p {
   margin-top: 15px;
   font-weight: bold;
-  color: #1565C0;
+  color: #1565c0;
 }
 
 .generate-btn {
   width: 100%;
   padding: 16px;
-  background: #1565C0;
+  background: #1565c0;
   color: white;
   border: none;
   border-radius: 8px;

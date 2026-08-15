@@ -11,48 +11,43 @@ const generateInvoice = require("../utils/invoiceGenerator");
 // Create Order
 // ========================================
 const createOrder = async (req, res) => {
-    console.log("🚀 createOrder() called");
+  console.log("🚀 createOrder() called");
   try {
     if (req.user && req.user.role === "staff") {
       return res.status(403).json({
         success: false,
-        message: "Staff accounts are not permitted to place orders."
+        message: "Staff accounts are not permitted to place orders.",
       });
     }
 
-    let {
-        items,
-        shippingAddress,
-        location,
-        paymentMethod,
-        paymentTime,
-      } = req.body;
-      
-      // FormData sends JSON as strings
-      if (typeof items === "string") {
-        items = JSON.parse(items);
-      }
-      
-      if (typeof shippingAddress === "string") {
-        shippingAddress = JSON.parse(shippingAddress);
-      }
-      
-      if (typeof location === "string") {
-        location = JSON.parse(location);
-      }
-      
-      // Uploaded screenshot (optional)
-      let paymentScreenshot = "";
-      if (req.file) {
-        const Image = require("../models/Image");
-        const newImg = new Image({
-          name: req.file.originalname,
-          data: req.file.buffer,
-          contentType: req.file.mimetype,
-        });
-        const savedImg = await newImg.save();
-        paymentScreenshot = savedImg._id.toString();
-      }
+    let { items, shippingAddress, location, paymentMethod, paymentTime } =
+      req.body;
+
+    // FormData sends JSON as strings
+    if (typeof items === "string") {
+      items = JSON.parse(items);
+    }
+
+    if (typeof shippingAddress === "string") {
+      shippingAddress = JSON.parse(shippingAddress);
+    }
+
+    if (typeof location === "string") {
+      location = JSON.parse(location);
+    }
+
+    // Uploaded screenshot (optional)
+    let paymentScreenshot = "";
+    if (req.file) {
+      const Image = require("../models/Image");
+      const newImg = new Image({
+        name: req.file.originalname,
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      });
+      const savedImg = await newImg.save();
+      paymentScreenshot = savedImg._id.toString();
+    }
     // Validate Items
     if (!items || items.length === 0) {
       return res.status(400).json({
@@ -94,12 +89,12 @@ const createOrder = async (req, res) => {
 
       if (product.hasVariants && product.variants?.length > 0) {
         targetVariant = product.variants.find(
-          (v) => v.color === (item.color || "") && v.size === (item.size || "")
+          (v) => v.color === (item.color || "") && v.size === (item.size || ""),
         );
         if (targetVariant) {
           itemPrice = targetVariant.price;
           if (targetVariant.image) itemImage = targetVariant.image;
-          
+
           if (targetVariant.stock < item.quantity) {
             return res.status(400).json({
               success: false,
@@ -120,83 +115,81 @@ const createOrder = async (req, res) => {
         }
         product.stock -= item.quantity;
       }
-      
+
       // Auto-hide if out of stock
       if (product.stock <= 0 && !product.allowOutOfStockPurchase) {
         product.active = false;
       } else if (product.stock > 0) {
         product.active = true;
       }
-      
+
       calculatedTotal += itemPrice * item.quantity;
 
       item.name = product.name;
       item.price = itemPrice;
       item.image = itemImage;
 
-// Increase total sold quantity
-if (product.salesCount == null || isNaN(product.salesCount)) {
-  product.salesCount = 0;
-}
-product.salesCount += item.quantity;
+      // Increase total sold quantity
+      if (product.salesCount == null || isNaN(product.salesCount)) {
+        product.salesCount = 0;
+      }
+      product.salesCount += item.quantity;
 
-await product.save();
+      await product.save();
     }
-    
+
     // Add shipping charge if applicable (waived for in-store purchases)
     const isInStore = shippingAddress.houseNo === "In-Store";
-    const shippingPrice = (isInStore || calculatedTotal >= 1000) ? 0 : 20;
+    const shippingPrice = isInStore || calculatedTotal >= 1000 ? 0 : 20;
     calculatedTotal += shippingPrice;
 
     // ========================================
-// Generate Custom Order ID
-// Format: PE YY MM DD MonthlyCount 
-// ========================================
+    // Generate Custom Order ID
+    // Format: PE YY MM DD MonthlyCount
+    // ========================================
 
-const now = new Date();
+    const now = new Date();
 
-const year = String(now.getFullYear()).slice(-2);
-const month = String(now.getMonth() + 1).padStart(2, "0");
-const day = String(now.getDate()).padStart(2, "0");
+    const year = String(now.getFullYear()).slice(-2);
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
 
-const monthKey = `${now.getFullYear()}-${month}`;
+    const monthKey = `${now.getFullYear()}-${month}`;
 
-// Find current month's counter
-let counter = await Counter.findOne({ month: monthKey });
+    // Find current month's counter
+    let counter = await Counter.findOne({ month: monthKey });
 
-if (!counter) {
-  counter = await Counter.create({
-    month: monthKey,
-    sequence: 1,
-  });
-} else {
-  counter.sequence += 1;
-  await counter.save();
-}
+    if (!counter) {
+      counter = await Counter.create({
+        month: monthKey,
+        sequence: 1,
+      });
+    } else {
+      counter.sequence += 1;
+      await counter.save();
+    }
 
-const sequence = String(counter.sequence).padStart(4, "0");
+    const sequence = String(counter.sequence).padStart(4, "0");
 
-const customOrderId = `PE${year}${month}${day}${sequence}`;
+    const customOrderId = `PE${year}${month}${day}${sequence}`;
 
     // Create Order
     const order = await Order.create({
-        user: req.user._id,
-        orderId: customOrderId,
-        items,
-        totalPrice: calculatedTotal,
-        shippingAddress,
-        location,
-        paymentMethod,
-      
-        paymentTime,
-      
-        paymentScreenshot,
-      
-        paymentStatus:
-          paymentMethod === "upi"
-            ? "Pending Verification"
-            : "Pending",
-      });
+      user: req.user._id,
+      orderId: customOrderId,
+      items,
+      totalPrice: calculatedTotal,
+      shippingAddress,
+      location,
+      paymentMethod,
+
+      paymentTime,
+
+      paymentScreenshot,
+
+      paymentStatus:
+        paymentMethod === "upi" ? "Pending Verification" : "Pending",
+    });
 
     // Create Notification
     await Notification.create({
@@ -214,34 +207,31 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
 
     // Send WhatsApp (Don't stop order if it fails)
     try {
-        console.log("📲 About to send WhatsApp...");
-        
-        await sendWhatsAppMessage({
-            customerName: shippingAddress.fullName,
-          
-            phone: shippingAddress.phone,
-          
-            amount: calculatedTotal,
-          
-            paymentMethod,
-          
-            paymentTime,
-          
-            paymentScreenshot,
-          
-            address: `${shippingAddress.houseNo ? shippingAddress.houseNo + ', ' : ''}${shippingAddress.building ? shippingAddress.building + ', ' : ''}${shippingAddress.street}${shippingAddress.landmark ? `, ${shippingAddress.landmark}` : ''}, ${shippingAddress.city}, ${shippingAddress.state || 'Rajasthan'} - ${shippingAddress.pincode}`,
-          
-            orderId: customOrderId,
+      console.log("📲 About to send WhatsApp...");
 
-            paymentStatus: order.paymentStatus,
-          });
-          console.log("✅ WhatsApp function completed");
-          
+      await sendWhatsAppMessage({
+        customerName: shippingAddress.fullName,
+
+        phone: shippingAddress.phone,
+
+        amount: calculatedTotal,
+
+        paymentMethod,
+
+        paymentTime,
+
+        paymentScreenshot,
+
+        address: `${shippingAddress.houseNo ? shippingAddress.houseNo + ", " : ""}${shippingAddress.building ? shippingAddress.building + ", " : ""}${shippingAddress.street}${shippingAddress.landmark ? `, ${shippingAddress.landmark}` : ""}, ${shippingAddress.city}, ${shippingAddress.state || "Rajasthan"} - ${shippingAddress.pincode}`,
+
+        orderId: customOrderId,
+
+        paymentStatus: order.paymentStatus,
+      });
+      console.log("✅ WhatsApp function completed");
     } catch (whatsappError) {
       console.error("WhatsApp Error:");
-      console.error(
-        whatsappError.response?.data || whatsappError.message
-      );
+      console.error(whatsappError.response?.data || whatsappError.message);
     }
 
     // Send FCM Push Notification to Admins
@@ -249,28 +239,32 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
       try {
         console.log("📲 Attempting to send FCM Notification...");
         const adminTokens = await NotificationToken.find({ isActive: true });
-        
+
         if (adminTokens.length > 0) {
-          const tokens = adminTokens.map(t => t.token);
-          
+          const tokens = adminTokens.map((t) => t.token);
+
           const payload = {
             notification: {
               title: "🛒 New Order Received!",
-              body: `Order #${customOrderId} • ${shippingAddress.fullName} • ₹${calculatedTotal}`
+              body: `Order #${customOrderId} • ${shippingAddress.fullName} • ₹${calculatedTotal}`,
             },
             data: {
               orderId: String(order._id),
               orderNumber: customOrderId,
               customerName: shippingAddress.fullName,
               totalAmount: String(calculatedTotal),
-              click_action: "/admin"
+              click_action: "/admin",
             },
-            tokens: tokens
+            tokens: tokens,
           };
 
-          const response = await firebaseAdmin.messaging().sendEachForMulticast(payload);
-          console.log(`✅ FCM Notification sent: ${response.successCount} successes, ${response.failureCount} failures`);
-          
+          const response = await firebaseAdmin
+            .messaging()
+            .sendEachForMulticast(payload);
+          console.log(
+            `✅ FCM Notification sent: ${response.successCount} successes, ${response.failureCount} failures`,
+          );
+
           // Cleanup invalid tokens
           if (response.failureCount > 0) {
             const failedTokens = [];
@@ -282,9 +276,11 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
             if (failedTokens.length > 0) {
               await NotificationToken.updateMany(
                 { token: { $in: failedTokens } },
-                { isActive: false }
+                { isActive: false },
               );
-              console.log(`🗑️ Deactivated ${failedTokens.length} invalid FCM tokens`);
+              console.log(
+                `🗑️ Deactivated ${failedTokens.length} invalid FCM tokens`,
+              );
             }
           }
         } else {
@@ -300,7 +296,6 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
       message: "Order Placed Successfully",
       order,
     });
-
   } catch (error) {
     console.error("Create Order Error:");
     console.error(error);
@@ -320,17 +315,16 @@ const customOrderId = `PE${year}${month}${day}${sequence}`;
 const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({
-  user: req.user._id,
-})
-.sort({ createdAt: -1 })
-.populate("items.product")
-.populate("user", "name email");
+      user: req.user._id,
+    })
+      .sort({ createdAt: -1 })
+      .populate("items.product")
+      .populate("user", "name email");
 
     return res.status(200).json({
       success: true,
       data: orders,
     });
-
   } catch (error) {
     console.error(error);
 
@@ -356,7 +350,6 @@ const getAllOrders = async (req, res) => {
       success: true,
       data: orders,
     });
-
   } catch (error) {
     console.error(error);
 
@@ -373,125 +366,118 @@ const getAllOrders = async (req, res) => {
 // Download Invoice
 // ========================================
 const downloadInvoice = async (req, res) => {
-    try {
-      const order = await Order.findById(req.params.id).populate("items.product");
-  
-      if (!order) {
-        return res.status(404).json({
-          success: false,
-          message: "Order not found",
-        });
-      }
-  
-      generateInvoice(res, order);
-  
-    } catch (error) {
-      console.error(error);
-  
-      return res.status(500).json({
+  try {
+    const order = await Order.findById(req.params.id).populate("items.product");
+
+    if (!order) {
+      return res.status(404).json({
         success: false,
-        message: error.message,
+        message: "Order not found",
       });
     }
-  };
+
+    generateInvoice(res, order);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 // ========================================
 // Update Order Status / Payment Status
 // ========================================
 const updateOrderStatus = async (req, res) => {
-    try {
-      const order = await Order.findById(req.params.id);
-  
-      if (!order) {
-        return res.status(404).json({
-          success: false,
-          message: "Order not found",
-        });
-      }
-  
-      // -----------------------------
-      // Update Order Status
-      // -----------------------------
-      if (req.body.status) {
-        const allowedStatus = [
-          "Pending",
-          "Processing",
-          "Shipped",
-          "Delivered",
-          "Cancelled",
-        ];
-  
-        if (!allowedStatus.includes(req.body.status)) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid order status",
-          });
-        }
-  
-        order.status = req.body.status;
-  
-        // COD payment becomes paid after delivery
-        if (
-          order.paymentMethod === "cod" &&
-          req.body.status === "Delivered"
-        ) {
-          order.paymentStatus = "Paid";
-          order.paidAt = new Date();
-        }
-      }
-  
-      // -----------------------------
-      // Update UPI Payment Status
-      // -----------------------------
-      if (req.body.paymentStatus) {
-        const allowedPaymentStatus = [
-          "Pending",
-          "Pending Verification",
-          "Paid",
-          "Rejected",
-        ];
-  
-        if (
-          !allowedPaymentStatus.includes(req.body.paymentStatus)
-        ) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid payment status",
-          });
-        }
-  
-        order.paymentStatus = req.body.paymentStatus;
-  
-        if (req.body.paymentStatus === "Paid") {
-          order.paidAt = new Date();
-        } else {
-          order.paidAt = null;
-        }
-      }
-  
-      await order.save();
-  
-      return res.status(200).json({
-        success: true,
-        message: "Order Updated Successfully",
-        order,
-      });
-  
-    } catch (error) {
-      console.error("Update Order Error:", error);
-  
-      if (res.headersSent) return;
-  
-      return res.status(500).json({
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
         success: false,
-        message: error.message,
+        message: "Order not found",
       });
     }
-  };
-  module.exports = {
-    createOrder,
-    getOrders,
-    getAllOrders,
-    updateOrderStatus,
-    downloadInvoice,
-  };
+
+    // -----------------------------
+    // Update Order Status
+    // -----------------------------
+    if (req.body.status) {
+      const allowedStatus = [
+        "Pending",
+        "Processing",
+        "Shipped",
+        "Delivered",
+        "Cancelled",
+      ];
+
+      if (!allowedStatus.includes(req.body.status)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid order status",
+        });
+      }
+
+      order.status = req.body.status;
+
+      // COD payment becomes paid after delivery
+      if (order.paymentMethod === "cod" && req.body.status === "Delivered") {
+        order.paymentStatus = "Paid";
+        order.paidAt = new Date();
+      }
+    }
+
+    // -----------------------------
+    // Update UPI Payment Status
+    // -----------------------------
+    if (req.body.paymentStatus) {
+      const allowedPaymentStatus = [
+        "Pending",
+        "Pending Verification",
+        "Paid",
+        "Rejected",
+      ];
+
+      if (!allowedPaymentStatus.includes(req.body.paymentStatus)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid payment status",
+        });
+      }
+
+      order.paymentStatus = req.body.paymentStatus;
+
+      if (req.body.paymentStatus === "Paid") {
+        order.paidAt = new Date();
+      } else {
+        order.paidAt = null;
+      }
+    }
+
+    await order.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Order Updated Successfully",
+      order,
+    });
+  } catch (error) {
+    console.error("Update Order Error:", error);
+
+    if (res.headersSent) return;
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+module.exports = {
+  createOrder,
+  getOrders,
+  getAllOrders,
+  updateOrderStatus,
+  downloadInvoice,
+};

@@ -14,13 +14,7 @@ const notificationSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      enum: [
-        "order",
-        "payment",
-        "review",
-        "stock",
-        "system",
-      ],
+      enum: ["order", "payment", "review", "stock", "system"],
       default: "system",
     },
 
@@ -33,7 +27,7 @@ const notificationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       default: null,
     },
-    
+
     metadata: {
       orderNumber: String,
       customer: String,
@@ -42,10 +36,7 @@ const notificationSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-module.exports = mongoose.model(
-  "Notification",
-  notificationSchema
-);
+module.exports = mongoose.model("Notification", notificationSchema);

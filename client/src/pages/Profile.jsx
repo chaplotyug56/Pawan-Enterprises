@@ -59,7 +59,10 @@ function Profile() {
   };
 
   return (
-    <div className="container" style={{ maxWidth: "700px", margin: "40px auto" }}>
+    <div
+      className="container"
+      style={{ maxWidth: "700px", margin: "40px auto" }}
+    >
       <h2>My Profile</h2>
 
       <form onSubmit={updateProfile}>
@@ -68,32 +71,22 @@ function Profile() {
         <input
           type="text"
           value={user.name}
-          onChange={(e) =>
-            setUser({ ...user, name: e.target.value })
-          }
+          onChange={(e) => setUser({ ...user, name: e.target.value })}
         />
 
         <label>Email</label>
 
-        <input
-          type="email"
-          value={user.email}
-          disabled
-        />
+        <input type="email" value={user.email} disabled />
 
         <label>Phone</label>
 
         <input
           type="text"
           value={user.phone}
-          onChange={(e) =>
-            setUser({ ...user, phone: e.target.value })
-          }
+          onChange={(e) => setUser({ ...user, phone: e.target.value })}
         />
 
-        <button type="submit">
-          Update Profile
-        </button>
+        <button type="submit">Update Profile</button>
       </form>
 
       <hr style={{ margin: "40px 0" }} />
@@ -125,9 +118,7 @@ function Profile() {
           }
         />
 
-        <button type="submit">
-          Change Password
-        </button>
+        <button type="submit">Change Password</button>
       </form>
     </div>
   );

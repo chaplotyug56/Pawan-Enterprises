@@ -19,7 +19,7 @@ function UPIPayment({
 
   // 2. Simplest possible valid UPI Deep Link
   const baseUpiParams = `pa=${UPI_ID}&pn=${encodeURIComponent(BUSINESS_NAME)}&am=${formattedAmount}&cu=INR`;
-  
+
   // 3. We use standard upi://pay for the QR Code
   const upiLink = `upi://pay?${baseUpiParams}`;
 
@@ -49,66 +49,40 @@ function UPIPayment({
 
   return (
     <div className="upi-payment-box">
-
-      <h2 className="upi-title">
-        Pay Using UPI
-      </h2>
+      <h2 className="upi-title">Pay Using UPI</h2>
 
       <div className="amount-card">
-
         <h1>₹{totalAmount}</h1>
 
         <p>Please pay the exact amount.</p>
-
       </div>
 
       <div className="qr-card">
-
-        <QRCode
-          value={upiLink}
-          size={220}
-        />
-
+        <QRCode value={upiLink} size={220} />
       </div>
 
       <div className="upi-id-card">
-
-        <p className="upi-label">
-          UPI ID
-        </p>
+        <p className="upi-label">UPI ID</p>
 
         <div className="upi-row">
-
           <span>{UPI_ID}</span>
 
-          <button
-            type="button"
-            className="copy-btn"
-            onClick={copyUPI}
-          >
+          <button type="button" className="copy-btn" onClick={copyUPI}>
             {copied ? "✓ Copied" : "Copy"}
           </button>
-
         </div>
-
       </div>
 
       <div className="payment-details">
-
         <h3>Payment Details</h3>
 
-        <label>
-          Payment Time
-        </label>
+        <label>Payment Time</label>
 
         <div className="payment-time-row">
-
           <input
             type="time"
             value={paymentTime}
-            onChange={(e) =>
-              setPaymentTime(e.target.value)
-            }
+            onChange={(e) => setPaymentTime(e.target.value)}
           />
 
           <button
@@ -118,10 +92,7 @@ function UPIPayment({
           >
             Use Current Time
           </button>
-
         </div>
-
-       
 
         <label>
           Upload Payment Screenshot
@@ -131,44 +102,32 @@ function UPIPayment({
         <input
           type="file"
           accept="image/*"
-          onChange={(e) =>
-            setPaymentScreenshot(
-              e.target.files[0]
-            )
-          }
+          onChange={(e) => setPaymentScreenshot(e.target.files[0])}
         />
 
         {paymentScreenshot && (
-
           <div className="preview-box">
-
             <img
               src={URL.createObjectURL(paymentScreenshot)}
               alt="Payment Screenshot"
               className="payment-preview"
             />
-
           </div>
-
         )}
-
       </div>
 
       <div className="payment-info">
-
         <h4>Instructions</h4>
 
         <ol>
           <li>Scan the QR code OR click "Pay via UPI App".</li>
           <li>Pay the exact amount.</li>
           <li>Click "Use Current Time".</li>
-          
+
           <li>Uploading the screenshot is optional.</li>
           <li>Click Place Order.</li>
         </ol>
-
       </div>
-
     </div>
   );
 }

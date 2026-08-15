@@ -9,7 +9,7 @@ const firebaseConfig = {
   storageBucket: "pawan-enterprises-shop.firebasestorage.app",
   messagingSenderId: "89341605121",
   appId: "1:89341605121:web:be2dde2e9b0bcb88ca1700",
-  measurementId: "G-KTW8NZMQHL"
+  measurementId: "G-KTW8NZMQHL",
 };
 
 const app = initializeApp(firebaseConfig);

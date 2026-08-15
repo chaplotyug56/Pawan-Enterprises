@@ -13,8 +13,6 @@ function PaymentMethods({ payment, setPayment }) {
         />
         UPI
       </label>
-
-
     </div>
   );
 }

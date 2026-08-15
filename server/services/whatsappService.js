@@ -11,14 +11,18 @@ const sendWhatsAppMessage = async ({
   orderId,
   paymentStatus,
 }) => {
-    console.log("📲 sendWhatsAppMessage() called");
+  console.log("📲 sendWhatsAppMessage() called");
   try {
-    if (!process.env.PHONE_NUMBER_ID || !process.env.WHATSAPP_TOKEN || !process.env.ADMIN_WHATSAPP) {
+    if (
+      !process.env.PHONE_NUMBER_ID ||
+      !process.env.WHATSAPP_TOKEN ||
+      !process.env.ADMIN_WHATSAPP
+    ) {
       console.warn("⚠️ WhatsApp credentials missing. Skipping message.");
       return;
     }
 
-    const adminPhone = process.env.ADMIN_WHATSAPP.replace(/\\D/g, ''); // Remove + and spaces
+    const adminPhone = process.env.ADMIN_WHATSAPP.replace(/\\D/g, ""); // Remove + and spaces
 
     const message = `🛒 *NEW ORDER*
 
@@ -52,10 +56,10 @@ ${orderId}
 
 💵 *Payment Status*
 ${paymentStatus}`;
-console.log("PHONE_NUMBER_ID:", process.env.PHONE_NUMBER_ID);
-console.log("ADMIN_WHATSAPP:", process.env.ADMIN_WHATSAPP);
-console.log("TOKEN EXISTS:", !!process.env.WHATSAPP_TOKEN);
-   const response = await axios.post(
+    console.log("PHONE_NUMBER_ID:", process.env.PHONE_NUMBER_ID);
+    console.log("ADMIN_WHATSAPP:", process.env.ADMIN_WHATSAPP);
+    console.log("TOKEN EXISTS:", !!process.env.WHATSAPP_TOKEN);
+    const response = await axios.post(
       `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
       {
         messaging_product: "whatsapp",
@@ -70,21 +74,17 @@ console.log("TOKEN EXISTS:", !!process.env.WHATSAPP_TOKEN);
           Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     console.log("✅ WhatsApp Sent");
     console.log(response.data);
-
   } catch (error) {
     console.log("Meta Error:");
-console.log(error.response?.status);
-console.log(error.response?.data);
-console.log(error.message);
-    console.log(
-      "WhatsApp Error:",
-      error.response?.data || error.message
-    );
+    console.log(error.response?.status);
+    console.log(error.response?.data);
+    console.log(error.message);
+    console.log("WhatsApp Error:", error.response?.data || error.message);
   }
 };
 

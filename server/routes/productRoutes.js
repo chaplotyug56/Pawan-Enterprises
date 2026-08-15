@@ -4,14 +4,14 @@ const router = express.Router();
 const upload = require("../middleware/upload");
 
 const {
-    addProduct,
-    getProducts,
-    getProductById,
-    getRelatedProducts,
-    getBestSellingProducts,
-    updateProduct,
-    deleteProduct,
-  } = require("../controllers/productController");
+  addProduct,
+  getProducts,
+  getProductById,
+  getRelatedProducts,
+  getBestSellingProducts,
+  updateProduct,
+  deleteProduct,
+} = require("../controllers/productController");
 
 const { protect } = require("../middleware/authMiddleware");
 const { admin } = require("../middleware/adminMiddleware");
@@ -22,7 +22,6 @@ const { admin } = require("../middleware/adminMiddleware");
 
 // Get All Products
 router.get("/", getProducts);
-
 
 router.get("/best-selling", getBestSellingProducts);
 // Get Single Product
@@ -35,29 +34,12 @@ router.get("/:id/related", getRelatedProducts);
 // ==========================
 
 // Create Product
-router.post(
-  "/",
-  protect,
-  admin,
-  upload.any(),
-  addProduct
-);
+router.post("/", protect, admin, upload.any(), addProduct);
 
 // Update Product
-router.put(
-  "/:id",
-  protect,
-  admin,
-  upload.any(),
-  updateProduct
-);
+router.put("/:id", protect, admin, upload.any(), updateProduct);
 
 // Delete Product
-router.delete(
-  "/:id",
-  protect,
-  admin,
-  deleteProduct
-);
+router.delete("/:id", protect, admin, deleteProduct);
 
 module.exports = router;

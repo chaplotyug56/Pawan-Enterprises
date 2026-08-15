@@ -10,9 +10,15 @@ const addProduct = async (req, res) => {
   try {
     let variants = [];
     if (req.body.variants) {
-      try { variants = typeof req.body.variants === "string" ? JSON.parse(req.body.variants) : req.body.variants; } catch (e) {}
+      try {
+        variants =
+          typeof req.body.variants === "string"
+            ? JSON.parse(req.body.variants)
+            : req.body.variants;
+      } catch (e) {}
     }
-    const hasVariants = req.body.hasVariants === "true" || req.body.hasVariants === true;
+    const hasVariants =
+      req.body.hasVariants === "true" || req.body.hasVariants === true;
 
     let imagesIds = [];
     if (req.files?.length > 0) {
@@ -23,7 +29,7 @@ const addProduct = async (req, res) => {
           contentType: file.mimetype,
         });
         const savedImg = await newImg.save();
-        
+
         if (file.fieldname === "images") {
           imagesIds.push(savedImg._id.toString());
         } else if (file.fieldname.startsWith("variantImage_")) {
@@ -36,18 +42,23 @@ const addProduct = async (req, res) => {
     }
 
     let imageId = imagesIds.length > 0 ? imagesIds[0] : "";
-    
+
     let productMrp = req.body.mrp;
     let productPrice = req.body.price;
     let productStock = req.body.stock;
-    
+
     if (hasVariants && variants && variants.length > 0) {
       productMrp = variants[0].mrp;
       productPrice = variants[0].price;
-      productStock = variants.reduce((acc, v) => acc + (Number(v.stock) || 0), 0);
+      productStock = variants.reduce(
+        (acc, v) => acc + (Number(v.stock) || 0),
+        0,
+      );
     }
 
-    const allowOutOfStock = req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true;
+    const allowOutOfStock =
+      req.body.allowOutOfStockPurchase === "true" ||
+      req.body.allowOutOfStockPurchase === true;
     const isOutOfStock = Number(productStock) <= 0 && !allowOutOfStock;
 
     const product = new Product({
@@ -57,11 +68,16 @@ const addProduct = async (req, res) => {
       stock: productStock,
       hasVariants,
       allowOutOfStockPurchase: allowOutOfStock,
-      deliveryAvailable: req.body.deliveryAvailable === "true" || req.body.deliveryAvailable === true,
+      deliveryAvailable:
+        req.body.deliveryAvailable === "true" ||
+        req.body.deliveryAvailable === true,
       featured: req.body.featured === "true" || req.body.featured === true,
-      bestSeller: req.body.bestSeller === "true" || req.body.bestSeller === true,
-      newArrival: req.body.newArrival === "true" || req.body.newArrival === true,
-      showOnHomepage: req.body.showOnHomepage === "true" || req.body.showOnHomepage === true,
+      bestSeller:
+        req.body.bestSeller === "true" || req.body.bestSeller === true,
+      newArrival:
+        req.body.newArrival === "true" || req.body.newArrival === true,
+      showOnHomepage:
+        req.body.showOnHomepage === "true" || req.body.showOnHomepage === true,
       active: !isOutOfStock, // Auto-hide if out of stock
       variants,
       image: imageId,
@@ -90,22 +106,15 @@ const addProduct = async (req, res) => {
 // =======================
 const getProducts = async (req, res) => {
   try {
-    const {
-      search,
-      category,
-      minPrice,
-      maxPrice,
-      inStock,
-      sort,
-      admin,
-    } = req.query;
+    const { search, category, minPrice, maxPrice, inStock, sort, admin } =
+      req.query;
 
     const query = {};
 
     // Search
     if (search) {
       const searchTerms = search.trim().split(/\s+/);
-      query.$and = searchTerms.map(term => ({
+      query.$and = searchTerms.map((term) => ({
         $or: [
           { name: { $regex: term, $options: "i" } },
           { brand: { $regex: term, $options: "i" } },
@@ -113,7 +122,7 @@ const getProducts = async (req, res) => {
           { sku: { $regex: term, $options: "i" } },
           { "variants.size": { $regex: term, $options: "i" } },
           { "variants.color": { $regex: term, $options: "i" } },
-          { "variants.sku": { $regex: term, $options: "i" } }
+          { "variants.sku": { $regex: term, $options: "i" } },
         ],
       }));
     }
@@ -156,38 +165,40 @@ const getProducts = async (req, res) => {
         break;
 
       case "rating":
-        products.sort(
-          (a, b) => b.averageRating - a.averageRating
-        );
+        products.sort((a, b) => b.averageRating - a.averageRating);
         break;
 
       case "name":
-        products.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+        products.sort((a, b) => a.name.localeCompare(b.name));
         break;
 
       case "newest":
       default:
-        products.sort(
-          (a, b) =>
-            new Date(b.createdAt) -
-            new Date(a.createdAt)
-        );
+        products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
     const updatedProducts = products.map((product) => {
       const obj = product.toObject();
 
       if (obj.image) {
-        if (obj.image && !obj.image.startsWith("http") && !obj.image.startsWith("data:image") && !obj.image.startsWith("//")) {
+        if (
+          obj.image &&
+          !obj.image.startsWith("http") &&
+          !obj.image.startsWith("data:image") &&
+          !obj.image.startsWith("//")
+        ) {
           obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }
-      
+
       if (obj.images && obj.images.length > 0) {
         obj.images = obj.images.map((img) => {
-          if (img && !img.startsWith("http") && !img.startsWith("data:image") && !img.startsWith("//")) {
+          if (
+            img &&
+            !img.startsWith("http") &&
+            !img.startsWith("data:image") &&
+            !img.startsWith("//")
+          ) {
             return `//${req.get("host")}/api/images/${img}`;
           }
           return img;
@@ -196,7 +207,12 @@ const getProducts = async (req, res) => {
 
       if (obj.variants && obj.variants.length > 0) {
         obj.variants = obj.variants.map((variant) => {
-          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image") && !variant.image.startsWith("//")) {
+          if (
+            variant.image &&
+            !variant.image.startsWith("http") &&
+            !variant.image.startsWith("data:image") &&
+            !variant.image.startsWith("//")
+          ) {
             variant.image = `//${req.get("host")}/api/images/${variant.image}`;
           }
           return variant;
@@ -236,27 +252,42 @@ const getProductById = async (req, res) => {
     const productObj = product.toObject();
 
     if (productObj.image) {
-      if (productObj.image && !productObj.image.startsWith("http") && !productObj.image.startsWith("data:image") && !productObj.image.startsWith("//")) {
+      if (
+        productObj.image &&
+        !productObj.image.startsWith("http") &&
+        !productObj.image.startsWith("data:image") &&
+        !productObj.image.startsWith("//")
+      ) {
         productObj.image = `//${req.get("host")}/api/images/${productObj.image}`;
       }
     }
-    if (
-      productObj.images &&
-      productObj.images.length > 0
-    ) {
+    if (productObj.images && productObj.images.length > 0) {
       productObj.images = productObj.images.map((img) => {
-        if (img && !img.startsWith("http") && !img.startsWith("data:image") && !img.startsWith("//")) {
+        if (
+          img &&
+          !img.startsWith("http") &&
+          !img.startsWith("data:image") &&
+          !img.startsWith("//")
+        ) {
           return `//${req.get("host")}/api/images/${img}`;
         }
         return img;
       });
     }
 
-    console.log("PRODUCT VARIANTS LENGTH:", productObj.variants ? productObj.variants.length : "undefined");
+    console.log(
+      "PRODUCT VARIANTS LENGTH:",
+      productObj.variants ? productObj.variants.length : "undefined",
+    );
     if (productObj.variants && productObj.variants.length > 0) {
       productObj.variants = productObj.variants.map((variant) => {
         console.log("Variant image before:", variant.image);
-        if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image") && !variant.image.startsWith("//")) {
+        if (
+          variant.image &&
+          !variant.image.startsWith("http") &&
+          !variant.image.startsWith("data:image") &&
+          !variant.image.startsWith("//")
+        ) {
           variant.image = `//${req.get("host")}/api/images/${variant.image}`;
         }
         console.log("Variant image after:", variant.image);
@@ -292,26 +323,38 @@ const updateProduct = async (req, res) => {
 
     let variants = [];
     if (req.body.variants) {
-      try { variants = typeof req.body.variants === "string" ? JSON.parse(req.body.variants) : req.body.variants; } catch (e) {}
+      try {
+        variants =
+          typeof req.body.variants === "string"
+            ? JSON.parse(req.body.variants)
+            : req.body.variants;
+      } catch (e) {}
     }
-    
-    const hasVariants = req.body.hasVariants === "true" || req.body.hasVariants === true;
-    
+
+    const hasVariants =
+      req.body.hasVariants === "true" || req.body.hasVariants === true;
+
     let productMrp = req.body.mrp;
     let productPrice = req.body.price;
     let productStock = req.body.stock;
-    
+
     if (hasVariants && variants && variants.length > 0) {
       productMrp = variants[0].mrp;
       productPrice = variants[0].price;
-      productStock = variants.reduce((acc, v) => acc + (Number(v.stock) || 0), 0);
+      productStock = variants.reduce(
+        (acc, v) => acc + (Number(v.stock) || 0),
+        0,
+      );
     }
 
-    const finalStock = productStock !== undefined ? Number(productStock) : product.stock;
-    const finalAllowOutOfStock = req.body.allowOutOfStockPurchase !== undefined 
-      ? (req.body.allowOutOfStockPurchase === "true" || req.body.allowOutOfStockPurchase === true)
-      : product.allowOutOfStockPurchase;
-    
+    const finalStock =
+      productStock !== undefined ? Number(productStock) : product.stock;
+    const finalAllowOutOfStock =
+      req.body.allowOutOfStockPurchase !== undefined
+        ? req.body.allowOutOfStockPurchase === "true" ||
+          req.body.allowOutOfStockPurchase === true
+        : product.allowOutOfStockPurchase;
+
     const isOutOfStock = finalStock <= 0 && !finalAllowOutOfStock;
 
     const updateData = {
@@ -321,11 +364,16 @@ const updateProduct = async (req, res) => {
       stock: productStock !== undefined ? productStock : product.stock,
       hasVariants,
       allowOutOfStockPurchase: finalAllowOutOfStock,
-      deliveryAvailable: req.body.deliveryAvailable === "true" || req.body.deliveryAvailable === true,
+      deliveryAvailable:
+        req.body.deliveryAvailable === "true" ||
+        req.body.deliveryAvailable === true,
       featured: req.body.featured === "true" || req.body.featured === true,
-      bestSeller: req.body.bestSeller === "true" || req.body.bestSeller === true,
-      newArrival: req.body.newArrival === "true" || req.body.newArrival === true,
-      showOnHomepage: req.body.showOnHomepage === "true" || req.body.showOnHomepage === true,
+      bestSeller:
+        req.body.bestSeller === "true" || req.body.bestSeller === true,
+      newArrival:
+        req.body.newArrival === "true" || req.body.newArrival === true,
+      showOnHomepage:
+        req.body.showOnHomepage === "true" || req.body.showOnHomepage === true,
       active: !isOutOfStock, // Auto-hide if out of stock
       variants,
     };
@@ -339,7 +387,7 @@ const updateProduct = async (req, res) => {
           contentType: file.mimetype,
         });
         const savedImg = await newImg.save();
-        
+
         if (file.fieldname === "images") {
           newImageIds.push(savedImg._id.toString());
         } else if (file.fieldname.startsWith("variantImage_")) {
@@ -356,15 +404,14 @@ const updateProduct = async (req, res) => {
       }
     }
 
-    const updatedProduct =
-      await Product.findByIdAndUpdate(
-        req.params.id,
-        updateData,
-        {
-          new: true,
-          runValidators: true,
-        }
-      );
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     return res.status(200).json({
       success: true,
@@ -386,9 +433,7 @@ const updateProduct = async (req, res) => {
 // =======================
 const deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(
-      req.params.id
-    );
+    const product = await Product.findByIdAndDelete(req.params.id);
 
     if (!product) {
       return res.status(404).json({
@@ -426,21 +471,30 @@ const getRelatedProducts = async (req, res) => {
     const relatedProducts = await Product.find({
       category: product.category,
       _id: { $ne: product._id },
-    })
-      .limit(4);
+    }).limit(4);
 
     const updatedProducts = relatedProducts.map((item) => {
       const obj = item.toObject();
 
       if (obj.image) {
-        if (obj.image && !obj.image.startsWith("http") && !obj.image.startsWith("data:image") && !obj.image.startsWith("//")) {
+        if (
+          obj.image &&
+          !obj.image.startsWith("http") &&
+          !obj.image.startsWith("data:image") &&
+          !obj.image.startsWith("//")
+        ) {
           obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }
 
       if (obj.variants && obj.variants.length > 0) {
         obj.variants = obj.variants.map((variant) => {
-          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image") && !variant.image.startsWith("//")) {
+          if (
+            variant.image &&
+            !variant.image.startsWith("http") &&
+            !variant.image.startsWith("data:image") &&
+            !variant.image.startsWith("//")
+          ) {
             variant.image = `//${req.get("host")}/api/images/${variant.image}`;
           }
           return variant;
@@ -454,7 +508,6 @@ const getRelatedProducts = async (req, res) => {
       success: true,
       data: updatedProducts,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -475,14 +528,24 @@ const getBestSellingProducts = async (req, res) => {
       const obj = product.toObject();
 
       if (obj.image) {
-        if (obj.image && !obj.image.startsWith("http") && !obj.image.startsWith("data:image") && !obj.image.startsWith("//")) {
+        if (
+          obj.image &&
+          !obj.image.startsWith("http") &&
+          !obj.image.startsWith("data:image") &&
+          !obj.image.startsWith("//")
+        ) {
           obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }
 
       if (obj.variants && obj.variants.length > 0) {
         obj.variants = obj.variants.map((variant) => {
-          if (variant.image && !variant.image.startsWith("http") && !variant.image.startsWith("data:image") && !variant.image.startsWith("//")) {
+          if (
+            variant.image &&
+            !variant.image.startsWith("http") &&
+            !variant.image.startsWith("data:image") &&
+            !variant.image.startsWith("//")
+          ) {
             variant.image = `//${req.get("host")}/api/images/${variant.image}`;
           }
           return variant;
@@ -496,7 +559,6 @@ const getBestSellingProducts = async (req, res) => {
       success: true,
       data: updatedProducts,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,

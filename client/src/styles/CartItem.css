@@ -1,154 +1,154 @@
 .cart-item {
-    display: grid;
-    grid-template-columns: 120px 1fr 140px 120px 50px;
-    grid-template-areas: "img info quantity subtotal remove";
-    gap: 20px;
-    align-items: center;
-    padding: 20px;
-    background: white;
-    border-radius: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  display: grid;
+  grid-template-columns: 120px 1fr 140px 120px 50px;
+  grid-template-areas: "img info quantity subtotal remove";
+  gap: 20px;
+  align-items: center;
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .cart-image {
-    grid-area: img;
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 10px;
+  grid-area: img;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .cart-info {
-    grid-area: info;
+  grid-area: info;
 }
 
 .cart-info h2 {
-    font-size: 18px;
-    margin: 0 0 5px 0;
+  font-size: 18px;
+  margin: 0 0 5px 0;
 }
 
 .cart-info h3 {
-    margin: 10px 0 0 0;
-    color: #1565C0;
+  margin: 10px 0 0 0;
+  color: #1565c0;
 }
 
 .quantity-box {
-    grid-area: quantity;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
+  grid-area: quantity;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
 }
 
 .quantity-box button {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    border: none;
-    cursor: pointer;
-    color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    transition: 0.2s;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  transition: 0.2s;
 }
 
 .quantity-box button:hover {
-    background: #1565C0;
-    color: white;
+  background: #1565c0;
+  color: white;
 }
 
 .subtotal {
-    grid-area: subtotal;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: right;
+  grid-area: subtotal;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
 }
 
 .remove-btn {
-    grid-area: remove;
-    background: transparent;
-    color: #D32F2F;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    transition: 0.2s;
+  grid-area: remove;
+  background: transparent;
+  color: #d32f2f;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: 0.2s;
 }
 
 .remove-btn:hover {
-    background: #ffebee;
+  background: #ffebee;
 }
 
 /* Mobile Responsiveness - Grid Area Magic! */
-@media(max-width: 900px) {
-    .cart-item {
-        grid-template-columns: 90px 1fr auto;
-        grid-template-areas: 
-            "img info remove"
-            "img subtotal quantity";
-        gap: 15px;
-        padding: 15px;
-    }
-    
-    .cart-image {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .cart-info h2 {
-        font-size: 15px;
-    }
+@media (max-width: 900px) {
+  .cart-item {
+    grid-template-columns: 90px 1fr auto;
+    grid-template-areas:
+      "img info remove"
+      "img subtotal quantity";
+    gap: 15px;
+    padding: 15px;
+  }
 
-    .cart-info h3 {
-        display: none; /* Hide single price since subtotal is visible below */
-    }
-    
-    .remove-btn {
-        align-self: start;
-        justify-self: end;
-        padding: 5px;
-    }
-    
-    .subtotal {
-        align-self: center;
-        text-align: left;
-        font-size: 16px;
-    }
-    
-    .quantity-box {
-        justify-self: end;
-        gap: 8px;
-    }
-    
-    .quantity-box button {
-        width: 30px;
-        height: 30px;
-    }
+  .cart-image {
+    width: 90px;
+    height: 90px;
+  }
+
+  .cart-info h2 {
+    font-size: 15px;
+  }
+
+  .cart-info h3 {
+    display: none; /* Hide single price since subtotal is visible below */
+  }
+
+  .remove-btn {
+    align-self: start;
+    justify-self: end;
+    padding: 5px;
+  }
+
+  .subtotal {
+    align-self: center;
+    text-align: left;
+    font-size: 16px;
+  }
+
+  .quantity-box {
+    justify-self: end;
+    gap: 8px;
+  }
+
+  .quantity-box button {
+    width: 30px;
+    height: 30px;
+  }
 }
 
-@media(max-width: 400px) {
-    .cart-item {
-        grid-template-columns: 80px 1fr;
-        grid-template-areas: 
-            "img info"
-            "img remove"
-            "quantity subtotal";
-    }
-    
-    .cart-image {
-        width: 80px;
-        height: 80px;
-    }
-    
-    .subtotal {
-        text-align: right;
-    }
+@media (max-width: 400px) {
+  .cart-item {
+    grid-template-columns: 80px 1fr;
+    grid-template-areas:
+      "img info"
+      "img remove"
+      "quantity subtotal";
+  }
+
+  .cart-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .subtotal {
+    text-align: right;
+  }
 }

@@ -25,26 +25,35 @@ function TopProducts({ products }) {
           {displayedProducts.map((product) => (
             <tr key={product._id}>
               <td>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
                   {product.image && (
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      style={{ width: "40px", height: "40px", borderRadius: "8px", objectFit: "cover" }}
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "8px",
+                        objectFit: "cover",
+                      }}
                     />
                   )}
-                  <span style={{ fontWeight: "600", color: "#1e293b" }}>{product.name}</span>
+                  <span style={{ fontWeight: "600", color: "#1e293b" }}>
+                    {product.name}
+                  </span>
                 </div>
               </td>
               <td>{product.category}</td>
               <td>₹{product.price}</td>
               <td>
-                <span className="badge success">
-                  {product.salesCount} sold
-                </span>
+                <span className="badge success">{product.salesCount} sold</span>
               </td>
               <td>
-                <span className={`badge ${product.stock > 10 ? 'success' : product.stock >= 3 ? 'warning' : 'danger'}`}>
+                <span
+                  className={`badge ${product.stock > 10 ? "success" : product.stock >= 3 ? "warning" : "danger"}`}
+                >
                   {product.stock}
                 </span>
               </td>
@@ -55,10 +64,7 @@ function TopProducts({ products }) {
 
       {products?.length > 5 && (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <button 
-            onClick={() => setShowAll(!showAll)}
-            className="edit-btn"
-          >
+          <button onClick={() => setShowAll(!showAll)} className="edit-btn">
             {showAll ? "Show Less" : "Show More"}
           </button>
         </div>

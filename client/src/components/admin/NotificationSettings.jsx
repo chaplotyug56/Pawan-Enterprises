@@ -23,14 +23,14 @@ const NotificationSettings = () => {
     setLoading(true);
     try {
       const token = await requestNotificationPermission();
-      
+
       if (token) {
         // Send token to backend
-        await api.post("/notifications/token", { 
-          token, 
-          deviceInfo: navigator.userAgent 
+        await api.post("/notifications/token", {
+          token,
+          deviceInfo: navigator.userAgent,
         });
-        
+
         setNotificationStatus("enabled");
         toast.success("Order notifications enabled for this device!");
       } else {
@@ -54,27 +54,42 @@ const NotificationSettings = () => {
   }
 
   return (
-    <div style={{
-      background: "#fff",
-      padding: "15px",
-      borderRadius: "8px",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-      marginBottom: "20px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between"
-    }}>
+    <div
+      style={{
+        background: "#fff",
+        padding: "15px",
+        borderRadius: "8px",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        marginBottom: "20px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
       <div>
-        <h3 style={{ margin: "0 0 5px 0", fontSize: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+        <h3
+          style={{
+            margin: "0 0 5px 0",
+            fontSize: "16px",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
           🔔 Order Notifications
         </h3>
         <p style={{ margin: 0, fontSize: "14px", color: "#666" }}>
-          Status: {notificationStatus === "enabled" ? (
-            <span style={{ color: "green", fontWeight: "bold" }}>Enabled ✅</span>
+          Status:{" "}
+          {notificationStatus === "enabled" ? (
+            <span style={{ color: "green", fontWeight: "bold" }}>
+              Enabled ✅
+            </span>
           ) : notificationStatus === "denied" ? (
             <span style={{ color: "red", fontWeight: "bold" }}>Blocked ❌</span>
           ) : (
-            <span style={{ color: "orange", fontWeight: "bold" }}>Disabled ❌</span>
+            <span style={{ color: "orange", fontWeight: "bold" }}>
+              Disabled ❌
+            </span>
           )}
         </p>
         {notificationStatus === "enabled" && (
@@ -83,7 +98,7 @@ const NotificationSettings = () => {
           </p>
         )}
       </div>
-      
+
       {notificationStatus !== "enabled" && notificationStatus !== "denied" && (
         <button
           onClick={enableNotifications}
@@ -96,13 +111,13 @@ const NotificationSettings = () => {
             borderRadius: "5px",
             cursor: loading ? "not-allowed" : "pointer",
             fontWeight: "bold",
-            opacity: loading ? 0.7 : 1
+            opacity: loading ? 0.7 : 1,
           }}
         >
           {loading ? "Enabling..." : "Enable Notifications"}
         </button>
       )}
-      
+
       {notificationStatus === "denied" && (
         <span style={{ fontSize: "12px", color: "#888" }}>
           Unblock in site settings

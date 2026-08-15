@@ -41,67 +41,100 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-        <Route path="/admin/report" element={<ProtectedRoute><AdminReport /></ProtectedRoute>} />
-        <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/report"
+          element={
+            <ProtectedRoute>
+              <AdminReport />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/settings" element={<AdminSettings />} />
-        <Route path="/admin/billing" element={<ProtectedRoute><ShopBilling /></ProtectedRoute>} />
-        <Route path="/admin/shop-bills" element={<ProtectedRoute><AdminShopBills /></ProtectedRoute>} />
-        <Route path="/staff" element={<ProtectedRoute><StaffDashboard /></ProtectedRoute>} />
+        <Route
+          path="/admin/billing"
+          element={
+            <ProtectedRoute>
+              <ShopBilling />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/shop-bills"
+          element={
+            <ProtectedRoute>
+              <AdminShopBills />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff"
+          element={
+            <ProtectedRoute>
+              <StaffDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/wishlist" element={<Wishlist />} />
 
         <Route
-  path="/wishlist"
-  element={<Wishlist />}
+          path="/my-orders"
+          element={
+            <ProtectedRoute>
+              <MyOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reviews"
+          element={
+            <ProtectedRoute>
+              <AdminReviews />
+            </ProtectedRoute>
+          }
+        />
 
-/>
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
-<Route
-  path="/my-orders"
-  element={
-    <ProtectedRoute>
-      <MyOrders />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/admin/reviews"
-  element={
-    <ProtectedRoute>
-      <AdminReviews />
-    </ProtectedRoute>
-  }
-/>
-
-<Route
-  path="/profile"
-  element={
-    <ProtectedRoute>
-      <Profile />
-    </ProtectedRoute>
-  }
-/>
-
-<Route
-  path="/addresses"
-  element={
-    <ProtectedRoute>
-      <Addresses />
-    </ProtectedRoute>
-  }
-/>
-
-
+        <Route
+          path="/addresses"
+          element={
+            <ProtectedRoute>
+              <Addresses />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
 
       <Footer />
 
-<FloatingWhatsApp />
+      <FloatingWhatsApp />
 
-<ToastContainer
-  position="top-right"
-  autoClose={3000}
-/>
+      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 }

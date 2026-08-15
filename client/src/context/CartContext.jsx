@@ -4,26 +4,26 @@ import { useAuth } from "./AuthContext";
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-    const { user } = useAuth();
+  const { user } = useAuth();
 
-    const [cart, setCart] = useState(() => {
-        const key = user ? `cart_${user._id}` : "cart_guest";
-        const saved = localStorage.getItem(key);
-        return saved ? JSON.parse(saved) : [];
-    });
+  const [cart, setCart] = useState(() => {
+    const key = user ? `cart_${user._id}` : "cart_guest";
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : [];
+  });
 
-    // When user changes (e.g. login/logout), load their cart
-    useEffect(() => {
-        const key = user ? `cart_${user._id}` : "cart_guest";
-        const saved = localStorage.getItem(key);
-        setCart(saved ? JSON.parse(saved) : []);
-    }, [user]);
+  // When user changes (e.g. login/logout), load their cart
+  useEffect(() => {
+    const key = user ? `cart_${user._id}` : "cart_guest";
+    const saved = localStorage.getItem(key);
+    setCart(saved ? JSON.parse(saved) : []);
+  }, [user]);
 
-    // When cart changes, save it
-    useEffect(() => {
-        const key = user ? `cart_${user._id}` : "cart_guest";
-        localStorage.setItem(key, JSON.stringify(cart));
-    }, [cart, user]);
+  // When cart changes, save it
+  useEffect(() => {
+    const key = user ? `cart_${user._id}` : "cart_guest";
+    localStorage.setItem(key, JSON.stringify(cart));
+  }, [cart, user]);
 
   const addToCart = (product) => {
     if (user && user.role === "staff") {
@@ -33,31 +33,29 @@ export function CartProvider({ children }) {
 
     setCart((prev) => {
       // Create a unique cart item identifier based on options
-      const cartItemId = `${product._id}-${product.color || ''}-${product.size || ''}`;
-      
-      const existing = prev.find(
-        (item) => {
-          const itemId = `${item._id}-${item.color || ''}-${item.size || ''}`;
-          return itemId === cartItemId;
-        }
-      );
-  
+      const cartItemId = `${product._id}-${product.color || ""}-${product.size || ""}`;
+
+      const existing = prev.find((item) => {
+        const itemId = `${item._id}-${item.color || ""}-${item.size || ""}`;
+        return itemId === cartItemId;
+      });
+
       if (existing) {
         toast.success("✅ Quantity updated in cart");
-  
+
         return prev.map((item) => {
-          const itemId = `${item._id}-${item.color || ''}-${item.size || ''}`;
+          const itemId = `${item._id}-${item.color || ""}-${item.size || ""}`;
           return itemId === cartItemId
             ? {
                 ...item,
                 quantity: item.quantity + 1,
               }
-            : item
+            : item;
         });
       }
-  
+
       toast.success("🛒 Product added to cart");
-  
+
       return [
         ...prev,
         {
@@ -75,7 +73,7 @@ export function CartProvider({ children }) {
       return;
     }
 
-    const cartItemId = `${product._id}-${product.color || ''}-${product.size || ''}`;
+    const cartItemId = `${product._id}-${product.color || ""}-${product.size || ""}`;
     setCart([
       {
         ...product,
@@ -83,7 +81,7 @@ export function CartProvider({ children }) {
         quantity: 1,
       },
     ]);
-  
+
     toast.success("🚀 Proceeding to Checkout");
   };
 
@@ -92,8 +90,8 @@ export function CartProvider({ children }) {
       prev.map((item) =>
         item.cartItemId === cartItemId || item._id === cartItemId
           ? { ...item, quantity: item.quantity + 1 }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
@@ -103,15 +101,17 @@ export function CartProvider({ children }) {
         .map((item) =>
           item.cartItemId === cartItemId || item._id === cartItemId
             ? { ...item, quantity: item.quantity - 1 }
-            : item
+            : item,
         )
-        .filter((item) => item.quantity > 0)
+        .filter((item) => item.quantity > 0),
     );
   };
 
   const removeFromCart = (cartItemId) => {
     setCart((prev) =>
-      prev.filter((item) => item.cartItemId !== cartItemId && item._id !== cartItemId)
+      prev.filter(
+        (item) => item.cartItemId !== cartItemId && item._id !== cartItemId,
+      ),
     );
   };
 
@@ -119,19 +119,16 @@ export function CartProvider({ children }) {
     setCart([]);
   };
 
-  const cartCount = cart.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const cartTotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
 
   return (
     <CartContext.Provider
-    value={{
+      value={{
         cart,
         addToCart,
         buyNow,

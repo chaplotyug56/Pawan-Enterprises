@@ -28,26 +28,17 @@ const NotificationBell = () => {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setOpen(false);
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
 
-    return () =>
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const unreadCount = notifications.filter(
-    (n) => !n.isRead
-  ).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   async function markAsRead(id) {
     try {
@@ -71,7 +62,7 @@ const NotificationBell = () => {
         navigate(`/admin/orders`);
       }
     }
-    
+
     setOpen(false);
   }
 
@@ -86,42 +77,30 @@ const NotificationBell = () => {
   }
 
   return (
-    <div
-      className="notification-bell"
-      ref={dropdownRef}
-    >
+    <div className="notification-bell" ref={dropdownRef}>
       <div onClick={() => setOpen(!open)}>
         <FaBell size={22} />
 
         {unreadCount > 0 && (
-          <span className="notification-badge">
-            {unreadCount}
-          </span>
+          <span className="notification-badge">{unreadCount}</span>
         )}
       </div>
 
       {open && (
         <div className="notification-dropdown">
-
           <div className="notification-header">
             <strong>Notifications</strong>
 
-            <button onClick={markAllRead}>
-              Mark all
-            </button>
+            <button onClick={markAllRead}>Mark all</button>
           </div>
 
           {notifications.length === 0 ? (
-            <p className="empty">
-              No notifications
-            </p>
+            <p className="empty">No notifications</p>
           ) : (
             notifications.map((n) => (
               <div
                 key={n._id}
-                className={`notification-item ${
-                  !n.isRead ? "unread" : ""
-                }`}
+                className={`notification-item ${!n.isRead ? "unread" : ""}`}
                 onClick={() => handleNotificationClick(n)}
               >
                 <strong>{n.title}</strong>

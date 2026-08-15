@@ -29,13 +29,9 @@ const updateSettings = async (req, res) => {
     if (!settings) {
       settings = await Settings.create(req.body);
     } else {
-      settings = await Settings.findByIdAndUpdate(
-        settings._id,
-        req.body,
-        {
-          new: true,
-        }
-      );
+      settings = await Settings.findByIdAndUpdate(settings._id, req.body, {
+        new: true,
+      });
     }
 
     res.json({

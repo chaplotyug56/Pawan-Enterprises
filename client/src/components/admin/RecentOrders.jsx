@@ -62,9 +62,7 @@ function RecentOrders() {
                   {order.status}
                 </span>
               </td>
-              <td>
-                {new Date(order.createdAt).toLocaleDateString("en-IN")}
-              </td>
+              <td>{new Date(order.createdAt).toLocaleDateString("en-IN")}</td>
             </tr>
           ))}
         </tbody>
@@ -72,7 +70,7 @@ function RecentOrders() {
 
       {orders.length > 5 && (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <button 
+          <button
             onClick={() => setShowAll(!showAll)}
             style={{
               padding: "10px 20px",
@@ -81,7 +79,7 @@ function RecentOrders() {
               border: "none",
               borderRadius: "8px",
               cursor: "pointer",
-              fontWeight: "600"
+              fontWeight: "600",
             }}
           >
             {showAll ? "Show Less" : "Show More"}

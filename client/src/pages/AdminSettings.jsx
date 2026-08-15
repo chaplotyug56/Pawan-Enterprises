@@ -52,7 +52,6 @@ const AdminSettings = () => {
       <h2>Shop Settings</h2>
 
       <form onSubmit={handleSubmit}>
-
         <input
           className="form-control mb-3"
           placeholder="Shop Name"
@@ -125,10 +124,7 @@ const AdminSettings = () => {
           onChange={handleChange}
         />
 
-        <button className="btn btn-primary">
-          Save Settings
-        </button>
-
+        <button className="btn btn-primary">Save Settings</button>
       </form>
     </div>
   );

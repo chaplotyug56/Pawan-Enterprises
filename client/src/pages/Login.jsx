@@ -29,22 +29,21 @@ function Login() {
         navigate("/");
       }
     } catch (err) {
-      toast.error(
-        err?.response?.data?.message ||
-          "Invalid Credentials"
-      );
+      toast.error(err?.response?.data?.message || "Invalid Credentials");
     }
   };
 
   const handleGoogleLogin = async () => {
     if (!auth) {
-      toast.error("Google Sign-In is not configured (Missing Firebase API Key)");
+      toast.error(
+        "Google Sign-In is not configured (Missing Firebase API Key)",
+      );
       return;
     }
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const token = await result.user.getIdToken();
-      
+
       const data = await firebaseAuth(token);
       toast.success("Login Successful");
 
@@ -55,27 +54,22 @@ function Login() {
       }
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || err.message || "Google Sign-In Failed");
+      toast.error(
+        err.response?.data?.message || err.message || "Google Sign-In Failed",
+      );
     }
   };
 
   return (
     <div className="auth-page">
-
-      <form
-        className="auth-form"
-        onSubmit={submit}
-      >
-
+      <form className="auth-form" onSubmit={submit}>
         <h1>Login</h1>
 
         <input
           type="text"
           placeholder="Email or Mobile Number"
           value={identifier}
-          onChange={(e) =>
-            setIdentifier(e.target.value)
-          }
+          onChange={(e) => setIdentifier(e.target.value)}
           required
         />
 
@@ -83,40 +77,57 @@ function Login() {
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
 
-        <button type="submit">
-          Login
-        </button>
+        <button type="submit">Login</button>
 
         <p>
-          Don't have an account?{" "}
-          <Link to="/register">
-            Register
-          </Link>
+          Don't have an account? <Link to="/register">Register</Link>
         </p>
 
-        <div style={{ margin: "20px 0", display: "flex", alignItems: "center", textTransform: "uppercase", color: "#666", fontSize: "12px" }}>
-          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #ccc" }} />
+        <div
+          style={{
+            margin: "20px 0",
+            display: "flex",
+            alignItems: "center",
+            textTransform: "uppercase",
+            color: "#666",
+            fontSize: "12px",
+          }}
+        >
+          <hr
+            style={{ flex: 1, border: "none", borderTop: "1px solid #ccc" }}
+          />
           <span style={{ padding: "0 10px" }}>Or</span>
-          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #ccc" }} />
+          <hr
+            style={{ flex: 1, border: "none", borderTop: "1px solid #ccc" }}
+          />
         </div>
 
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={handleGoogleLogin}
-          style={{ background: "#fff", color: "#333", border: "1px solid #ccc", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", padding: "12px" }}
+          style={{
+            background: "#fff",
+            color: "#333",
+            border: "1px solid #ccc",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "10px",
+            padding: "12px",
+          }}
         >
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: "18px" }} />
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google"
+            style={{ width: "18px" }}
+          />
           Sign in with Google
         </button>
-
       </form>
-
     </div>
   );
 }

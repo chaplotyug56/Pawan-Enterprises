@@ -23,14 +23,16 @@ function RecentCustomers({ customers }) {
           {displayedCustomers.map((customer) => (
             <tr key={customer._id}>
               <td>
-                <span style={{ fontWeight: "600", color: "#1e293b" }}>{customer.name}</span>
+                <span style={{ fontWeight: "600", color: "#1e293b" }}>
+                  {customer.name}
+                </span>
               </td>
               <td>{customer.email}</td>
               <td>
                 {new Date(customer.createdAt).toLocaleDateString("en-IN", {
                   day: "numeric",
                   month: "short",
-                  year: "numeric"
+                  year: "numeric",
                 })}
               </td>
             </tr>
@@ -40,10 +42,7 @@ function RecentCustomers({ customers }) {
 
       {customers?.length > 5 && (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
-          <button 
-            onClick={() => setShowAll(!showAll)}
-            className="edit-btn"
-          >
+          <button onClick={() => setShowAll(!showAll)} className="edit-btn">
             {showAll ? "Show Less" : "Show More"}
           </button>
         </div>

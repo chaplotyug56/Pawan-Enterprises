@@ -10,16 +10,16 @@ import BestSelling from "../components/BestSelling";
 function Home() {
   return (
     <>
-  <HeroBanner />
+      <HeroBanner />
 
-  <Categories />
+      <Categories />
 
-  <BestSelling />
+      <BestSelling />
 
-  <FeaturedProducts />
+      <FeaturedProducts />
 
-  <WhyChooseUs />
-</>
+      <WhyChooseUs />
+    </>
   );
 }
 

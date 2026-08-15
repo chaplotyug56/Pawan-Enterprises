@@ -55,9 +55,7 @@ function ReviewForm({ productId, onReviewAdded }) {
       <br />
       <br />
 
-      <button type="submit">
-        Submit Review
-      </button>
+      <button type="submit">Submit Review</button>
     </form>
   );
 }

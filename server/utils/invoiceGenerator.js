@@ -8,7 +8,7 @@ function generateInvoice(res, order) {
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader(
     "Content-Disposition",
-    `attachment; filename=Invoice-${order.orderId}.pdf`
+    `attachment; filename=Invoice-${order.orderId}.pdf`,
   );
 
   doc.pipe(res);
@@ -30,24 +30,31 @@ function generateInvoice(res, order) {
     .moveDown();
 
   // Line Break
-  doc.strokeColor("#aaaaaa").lineWidth(1).moveTo(50, 110).lineTo(550, 110).stroke();
+  doc
+    .strokeColor("#aaaaaa")
+    .lineWidth(1)
+    .moveTo(50, 110)
+    .lineTo(550, 110)
+    .stroke();
 
   // Invoice details
-  doc
-    .fillColor("#000000")
-    .fontSize(20)
-    .text("INVOICE", 50, 130);
+  doc.fillColor("#000000").fontSize(20).text("INVOICE", 50, 130);
 
   doc
     .fontSize(10)
     .fillColor("#444444")
     .text(`Invoice No: ${order.orderId}`, 50, 160)
-    .text(`Date: ${new Date(order.createdAt).toLocaleDateString("en-IN")}`, 50, 175)
+    .text(
+      `Date: ${new Date(order.createdAt).toLocaleDateString("en-IN")}`,
+      50,
+      175,
+    )
     .text(`Payment Method: ${order.paymentMethod.toUpperCase()}`, 50, 190);
 
-  const addressLine1 = [order.shippingAddress.building, order.shippingAddress.street]
-    .filter(Boolean)
-    .join(", ") || "Shop Purchase";
+  const addressLine1 =
+    [order.shippingAddress.building, order.shippingAddress.street]
+      .filter(Boolean)
+      .join(", ") || "Shop Purchase";
   const stateStr = order.shippingAddress.state || "Rajasthan";
   const cityStr = order.shippingAddress.city || "In-Store";
   const pinStr = order.shippingAddress.pincode || "000000";
@@ -64,7 +71,7 @@ function generateInvoice(res, order) {
 
   // Table Setup
   const tableTop = 250;
-  
+
   doc.font("Helvetica-Bold");
   doc.fontSize(10);
   doc.text("Item", 50, tableTop);
@@ -74,8 +81,13 @@ function generateInvoice(res, order) {
   doc.text("Qty", 470, tableTop, { width: 30, align: "right" });
   doc.text("Total", 510, tableTop, { width: 40, align: "right" });
 
-  doc.strokeColor("#dddddd").lineWidth(1).moveTo(50, tableTop + 15).lineTo(550, tableTop + 15).stroke();
-  
+  doc
+    .strokeColor("#dddddd")
+    .lineWidth(1)
+    .moveTo(50, tableTop + 15)
+    .lineTo(550, tableTop + 15)
+    .stroke();
+
   doc.font("Helvetica");
 
   let y = tableTop + 25;
@@ -83,17 +95,18 @@ function generateInvoice(res, order) {
   let totalDiscount = 0;
 
   order.items.forEach((item) => {
-    const mrp = item.product && item.product.mrp ? item.product.mrp : item.price;
+    const mrp =
+      item.product && item.product.mrp ? item.product.mrp : item.price;
     const price = item.price;
     const discount = mrp - price;
     const total = price * item.quantity;
-    
-    totalDiscount += (discount * item.quantity);
+
+    totalDiscount += discount * item.quantity;
 
     doc.fontSize(10);
     // Allow item name to wrap, calculate height
     doc.text(item.name, 50, y, { width: 190 });
-    
+
     // The other columns stay on the same starting y line
     doc.text(`Rs. ${mrp}`, 250, y, { width: 60, align: "right" });
     doc.text(`Rs. ${price}`, 320, y, { width: 70, align: "right" });
@@ -104,37 +117,51 @@ function generateInvoice(res, order) {
     // Approximate height adjustment based on text wrapping
     const textHeight = doc.heightOfString(item.name, { width: 190 });
     y += textHeight + 10;
-    
-    doc.strokeColor("#eeeeee").lineWidth(1).moveTo(50, y - 5).lineTo(550, y - 5).stroke();
+
+    doc
+      .strokeColor("#eeeeee")
+      .lineWidth(1)
+      .moveTo(50, y - 5)
+      .lineTo(550, y - 5)
+      .stroke();
   });
 
   // Totals Section
   y += 10;
-  
-  const itemsTotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  const itemsTotal = order.items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
   const shippingCharge = order.totalPrice - itemsTotal;
 
   doc.font("Helvetica-Bold");
   doc.fontSize(12);
-  
+
   // Left side: You Saved
   doc.fillColor("#2e7d32");
   doc.text(`You Saved: Rs. ${totalDiscount}`, 50, y);
   doc.fillColor("#000000");
-  
+
   let rightY = y;
-  
+
   if (shippingCharge > 0) {
     doc.text("Shipping:", 350, rightY, { width: 100, align: "right" });
-    doc.text(`Rs. ${shippingCharge}`, 460, rightY, { width: 90, align: "right" });
+    doc.text(`Rs. ${shippingCharge}`, 460, rightY, {
+      width: 90,
+      align: "right",
+    });
     rightY += 15;
   }
-  
+
   rightY += 5;
-  
+
   doc.fontSize(14);
   doc.text("Grand Total:", 350, rightY, { width: 100, align: "right" });
-  doc.text(`Rs. ${order.totalPrice}`, 460, rightY, { width: 90, align: "right" });
+  doc.text(`Rs. ${order.totalPrice}`, 460, rightY, {
+    width: 90,
+    align: "right",
+  });
 
   doc.moveDown(3);
   doc.y = Math.max(doc.y, rightY + 40);
@@ -143,10 +170,15 @@ function generateInvoice(res, order) {
     .font("Helvetica")
     .fontSize(10)
     .fillColor("gray")
-    .text("Thank you for shopping with Pawan Enterprises. Have a great day!", 50, doc.y, {
-      align: "center",
-      width: 500
-    });
+    .text(
+      "Thank you for shopping with Pawan Enterprises. Have a great day!",
+      50,
+      doc.y,
+      {
+        align: "center",
+        width: 500,
+      },
+    );
 
   doc.end();
 }

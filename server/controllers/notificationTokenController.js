@@ -6,9 +6,11 @@ const NotificationToken = require("../models/NotificationToken");
 const saveToken = async (req, res) => {
   try {
     const { token, deviceInfo } = req.body;
-    
+
     if (!token) {
-      return res.status(400).json({ success: false, message: "Token is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Token is required" });
     }
 
     // Check if token already exists
@@ -30,7 +32,9 @@ const saveToken = async (req, res) => {
       });
     }
 
-    return res.status(200).json({ success: true, message: "Token saved successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Token saved successfully" });
   } catch (error) {
     console.error("Save Token Error:", error);
     return res.status(500).json({ success: false, message: "Server error" });
@@ -44,15 +48,16 @@ const removeToken = async (req, res) => {
   try {
     const { token } = req.body;
     if (!token) {
-      return res.status(400).json({ success: false, message: "Token is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Token is required" });
     }
 
-    await NotificationToken.findOneAndUpdate(
-      { token },
-      { isActive: false }
-    );
+    await NotificationToken.findOneAndUpdate({ token }, { isActive: false });
 
-    return res.status(200).json({ success: true, message: "Token removed successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Token removed successfully" });
   } catch (error) {
     console.error("Remove Token Error:", error);
     return res.status(500).json({ success: false, message: "Server error" });
@@ -67,38 +72,51 @@ const firebaseAdmin = require("../config/firebase");
 const testNotification = async (req, res) => {
   try {
     if (!firebaseAdmin) {
-      return res.status(500).json({ success: false, message: "Firebase Admin SDK is not initialized. Environment variables are likely missing or incorrect." });
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message:
+            "Firebase Admin SDK is not initialized. Environment variables are likely missing or incorrect.",
+        });
     }
 
     const adminTokens = await NotificationToken.find({ isActive: true });
-    
+
     if (adminTokens.length === 0) {
-      return res.status(404).json({ success: false, message: "No active notification tokens found in database. Click 'Enable Notifications' in Admin Dashboard first." });
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message:
+            "No active notification tokens found in database. Click 'Enable Notifications' in Admin Dashboard first.",
+        });
     }
 
     const payload = {
       notification: {
         title: "🧪 Test Notification",
-        body: "If you see this, Firebase Cloud Messaging is working perfectly!"
+        body: "If you see this, Firebase Cloud Messaging is working perfectly!",
       },
-      tokens: adminTokens.map(t => t.token)
+      tokens: adminTokens.map((t) => t.token),
     };
 
-    const response = await firebaseAdmin.messaging().sendEachForMulticast(payload);
-    
-    return res.status(200).json({ 
-      success: true, 
-      message: "Test completed", 
-      result: response 
-    });
+    const response = await firebaseAdmin
+      .messaging()
+      .sendEachForMulticast(payload);
 
+    return res.status(200).json({
+      success: true,
+      message: "Test completed",
+      result: response,
+    });
   } catch (error) {
     console.error("Test Notification Error:", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Failed to send notification", 
+    return res.status(500).json({
+      success: false,
+      message: "Failed to send notification",
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
     });
   }
 };
@@ -106,5 +124,5 @@ const testNotification = async (req, res) => {
 module.exports = {
   saveToken,
   removeToken,
-  testNotification
+  testNotification,
 };

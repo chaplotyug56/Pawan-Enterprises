@@ -12,7 +12,6 @@ function SearchBar({
 }) {
   return (
     <div className="search-panel">
-
       <input
         type="text"
         placeholder="Search products..."
@@ -20,10 +19,7 @@ function SearchBar({
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-      >
+      <select value={category} onChange={(e) => setCategory(e.target.value)}>
         <option value="All">All Categories</option>
         <option value="Cosmetics">Cosmetics</option>
         <option value="Grocery">Grocery</option>
@@ -32,10 +28,7 @@ function SearchBar({
         <option value="Household">Household</option>
       </select>
 
-      <select
-        value={sort}
-        onChange={(e) => setSort(e.target.value)}
-      >
+      <select value={sort} onChange={(e) => setSort(e.target.value)}>
         <option value="newest">Newest</option>
         <option value="low">Price: Low → High</option>
         <option value="high">Price: High → Low</option>
@@ -50,7 +43,6 @@ function SearchBar({
         />
         In Stock Only
       </label>
-
     </div>
   );
 }

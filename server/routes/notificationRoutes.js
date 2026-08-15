@@ -14,7 +14,7 @@ const {
 const {
   saveToken,
   removeToken,
-  testNotification
+  testNotification,
 } = require("../controllers/notificationTokenController");
 
 router.get("/", getNotifications);

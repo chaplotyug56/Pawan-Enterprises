@@ -12,23 +12,14 @@ const {
 const { protect } = require("../middleware/authMiddleware");
 const { admin, adminOrStaff } = require("../middleware/adminMiddleware");
 
-router.post(
-  "/",
-  protect,
-  upload.single("paymentScreenshot"),
-  createOrder
-);
+router.post("/", protect, upload.single("paymentScreenshot"), createOrder);
 
 // User Orders
 router.get("/", protect, getOrders);
 
 // Admin
 router.get("/all", protect, adminOrStaff, getAllOrders);
-router.get(
-  "/:id/invoice",
-  protect,
-  downloadInvoice
-);
+router.get("/:id/invoice", protect, downloadInvoice);
 router.put("/:id", protect, admin, updateOrderStatus);
 
 module.exports = router;

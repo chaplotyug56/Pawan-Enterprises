@@ -1,9 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  FaShoppingCart,
-  FaHeart,
-  FaStar,
-} from "react-icons/fa";
+import { FaShoppingCart, FaHeart, FaStar } from "react-icons/fa";
 
 import { useWishlist } from "../context/WishlistContext";
 
@@ -14,51 +10,29 @@ function ProductCard({ product, addToCart }) {
   const navigate = useNavigate();
   const isHome = location.pathname === "/";
 
-  const {
-    wishlist,
-    addToWishlist,
-    removeFromWishlist,
-  } = useWishlist();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   if (!product) return null;
 
-  const inWishlist = wishlist.some(
-    (item) => item._id === product._id
-  );
+  const inWishlist = wishlist.some((item) => item._id === product._id);
 
   // Real Discount Calculation
   const discount =
     product.mrp > product.price
-      ? Math.round(
-          ((product.mrp - product.price) /
-            product.mrp) *
-            100
-        )
+      ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
       : 0;
 
   const saveAmount =
-    product.mrp > product.price
-      ? product.mrp - product.price
-      : 0;
-
+    product.mrp > product.price ? product.mrp - product.price : 0;
 
   return (
     <div className="product-card">
-
-      {discount > 0 && (
-        <div className="discount-badge">
-          {discount}% OFF
-        </div>
-      )}
+      {discount > 0 && <div className="discount-badge">{discount}% OFF</div>}
 
       <button
-        className={`wishlist-btn ${
-          inWishlist ? "active" : ""
-        }`}
+        className={`wishlist-btn ${inWishlist ? "active" : ""}`}
         onClick={() =>
-          inWishlist
-            ? removeFromWishlist(product._id)
-            : addToWishlist(product)
+          inWishlist ? removeFromWishlist(product._id) : addToWishlist(product)
         }
       >
         <FaHeart />
@@ -66,34 +40,28 @@ function ProductCard({ product, addToCart }) {
 
       <Link to={`/product/${product._id}`}>
         <div className="product-image">
-          <img
-            src={product.image}
-            alt={product.name}
-          />
+          <img src={product.image} alt={product.name} />
         </div>
       </Link>
 
       <div className="product-content">
-
-        <span className="brand">
-          {product.brand || "Pawan Enterprises"}
-        </span>
+        <span className="brand">{product.brand || "Pawan Enterprises"}</span>
 
         <Link
           to={`/product/${product._id}`}
           className="product-name"
           title={product.name}
         >
-          {product.name.length > 24 ? product.name.substring(0, 24) + "..." : product.name}
+          {product.name.length > 24
+            ? product.name.substring(0, 24) + "..."
+            : product.name}
         </Link>
 
         {!isHome && (
           <div className="rating">
             <FaStar className="star-icon" />
 
-            <span>
-              {(product.averageRating || 0).toFixed(1)}
-            </span>
+            <span>{(product.averageRating || 0).toFixed(1)}</span>
 
             <span className="review-count">
               ({product.reviewCount || 0} Reviews)
@@ -102,33 +70,19 @@ function ProductCard({ product, addToCart }) {
         )}
 
         <div className="price-row">
-
           <div>
+            <h3>₹{product.price}</h3>
 
-            <h3>
-              ₹{product.price}
-            </h3>
-
-            {product.mrp > product.price && (
-              <del>
-                ₹{product.mrp}
-              </del>
-            )}
-
+            {product.mrp > product.price && <del>₹{product.mrp}</del>}
           </div>
 
           {saveAmount > 0 && (
-            <small className="save-price">
-              Save ₹{saveAmount}
-            </small>
+            <small className="save-price">Save ₹{saveAmount}</small>
           )}
-
         </div>
 
         <div className="stock">
-          {product.stock > 0
-            ? "✅ In Stock"
-            : "❌ Out of Stock"}
+          {product.stock > 0 ? "✅ In Stock" : "❌ Out of Stock"}
         </div>
 
         <div className="actions">
@@ -155,9 +109,7 @@ function ProductCard({ product, addToCart }) {
             </button>
           )}
         </div>
-
       </div>
-
     </div>
   );
 }

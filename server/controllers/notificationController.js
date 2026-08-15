@@ -3,8 +3,7 @@ const Notification = require("../models/Notification");
 // Get all notifications
 const getNotifications = async (req, res) => {
   try {
-    const notifications = await Notification.find()
-      .sort({ createdAt: -1 });
+    const notifications = await Notification.find().sort({ createdAt: -1 });
 
     res.json({
       success: true,
@@ -21,10 +20,7 @@ const getNotifications = async (req, res) => {
 // Mark one notification as read
 const markAsRead = async (req, res) => {
   try {
-    await Notification.findByIdAndUpdate(
-      req.params.id,
-      { isRead: true }
-    );
+    await Notification.findByIdAndUpdate(req.params.id, { isRead: true });
 
     res.json({
       success: true,
@@ -41,10 +37,7 @@ const markAsRead = async (req, res) => {
 // Mark all notifications as read
 const markAllAsRead = async (req, res) => {
   try {
-    await Notification.updateMany(
-      { isRead: false },
-      { isRead: true }
-    );
+    await Notification.updateMany({ isRead: false }, { isRead: true });
 
     res.json({
       success: true,

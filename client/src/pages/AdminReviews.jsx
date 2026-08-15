@@ -47,11 +47,7 @@ function AdminReviews() {
 
           <p>{review.comment}</p>
 
-          <button
-            onClick={() => removeReview(review._id)}
-          >
-            Delete
-          </button>
+          <button onClick={() => removeReview(review._id)}>Delete</button>
         </div>
       ))}
     </div>

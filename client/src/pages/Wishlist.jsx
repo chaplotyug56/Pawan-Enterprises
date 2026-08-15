@@ -13,10 +13,7 @@ function Wishlist() {
 
         <p>Add products you love.</p>
 
-        <Link
-          to="/products"
-          className="primary-btn"
-        >
+        <Link to="/products" className="primary-btn">
           Browse Products
         </Link>
       </div>
@@ -25,22 +22,13 @@ function Wishlist() {
 
   return (
     <div className="container section">
-
-      <h1 className="title">
-        My Wishlist
-      </h1>
+      <h1 className="title">My Wishlist</h1>
 
       <div className="wishlist-grid">
-
         {wishlist.map((item) => (
-          <WishlistCard
-            key={item._id}
-            item={item}
-          />
+          <WishlistCard key={item._id} item={item} />
         ))}
-
       </div>
-
     </div>
   );
 }

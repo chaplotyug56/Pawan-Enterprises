@@ -7,9 +7,20 @@ let auth = null;
 
 function initializeFirebaseAdmin() {
   try {
-    if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !process.env.FIREBASE_PRIVATE_KEY) {
-      initializationError = "Missing Env: " + (!process.env.FIREBASE_PROJECT_ID ? "PROJECT_ID " : "") + (!process.env.FIREBASE_CLIENT_EMAIL ? "CLIENT_EMAIL " : "") + (!process.env.FIREBASE_PRIVATE_KEY ? "PRIVATE_KEY" : "");
-      console.warn("⚠️ Firebase Admin SDK is NOT initialized:", initializationError);
+    if (
+      !process.env.FIREBASE_PROJECT_ID ||
+      !process.env.FIREBASE_CLIENT_EMAIL ||
+      !process.env.FIREBASE_PRIVATE_KEY
+    ) {
+      initializationError =
+        "Missing Env: " +
+        (!process.env.FIREBASE_PROJECT_ID ? "PROJECT_ID " : "") +
+        (!process.env.FIREBASE_CLIENT_EMAIL ? "CLIENT_EMAIL " : "") +
+        (!process.env.FIREBASE_PRIVATE_KEY ? "PRIVATE_KEY" : "");
+      console.warn(
+        "⚠️ Firebase Admin SDK is NOT initialized:",
+        initializationError,
+      );
       return null;
     }
 
@@ -19,7 +30,7 @@ function initializeFirebaseAdmin() {
           projectId: process.env.FIREBASE_PROJECT_ID,
           clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
           // Replace escaped newlines with actual newlines
-          privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+          privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
         }),
       });
       auth = getAuth(app);
@@ -34,8 +45,8 @@ function initializeFirebaseAdmin() {
 
 const firebaseAdmin = initializeFirebaseAdmin();
 
-module.exports = { 
-  admin: firebaseAdmin ? firebaseAdmin.app : null, 
+module.exports = {
+  admin: firebaseAdmin ? firebaseAdmin.app : null,
   auth: firebaseAdmin ? firebaseAdmin.auth : null,
-  initializationError 
+  initializationError,
 };

@@ -90,7 +90,10 @@ const getDashboardStats = async (req, res) => {
     const topProducts = topProductsRaw.map((product) => {
       const obj = product.toObject();
       if (obj.image) {
-        if (!obj.image.startsWith("http") && !obj.image.startsWith("data:image")) {
+        if (
+          !obj.image.startsWith("http") &&
+          !obj.image.startsWith("data:image")
+        ) {
           obj.image = `//${req.get("host")}/api/images/${obj.image}`;
         }
       }

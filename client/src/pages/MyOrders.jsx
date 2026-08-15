@@ -3,12 +3,7 @@ import { toast } from "react-toastify";
 import api from "../services/api";
 import "../styles/MyOrders.css";
 
-const orderSteps = [
-    "Pending",
-    "Processing",
-    "Shipped",
-    "Delivered",
-  ];
+const orderSteps = ["Pending", "Processing", "Shipped", "Delivered"];
 function MyOrders() {
   const [orders, setOrders] = useState([]);
 
@@ -18,7 +13,7 @@ function MyOrders() {
 
   const fetchOrders = async () => {
     try {
-        const res = await api.get("/orders");
+      const res = await api.get("/orders");
 
       setOrders(res.data.data);
     } catch (err) {
@@ -38,10 +33,10 @@ function MyOrders() {
         window.URL.revokeObjectURL(url);
       }),
       {
-        pending: 'Downloading Invoice...',
-        success: 'Invoice Downloaded',
-        error: 'Unable to download invoice'
-      }
+        pending: "Downloading Invoice...",
+        success: "Invoice Downloaded",
+        error: "Unable to download invoice",
+      },
     );
   }
 
@@ -63,67 +58,65 @@ function MyOrders() {
             </div>
 
             <div className="order-info">
+              <div>
+                <strong>Total</strong>
+                <p>₹{order.totalPrice}</p>
+              </div>
 
-  <div>
-    <strong>Total</strong>
-    <p>₹{order.totalPrice}</p>
-  </div>
+              <div>
+                <strong>Items</strong>
+                <p>{order.items.length}</p>
+              </div>
 
-  <div>
-    <strong>Items</strong>
-    <p>{order.items.length}</p>
-  </div>
+              <div>
+                <strong>Date</strong>
+                <p>{new Date(order.createdAt).toLocaleDateString()}</p>
+              </div>
+            </div>
 
-  
+            <div className="shipping-card">
+              <h4>📍 Shipping Address</h4>
 
-  <div>
-    <strong>Date</strong>
-    <p>{new Date(order.createdAt).toLocaleDateString()}</p>
-  </div>
+              <div className="shipping-details">
+                <p>
+                  <strong>{order.shippingAddress.fullName}</strong>
+                </p>
 
-</div>
+                <p>{order.shippingAddress.phone}</p>
 
-<div className="shipping-card">
-  <h4>📍 Shipping Address</h4>
+                <p>{order.shippingAddress.address}</p>
 
-  <div className="shipping-details">
-  <p><strong>{order.shippingAddress.fullName}</strong></p>
+                <p>
+                  {order.shippingAddress.city}, {order.shippingAddress.state}
+                </p>
 
-  <p>{order.shippingAddress.phone}</p>
-
-  <p>{order.shippingAddress.address}</p>
-
-  <p>
-    {order.shippingAddress.city}, {order.shippingAddress.state}
-  </p>
-
-  <p>{order.shippingAddress.pincode}</p>
-</div>
-</div>
+                <p>{order.shippingAddress.pincode}</p>
+              </div>
+            </div>
 
             <div className="order-timeline">
-  {orderSteps.map((step, index) => {
-    const currentIndex = orderSteps.indexOf(order.status);
+              {orderSteps.map((step, index) => {
+                const currentIndex = orderSteps.indexOf(order.status);
 
-    return (
-      <div
-        key={step}
-        className={`timeline-step ${
-          index <= currentIndex ? "active" : ""
-        }`}
-      >
-        <div className="circle"></div>
-        <span>{step}</span>
-      </div>
-    );
-  })}
-</div>
-<button
-  className="primary-btn"
-  onClick={() => downloadInvoice(order._id, order.orderId)}
->
-  📄 Download Invoice
-</button>
+                return (
+                  <div
+                    key={step}
+                    className={`timeline-step ${
+                      index <= currentIndex ? "active" : ""
+                    }`}
+                  >
+                    <div className="circle"></div>
+                    <span>{step}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <button
+              className="primary-btn"
+              onClick={() => downloadInvoice(order._id, order.orderId)}
+            >
+              📄 Download Invoice
+            </button>
 
             <h4>Products</h4>
 
@@ -131,24 +124,23 @@ function MyOrders() {
               <div className="order-item" key={item.product}>
                 <img
                   src={
-                    item.image.startsWith("http") || item.image.startsWith("data:")
+                    item.image.startsWith("http") ||
+                    item.image.startsWith("data:")
                       ? item.image
                       : `//${window.location.host.includes("localhost") ? "localhost:8000" : "pawan-enterprises.onrender.com"}/api/images/${item.image}`
                   }
                   alt={item.name}
                 />
 
-<div className="order-item-details">
-  <h4>{item.name}</h4>
+                <div className="order-item-details">
+                  <h4>{item.name}</h4>
 
-  <div className="order-item-meta">
-    <span className="price">₹{item.price}</span>
+                  <div className="order-item-meta">
+                    <span className="price">₹{item.price}</span>
 
-    <span className="quantity">
-      Qty: {item.quantity}
-    </span>
-  </div>
-</div>
+                    <span className="quantity">Qty: {item.quantity}</span>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

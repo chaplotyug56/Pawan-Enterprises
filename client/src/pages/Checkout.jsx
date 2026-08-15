@@ -27,7 +27,7 @@ function Checkout() {
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const shipping = cartTotal >= 1000 ? 0 : 20;
   const totalAmount = cartTotal + shipping;
-  
+
   const continueCheckout = (data) => {
     const { location: verifiedLocation, saveAddress, ...addressData } = data;
     setShippingAddress({ ...addressData, saveAddress });
@@ -52,20 +52,19 @@ function Checkout() {
       }
       let finalPaymentTime = paymentTime;
       if (payment === "upi" && !finalPaymentTime) {
-         const now = new Date();
-         const hours = String(now.getHours()).padStart(2, "0");
-         const minutes = String(now.getMinutes()).padStart(2, "0");
-         finalPaymentTime = `${hours}:${minutes}`;
-         setPaymentTime(finalPaymentTime);
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        finalPaymentTime = `${hours}:${minutes}`;
+        setPaymentTime(finalPaymentTime);
       }
 
       const items = cart.map((item) => ({
         product: item._id,
         quantity: item.quantity,
         color: item.color || "",
-        size: item.size || ""
+        size: item.size || "",
       }));
-
 
       const data = new FormData();
 
@@ -102,11 +101,8 @@ function Checkout() {
 
         navigate("/my-orders");
       }
-
     } catch (err) {
-      toast.error(
-        err.response?.data?.message || "Order Failed"
-      );
+      toast.error(err.response?.data?.message || "Order Failed");
     } finally {
       setIsPlacingOrder(false);
     }
@@ -114,29 +110,21 @@ function Checkout() {
 
   return (
     <div className="checkout-page container section">
-
       <div>
-
-        <CheckoutForm
-          onSubmit={continueCheckout}
-        />
+        <CheckoutForm onSubmit={continueCheckout} />
 
         {showPayment && (
           <>
-
-            <PaymentMethods
-              payment={payment}
-              setPayment={setPayment}
-            />
+            <PaymentMethods payment={payment} setPayment={setPayment} />
             {payment === "upi" && (
-  <UPIPayment
-    totalAmount={totalAmount}
-    paymentTime={paymentTime}
-    setPaymentTime={setPaymentTime}
-    paymentScreenshot={paymentScreenshot}
-    setPaymentScreenshot={setPaymentScreenshot}
-  />
-)}
+              <UPIPayment
+                totalAmount={totalAmount}
+                paymentTime={paymentTime}
+                setPaymentTime={setPaymentTime}
+                paymentScreenshot={paymentScreenshot}
+                setPaymentScreenshot={setPaymentScreenshot}
+              />
+            )}
 
             <button
               className="primary-btn"
@@ -146,14 +134,11 @@ function Checkout() {
             >
               {isPlacingOrder ? "Placing Order..." : "Place Order"}
             </button>
-
           </>
         )}
-
       </div>
 
       <OrderSummary hideButton />
-
     </div>
   );
 }

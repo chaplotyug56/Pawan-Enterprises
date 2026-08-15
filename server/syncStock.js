@@ -26,7 +26,9 @@ async function syncStock() {
         product.active = shouldBeActive;
         await product.save();
         updated++;
-        console.log(`Updated product: ${product.name} to active: ${shouldBeActive}`);
+        console.log(
+          `Updated product: ${product.name} to active: ${shouldBeActive}`,
+        );
       }
     }
 

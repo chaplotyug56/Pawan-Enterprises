@@ -60,12 +60,14 @@ function Navbar() {
     const lowerSearch = search.toLowerCase();
     const filtered = products.filter((product) => {
       if (product.name.toLowerCase().includes(lowerSearch)) return true;
-      if (product.sku && product.sku.toLowerCase().includes(lowerSearch)) return true;
+      if (product.sku && product.sku.toLowerCase().includes(lowerSearch))
+        return true;
       if (product.variants && product.variants.length > 0) {
-        return product.variants.some(v => 
-          (v.size && v.size.toLowerCase().includes(lowerSearch)) || 
-          (v.color && v.color.toLowerCase().includes(lowerSearch)) || 
-          (v.sku && v.sku.toLowerCase().includes(lowerSearch))
+        return product.variants.some(
+          (v) =>
+            (v.size && v.size.toLowerCase().includes(lowerSearch)) ||
+            (v.color && v.color.toLowerCase().includes(lowerSearch)) ||
+            (v.sku && v.sku.toLowerCase().includes(lowerSearch)),
         );
       }
       return false;
@@ -77,11 +79,14 @@ function Navbar() {
   return (
     <div className="navbar-wrapper">
       <header className="navbar">
-
         {/* Logo */}
 
         <Link to="/" className="logo">
-          <img src="/logo.png" alt="Pawan Enterprises Logo" className="logo-img" />
+          <img
+            src="/logo.png"
+            alt="Pawan Enterprises Logo"
+            className="logo-img"
+          />
 
           <div>
             <h2>Pawan</h2>
@@ -92,7 +97,6 @@ function Navbar() {
         {/* Search */}
 
         <form className="search-box" onSubmit={handleSearchSubmit}>
-
           <input
             type="text"
             placeholder="Search products..."
@@ -106,7 +110,6 @@ function Navbar() {
 
           {suggestions.length > 0 && (
             <div className="search-dropdown">
-
               {suggestions.map((product) => (
                 <Link
                   key={product._id}
@@ -117,28 +120,21 @@ function Navbar() {
                     setSuggestions([]);
                   }}
                 >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                  />
+                  <img src={product.image} alt={product.name} />
 
                   <div>
                     <strong>{product.name}</strong>
                     <p>₹{product.price}</p>
                   </div>
-
                 </Link>
               ))}
-
             </div>
           )}
-
         </form>
 
         {/* Icons */}
 
         <div className="nav-icons">
-
           <NavLink to="/wishlist">
             <FaHeart />
             <span>Wishlist</span>
@@ -147,11 +143,7 @@ function Navbar() {
           <NavLink to="/cart" className="cart-link">
             <div className="cart-icon-wrapper">
               <FaShoppingCart />
-              {cartCount > 0 && (
-                <div className="cart-count">
-                  {cartCount}
-                </div>
-              )}
+              {cartCount > 0 && <div className="cart-count">{cartCount}</div>}
             </div>
             <span>Cart</span>
           </NavLink>
@@ -167,24 +159,18 @@ function Navbar() {
               <span>{user.name.split(" ")[0]}</span>
             </NavLink>
           )}
-
         </div>
 
         {/* Mobile Menu Button */}
 
-        <button
-          className="menu-btn"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
-
       </header>
 
       {/* Navigation */}
 
       <nav className={`menu ${menuOpen ? "show" : ""}`}>
-
         <NavLink to="/" onClick={() => setMenuOpen(false)}>
           Home
         </NavLink>
@@ -256,7 +242,6 @@ function Navbar() {
             Logout
           </button>
         )}
-
       </nav>
     </div>
   );

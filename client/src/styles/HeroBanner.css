@@ -1,112 +1,112 @@
 .hero-banner {
-    width: 100%;
-    min-height: 500px;
-  
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  
-    border-radius: 20px;
-  
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  
-    margin: 25px 0;
-    overflow: hidden;
+  width: 100%;
+  min-height: 500px;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-radius: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 25px 0;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  width: 100%;
+  max-width: 1200px;
+  padding: 50px;
+  text-align: center;
+  color: white;
+}
+
+.hero-overlay h1 {
+  font-size: 58px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.hero-overlay h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.hero-overlay p {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.shop-btn,
+.call-btn {
+  padding: 14px 32px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.shop-btn {
+  background: #ff9800;
+  color: white;
+}
+
+.shop-btn:hover {
+  background: #f57c00;
+}
+
+.call-btn {
+  background: #1976d2;
+  color: white;
+}
+
+.call-btn:hover {
+  background: #1565c0;
+}
+
+@media (max-width: 768px) {
+  .hero-banner {
+    min-height: 350px;
+    margin: 15px 0;
+    border-radius: 12px;
   }
-  
+
   .hero-overlay {
-    width: 100%;
-    max-width: 1200px;
-    padding: 50px;
-    text-align: center;
-    color: white;
+    padding: 20px 15px;
   }
-  
+
   .hero-overlay h1 {
-    font-size: 58px;
-    font-weight: 700;
+    font-size: 28px;
+  }
+
+  .hero-overlay h2 {
+    font-size: 18px;
     margin-bottom: 10px;
   }
-  
-  .hero-overlay h2 {
-    font-size: 28px;
-    margin-bottom: 15px;
-  }
-  
+
   .hero-overlay p {
-    font-size: 20px;
-    margin-bottom: 30px;
+    font-size: 14px;
+    margin-bottom: 20px;
   }
-  
+
   .hero-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+    gap: 12px;
   }
-  
+
   .shop-btn,
   .call-btn {
-    padding: 14px 32px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s;
+    padding: 12px 24px;
+    font-size: 14px;
+    width: 100%;
   }
-  
-  .shop-btn {
-    background: #ff9800;
-    color: white;
-  }
-  
-  .shop-btn:hover {
-    background: #f57c00;
-  }
-  
-  .call-btn {
-    background: #1976d2;
-    color: white;
-  }
-  
-  .call-btn:hover {
-    background: #1565c0;
-  }
-  
-  @media (max-width: 768px) {
-    .hero-banner {
-      min-height: 350px;
-      margin: 15px 0;
-      border-radius: 12px;
-    }
-  
-    .hero-overlay {
-      padding: 20px 15px;
-    }
-  
-    .hero-overlay h1 {
-      font-size: 28px;
-    }
-  
-    .hero-overlay h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-  
-    .hero-overlay p {
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-
-    .hero-buttons {
-      gap: 12px;
-    }
-
-    .shop-btn,
-    .call-btn {
-      padding: 12px 24px;
-      font-size: 14px;
-      width: 100%;
-    }
-  }
+}

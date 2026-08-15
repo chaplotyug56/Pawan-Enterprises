@@ -14,9 +14,7 @@ export const WishlistProvider = ({ children }) => {
   }, [wishlist]);
 
   const addToWishlist = (product) => {
-    const exists = wishlist.find(
-      (item) => item._id === product._id
-    );
+    const exists = wishlist.find((item) => item._id === product._id);
 
     if (exists) {
       toast.info("Already in Wishlist");
@@ -28,9 +26,7 @@ export const WishlistProvider = ({ children }) => {
   };
 
   const removeFromWishlist = (id) => {
-    setWishlist(
-      wishlist.filter((item) => item._id !== id)
-    );
+    setWishlist(wishlist.filter((item) => item._id !== id));
 
     toast.success("Removed from Wishlist");
   };
@@ -53,5 +49,4 @@ export const WishlistProvider = ({ children }) => {
   );
 };
 
-export const useWishlist = () =>
-  useContext(WishlistContext);
+export const useWishlist = () => useContext(WishlistContext);

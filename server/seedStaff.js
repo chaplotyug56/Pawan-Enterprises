@@ -6,10 +6,12 @@ const User = require("./models/User");
 
 dotenv.config({ path: path.join(__dirname, ".env") });
 
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose
+  .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then(async () => {
+  })
+  .then(async () => {
     console.log("MongoDB Connected");
 
     const email = "staff@gmail.com";
@@ -17,23 +19,24 @@ mongoose.connect(process.env.MONGODB_URI, {
 
     const existingStaff = await User.findOne({ email });
     if (existingStaff) {
-        console.log("Staff already exists, updating role/password...");
-        existingStaff.role = "staff";
-        existingStaff.password = password;
-        await existingStaff.save();
+      console.log("Staff already exists, updating role/password...");
+      existingStaff.role = "staff";
+      existingStaff.password = password;
+      await existingStaff.save();
     } else {
-        console.log("Creating staff account...");
-        await User.create({
-            name: "Delivery Staff",
-            email: email,
-            password: password,
-            role: "staff"
-        });
+      console.log("Creating staff account...");
+      await User.create({
+        name: "Delivery Staff",
+        email: email,
+        password: password,
+        role: "staff",
+      });
     }
 
     console.log("Staff seeded successfully");
     process.exit(0);
-}).catch(err => {
+  })
+  .catch((err) => {
     console.error(err);
     process.exit(1);
-});
+  });

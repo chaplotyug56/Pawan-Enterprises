@@ -21,5 +21,5 @@ root.render(
         </CartProvider>
       </WishlistProvider>
     </AuthProvider>
-  </BrowserRouter>
+  </BrowserRouter>,
 );

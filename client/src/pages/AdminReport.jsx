@@ -42,7 +42,7 @@ function AdminReport() {
           <br />
           {body}
         </div>,
-        { autoClose: 5000, closeOnClick: true, icon: "🛒" }
+        { autoClose: 5000, closeOnClick: true, icon: "🛒" },
       );
       // Auto refresh dashboard to show new order
       fetchDashboard();
@@ -54,11 +54,7 @@ function AdminReport() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="loading-page">
-        Loading Dashboard...
-      </div>
-    );
+    return <div className="loading-page">Loading Dashboard...</div>;
   }
 
   return (

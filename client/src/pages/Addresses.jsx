@@ -6,18 +6,18 @@ function Addresses() {
   const [addresses, setAddresses] = useState([]);
   const [editingId, setEditingId] = useState(null);
 
-const emptyForm = {
-  fullName: "",
-  phone: "",
-  houseNo: "",
-  building: "",
-  street: "",
-  landmark: "",
-  city: "",
-  state: "Rajasthan",
-  pincode: "",
-};
-const [form, setForm] = useState(emptyForm);
+  const emptyForm = {
+    fullName: "",
+    phone: "",
+    houseNo: "",
+    building: "",
+    street: "",
+    landmark: "",
+    city: "",
+    state: "Rajasthan",
+    pincode: "",
+  };
+  const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
     fetchAddresses();
@@ -42,12 +42,14 @@ const [form, setForm] = useState(emptyForm);
 
   const addAddress = async (e) => {
     e.preventDefault();
-    
+
     if (form.pincode.trim() !== "312205") {
-      alert("Sorry, we currently only deliver to pincode 312205. Your area is not deliverable at the moment.");
+      alert(
+        "Sorry, we currently only deliver to pincode 312205. Your area is not deliverable at the moment.",
+      );
       return;
     }
-  
+
     try {
       if (editingId) {
         await api.put(`/users/addresses/${editingId}`, form);
@@ -56,12 +58,11 @@ const [form, setForm] = useState(emptyForm);
         await api.post("/users/addresses", form);
         alert("Address Added Successfully");
       }
-  
+
       setForm(emptyForm);
       setEditingId(null);
-  
+
       fetchAddresses();
-  
     } catch (err) {
       alert(err.response?.data?.message || "Something went wrong");
     }
@@ -76,7 +77,7 @@ const [form, setForm] = useState(emptyForm);
   const makeDefault = async (id) => {
     try {
       await api.put(`/users/addresses/${id}/default`);
-  
+
       fetchAddresses();
     } catch (err) {
       alert(err.response?.data?.message || "Unable to set default address");
@@ -85,7 +86,7 @@ const [form, setForm] = useState(emptyForm);
 
   const editAddress = (address) => {
     setEditingId(address._id);
-  
+
     setForm({
       fullName: address.fullName,
       phone: address.phone,
@@ -97,7 +98,7 @@ const [form, setForm] = useState(emptyForm);
       state: address.state || "Rajasthan",
       pincode: address.pincode,
     });
-  
+
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -106,9 +107,7 @@ const [form, setForm] = useState(emptyForm);
 
   return (
     <div className="addresses-page">
-     <h2>
-  {editingId ? "Edit Address" : "Saved Addresses"}
-</h2>
+      <h2>{editingId ? "Edit Address" : "Saved Addresses"}</h2>
 
       <form onSubmit={addAddress} className="address-form">
         <input
@@ -167,7 +166,7 @@ const [form, setForm] = useState(emptyForm);
           value={form.state}
           onChange={handleChange}
           readOnly
-          style={{ backgroundColor: '#f5f5f5', color: '#666' }}
+          style={{ backgroundColor: "#f5f5f5", color: "#666" }}
           required
         />
 
@@ -179,59 +178,60 @@ const [form, setForm] = useState(emptyForm);
           required
         />
 
-<button type="submit">
-  {editingId ? "Update Address" : "Add Address"}
-</button>
+        <button type="submit">
+          {editingId ? "Update Address" : "Add Address"}
+        </button>
       </form>
 
       <div className="address-list">
         {addresses.map((item) => (
           <div key={item._id} className="address-card">
             <h4>
-  {item.fullName}
+              {item.fullName}
 
-  {item.isDefault && (
-    <span
-      style={{
-        marginLeft: 10,
-        color: "green",
-        fontSize: "14px",
-      }}
-    >
-      ⭐ Default
-    </span>
-  )}
-</h4>
+              {item.isDefault && (
+                <span
+                  style={{
+                    marginLeft: 10,
+                    color: "green",
+                    fontSize: "14px",
+                  }}
+                >
+                  ⭐ Default
+                </span>
+              )}
+            </h4>
 
             <p>{item.phone}</p>
 
-            <p>{item.houseNo}, {item.building}, {item.street}</p>
+            <p>
+              {item.houseNo}, {item.building}, {item.street}
+            </p>
 
             <p>
-              {item.landmark && `${item.landmark}, `}{item.city} - {item.pincode}
+              {item.landmark && `${item.landmark}, `}
+              {item.city} - {item.pincode}
             </p>
 
             <div style={{ marginTop: "10px" }}>
-  {!item.isDefault && (
-    <button
-      onClick={() => makeDefault(item._id)}
-      style={{ marginRight: "10px" }}
-    >
-      Set Default
-    </button>
-  )}
+              {!item.isDefault && (
+                <button
+                  onClick={() => makeDefault(item._id)}
+                  style={{ marginRight: "10px" }}
+                >
+                  Set Default
+                </button>
+              )}
 
-  <button
-    onClick={() => editAddress(item)}
-    style={{ marginRight: "10px" }}
-  >
-    Edit
-  </button>
+              <button
+                onClick={() => editAddress(item)}
+                style={{ marginRight: "10px" }}
+              >
+                Edit
+              </button>
 
-  <button onClick={() => removeAddress(item._id)}>
-    Delete
-  </button>
-</div>
+              <button onClick={() => removeAddress(item._id)}>Delete</button>
+            </div>
           </div>
         ))}
       </div>

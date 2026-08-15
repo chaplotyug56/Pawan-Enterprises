@@ -22,10 +22,7 @@ function BestSelling() {
 
   return (
     <section className="container section">
-
-      <h2 className="section-title">
-        🔥 Most Popular Products
-      </h2>
+      <h2 className="section-title">🔥 Most Popular Products</h2>
 
       <div className="products-grid">
         {products.map((product) => (
@@ -36,7 +33,6 @@ function BestSelling() {
           />
         ))}
       </div>
-
     </section>
   );
 }

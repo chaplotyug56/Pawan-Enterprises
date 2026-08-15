@@ -8,45 +8,43 @@ import "../styles/Auth.css";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate();
+  const { register, login, firebaseAuth } = useAuth();
 
-    const navigate = useNavigate();
-    const { register, login, firebaseAuth } = useAuth();
-  
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
 
-  const [form, setForm] =
-    useState({
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-    });
+  const submit = async (e) => {
+    e.preventDefault();
 
-    const submit = async (e) => {
-        e.preventDefault();
-      
-        try {
-          await register(form);
-      
-          await login(form.email, form.password);
-      
-          toast.success("Welcome to Pawan Enterprises!");
-      
-          navigate("/");
-      
-        } catch (err) {
-          toast.error(err.response?.data?.message || "Registration Failed");
-        }
-    };
+    try {
+      await register(form);
+
+      await login(form.email, form.password);
+
+      toast.success("Welcome to Pawan Enterprises!");
+
+      navigate("/");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Registration Failed");
+    }
+  };
 
   const handleGoogleLogin = async () => {
     if (!auth) {
-      toast.error("Google Sign-In is not configured (Missing Firebase API Key)");
+      toast.error(
+        "Google Sign-In is not configured (Missing Firebase API Key)",
+      );
       return;
     }
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const token = await result.user.getIdToken();
-      
+
       const data = await firebaseAuth(token);
       toast.success("Login Successful via Google");
 
@@ -57,19 +55,15 @@ function Register() {
       }
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || err.message || "Google Sign-In Failed");
+      toast.error(
+        err.response?.data?.message || err.message || "Google Sign-In Failed",
+      );
     }
   };
 
   return (
-
     <div className="auth-page">
-
-      <form
-        className="auth-form"
-        onSubmit={submit}
-      >
-
+      <form className="auth-form" onSubmit={submit}>
         <h1>Create Account</h1>
 
         <input
@@ -119,39 +113,56 @@ function Register() {
           required
         />
 
-        <button>
-          Register
-        </button>
+        <button>Register</button>
 
         <p>
-
           Already have an account?
-
-          <Link to="/login">
-            Login
-          </Link>
-
+          <Link to="/login">Login</Link>
         </p>
 
-        <div style={{ margin: "20px 0", display: "flex", alignItems: "center", textTransform: "uppercase", color: "#666", fontSize: "12px" }}>
-          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #ccc" }} />
+        <div
+          style={{
+            margin: "20px 0",
+            display: "flex",
+            alignItems: "center",
+            textTransform: "uppercase",
+            color: "#666",
+            fontSize: "12px",
+          }}
+        >
+          <hr
+            style={{ flex: 1, border: "none", borderTop: "1px solid #ccc" }}
+          />
           <span style={{ padding: "0 10px" }}>Or</span>
-          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #ccc" }} />
+          <hr
+            style={{ flex: 1, border: "none", borderTop: "1px solid #ccc" }}
+          />
         </div>
 
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={handleGoogleLogin}
-          style={{ background: "#fff", color: "#333", border: "1px solid #ccc", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", padding: "12px", cursor: "pointer" }}
+          style={{
+            background: "#fff",
+            color: "#333",
+            border: "1px solid #ccc",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "10px",
+            padding: "12px",
+            cursor: "pointer",
+          }}
         >
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: "18px" }} />
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google"
+            style={{ width: "18px" }}
+          />
           Sign in with Google
         </button>
-
       </form>
-
     </div>
-
   );
 }
 

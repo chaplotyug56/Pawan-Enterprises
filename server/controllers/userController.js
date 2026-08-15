@@ -17,10 +17,7 @@ const registerUser = async (req, res) => {
     }
 
     const userExists = await User.findOne({
-      $or: [
-        { email: email.toLowerCase() },
-        { phone: phone }
-      ]
+      $or: [{ email: email.toLowerCase() }, { phone: phone }],
     });
 
     if (userExists) {
@@ -47,7 +44,6 @@ const registerUser = async (req, res) => {
       message: "User Registered Successfully",
       user: userData,
     });
-
   } catch (error) {
     console.error("Register Error:", error);
 
@@ -66,7 +62,7 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { identifier, email, password } = req.body;
-    
+
     // Support both old 'email' payload and new 'identifier' payload
     const loginId = identifier || email;
 
@@ -78,10 +74,7 @@ const loginUser = async (req, res) => {
     }
 
     const user = await User.findOne({
-      $or: [
-        { email: loginId.toLowerCase() },
-        { phone: loginId }
-      ]
+      $or: [{ email: loginId.toLowerCase() }, { phone: loginId }],
     });
 
     if (!user) {
@@ -91,10 +84,7 @@ const loginUser = async (req, res) => {
       });
     }
 
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -111,7 +101,7 @@ const loginUser = async (req, res) => {
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     const userData = user.toObject();
@@ -123,7 +113,6 @@ const loginUser = async (req, res) => {
       token,
       user: userData,
     });
-
   } catch (error) {
     console.error("Login Error:", error);
 
@@ -142,14 +131,18 @@ const loginUser = async (req, res) => {
 const firebaseLogin = async (req, res) => {
   try {
     const { token } = req.body;
-    
+
     if (!token) {
-      return res.status(400).json({ success: false, message: "Firebase token is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Firebase token is required" });
     }
 
     const firebaseConfig = require("../config/firebase");
     if (!firebaseConfig.auth) {
-      return res.status(500).json({ success: false, message: firebaseConfig.initializationError });
+      return res
+        .status(500)
+        .json({ success: false, message: firebaseConfig.initializationError });
     }
 
     // Verify token
@@ -160,10 +153,7 @@ const firebaseLogin = async (req, res) => {
 
     // Check if user exists
     let user = await User.findOne({
-      $or: [
-        { email: userEmail },
-        { phone: phone_number || uid }
-      ]
+      $or: [{ email: userEmail }, { phone: phone_number || uid }],
     });
 
     if (!user) {
@@ -185,7 +175,7 @@ const firebaseLogin = async (req, res) => {
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     const userData = user.toObject();
@@ -197,7 +187,6 @@ const firebaseLogin = async (req, res) => {
       token: localToken,
       user: userData,
     });
-
   } catch (error) {
     console.error("Firebase Login Error:", error);
     if (res.headersSent) return;
@@ -213,8 +202,7 @@ const firebaseLogin = async (req, res) => {
 // ========================================
 const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id)
-      .select("-password");
+    const user = await User.findById(req.user.id).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -227,7 +215,6 @@ const getProfile = async (req, res) => {
       success: true,
       user,
     });
-
   } catch (error) {
     console.error("Get Profile Error:", error);
 
@@ -269,7 +256,6 @@ const updateProfile = async (req, res) => {
       message: "Profile Updated Successfully",
       user: userData,
     });
-
   } catch (error) {
     console.error("Update Profile Error:", error);
 
@@ -287,10 +273,7 @@ const updateProfile = async (req, res) => {
 // ========================================
 const changePassword = async (req, res) => {
   try {
-    const {
-      currentPassword,
-      newPassword,
-    } = req.body;
+    const { currentPassword, newPassword } = req.body;
 
     const user = await User.findById(req.user.id);
 
@@ -301,10 +284,7 @@ const changePassword = async (req, res) => {
       });
     }
 
-    const match = await bcrypt.compare(
-      currentPassword,
-      user.password
-    );
+    const match = await bcrypt.compare(currentPassword, user.password);
 
     if (!match) {
       return res.status(400).json({
@@ -313,10 +293,7 @@ const changePassword = async (req, res) => {
       });
     }
 
-    user.password = await bcrypt.hash(
-      newPassword,
-      10
-    );
+    user.password = await bcrypt.hash(newPassword, 10);
 
     await user.save();
 
@@ -324,7 +301,6 @@ const changePassword = async (req, res) => {
       success: true,
       message: "Password Changed Successfully",
     });
-
   } catch (error) {
     console.error("Change Password Error:", error);
 
@@ -353,13 +329,7 @@ const addAddress = async (req, res) => {
       pincode,
     } = req.body;
 
-    if (
-      !fullName ||
-      !phone ||
-      !street ||
-      !city ||
-      !pincode
-    ) {
+    if (!fullName || !phone || !street || !city || !pincode) {
       return res.status(400).json({
         success: false,
         message: "Please fill all address fields",
@@ -395,7 +365,6 @@ const addAddress = async (req, res) => {
       message: "Address Added Successfully",
       addresses: user.addresses,
     });
-
   } catch (error) {
     console.error("Add Address Error:", error);
 
@@ -426,7 +395,6 @@ const getAddresses = async (req, res) => {
       success: true,
       addresses: user.addresses,
     });
-
   } catch (error) {
     console.error("Get Addresses Error:", error);
 
@@ -454,7 +422,7 @@ const deleteAddress = async (req, res) => {
     }
 
     user.addresses = user.addresses.filter(
-      (address) => address._id.toString() !== req.params.id
+      (address) => address._id.toString() !== req.params.id,
     );
 
     await user.save();
@@ -464,7 +432,6 @@ const deleteAddress = async (req, res) => {
       message: "Address Deleted Successfully",
       addresses: user.addresses,
     });
-
   } catch (error) {
     console.error("Delete Address Error:", error);
 
@@ -517,7 +484,6 @@ const updateAddress = async (req, res) => {
       message: "Address Updated Successfully",
       addresses: user.addresses,
     });
-
   } catch (error) {
     console.error("Update Address Error:", error);
 
@@ -554,8 +520,7 @@ const setDefaultAddress = async (req, res) => {
     }
 
     user.addresses.forEach((address) => {
-      address.isDefault =
-        address._id.toString() === req.params.id;
+      address.isDefault = address._id.toString() === req.params.id;
     });
 
     await user.save();
@@ -565,7 +530,6 @@ const setDefaultAddress = async (req, res) => {
       message: "Default Address Updated",
       addresses: user.addresses,
     });
-
   } catch (error) {
     console.error("Set Default Address Error:", error);
 

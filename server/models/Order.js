@@ -8,10 +8,10 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
     orderId: {
-        type: String,
-        unique: true,
-        required: true,
-      },
+      type: String,
+      unique: true,
+      required: true,
+    },
 
     items: [
       {
@@ -38,75 +38,60 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    
-
 
     shippingAddress: {
-        fullName: String,
-        phone: String,
-        houseNo: String,
-        building: String,
-        street: String,
-        landmark: String,
-        city: String,
-        pincode: String,
-      },
-      
-      location: {
-        latitude: Number,
-        longitude: Number,
-        distance: Number,
-      },
+      fullName: String,
+      phone: String,
+      houseNo: String,
+      building: String,
+      street: String,
+      landmark: String,
+      city: String,
+      pincode: String,
+    },
 
-      status: {
-        type: String,
-        enum: [
-          "Pending",
-          "Processing",
-          "Shipped",
-          "Delivered",
-          "Cancelled",
-        ],
-        default: "Pending",
-      },
+    location: {
+      latitude: Number,
+      longitude: Number,
+      distance: Number,
+    },
 
-      paymentMethod: {
-        type: String,
-        enum: ["cod", "upi", "cash"],
-        default: "cod",
-      },
-      
-      paymentStatus: {
-        type: String,
-        enum: [
-          "Pending",
-          "Pending Verification",
-          "Paid",
-          "Rejected",
-        ],
-        default: "Pending",
-      },
-      
-      paymentScreenshot: {
-        type: String,
-        default: "",
-      },
-      
-      paymentTime: {
-        type: String,
-        default: "",
-      },
-      
-    
-      paidAt: {
-        type: Date,
-        default: null,
-      },
+    status: {
+      type: String,
+      enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+      default: "Pending",
+    },
+
+    paymentMethod: {
+      type: String,
+      enum: ["cod", "upi", "cash"],
+      default: "cod",
+    },
+
+    paymentStatus: {
+      type: String,
+      enum: ["Pending", "Pending Verification", "Paid", "Rejected"],
+      default: "Pending",
+    },
+
+    paymentScreenshot: {
+      type: String,
+      default: "",
+    },
+
+    paymentTime: {
+      type: String,
+      default: "",
+    },
+
+    paidAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
-  }
-
+  },
 );
 
 module.exports = mongoose.model("Order", orderSchema);

@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import api from "../services/api";
 import { STORE_LOCATION } from "../config";
 import "../styles/Checkout.css";
-import { FaMapMarkerAlt, FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaSpinner,
+} from "react-icons/fa";
 
 // Haversine Formula to calculate distance in km
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -11,8 +16,10 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   const dLon = deg2rad(lon2 - lon1);
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c; // Distance in km
   return d;
@@ -92,9 +99,17 @@ function CheckoutForm({ onSubmit }) {
 
   const verifyLocation = () => {
     // Validate required address fields before location check (optional, but good UX)
-    if (!form.fullName || !form.phone || !form.street || !form.city || !form.pincode) {
+    if (
+      !form.fullName ||
+      !form.phone ||
+      !form.street ||
+      !form.city ||
+      !form.pincode
+    ) {
       setLocationStatus("error");
-      setLocationMessage("Please fill all required address fields before verifying location.");
+      setLocationMessage(
+        "Please fill all required address fields before verifying location.",
+      );
       return;
     }
 
@@ -114,16 +129,22 @@ function CheckoutForm({ onSubmit }) {
           STORE_LOCATION.latitude,
           STORE_LOCATION.longitude,
           latitude,
-          longitude
+          longitude,
         );
 
         if (distance <= STORE_LOCATION.maxDeliveryDistanceKm) {
           setLocationStatus("success");
           setLocationMessage("We deliver to your location.");
-          setVerifiedLocation({ latitude, longitude, distance: distance.toFixed(2) });
+          setVerifiedLocation({
+            latitude,
+            longitude,
+            distance: distance.toFixed(2),
+          });
         } else {
           setLocationStatus("error");
-          setLocationMessage(`Sorry, we currently deliver only within a ${STORE_LOCATION.maxDeliveryDistanceKm} km radius of our store. (You are ${distance.toFixed(1)} km away)`);
+          setLocationMessage(
+            `Sorry, we currently deliver only within a ${STORE_LOCATION.maxDeliveryDistanceKm} km radius of our store. (You are ${distance.toFixed(1)} km away)`,
+          );
           setVerifiedLocation(null);
         }
       },
@@ -131,16 +152,24 @@ function CheckoutForm({ onSubmit }) {
         setLocationStatus("error");
         switch (error.code) {
           case error.PERMISSION_DENIED:
-            setLocationMessage("Location permission is required to verify whether we deliver to your area.");
+            setLocationMessage(
+              "Location permission is required to verify whether we deliver to your area.",
+            );
             break;
           case error.POSITION_UNAVAILABLE:
-            setLocationMessage("Location information is unavailable. Please try again or check your GPS signal.");
+            setLocationMessage(
+              "Location information is unavailable. Please try again or check your GPS signal.",
+            );
             break;
           case error.TIMEOUT:
-            setLocationMessage("The request to get your location timed out. Please try again.");
+            setLocationMessage(
+              "The request to get your location timed out. Please try again.",
+            );
             break;
           default:
-            setLocationMessage("An unknown error occurred while fetching location.");
+            setLocationMessage(
+              "An unknown error occurred while fetching location.",
+            );
             break;
         }
         setVerifiedLocation(null);
@@ -148,8 +177,8 @@ function CheckoutForm({ onSubmit }) {
       {
         enableHighAccuracy: false,
         timeout: 20000,
-        maximumAge: 60000
-      }
+        maximumAge: 60000,
+      },
     );
   };
 
@@ -168,18 +197,38 @@ function CheckoutForm({ onSubmit }) {
         <h2>Delivery Address</h2>
 
         {addresses.length > 0 && (
-          <div className="saved-addresses" style={{ marginBottom: '20px' }}>
+          <div className="saved-addresses" style={{ marginBottom: "20px" }}>
             {addresses.map((item) => (
-              <label key={item._id} className="saved-address" style={{ display: 'flex', gap: '10px', padding: '10px', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', marginBottom: '10px', cursor: 'pointer' }}>
+              <label
+                key={item._id}
+                className="saved-address"
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  padding: "10px",
+                  border: "1px solid var(--border-color)",
+                  borderRadius: "var(--radius-md)",
+                  marginBottom: "10px",
+                  cursor: "pointer",
+                }}
+              >
                 <input
                   type="radio"
                   checked={selectedAddress?._id === item._id}
                   onChange={() => handleAddressSelection(item)}
                 />
                 <div>
-                  <strong>{item.fullName} {item.isDefault && "⭐"}</strong>
-                  <p style={{ fontSize: '0.9em', color: 'var(--text-secondary)' }}>
-                    {item.houseNo}, {item.building}, {item.street}<br/>
+                  <strong>
+                    {item.fullName} {item.isDefault && "⭐"}
+                  </strong>
+                  <p
+                    style={{
+                      fontSize: "0.9em",
+                      color: "var(--text-secondary)",
+                    }}
+                  >
+                    {item.houseNo}, {item.building}, {item.street}
+                    <br />
                     {item.city}, {item.state || "Rajasthan"} - {item.pincode}
                   </p>
                 </div>
@@ -192,12 +241,20 @@ function CheckoutForm({ onSubmit }) {
                 setShowManualForm(true);
                 setSelectedAddress(null);
                 setForm({
-                  fullName: "", phone: "", houseNo: "", building: "", street: "", landmark: "", city: "", state: "Rajasthan", pincode: "",
+                  fullName: "",
+                  phone: "",
+                  houseNo: "",
+                  building: "",
+                  street: "",
+                  landmark: "",
+                  city: "",
+                  state: "Rajasthan",
+                  pincode: "",
                 });
                 setLocationStatus("idle");
                 setVerifiedLocation(null);
               }}
-              style={{ padding: '8px 12px', fontSize: '0.9em' }}
+              style={{ padding: "8px 12px", fontSize: "0.9em" }}
             >
               + Enter New Address
             </button>
@@ -234,7 +291,7 @@ function CheckoutForm({ onSubmit }) {
                 onChange={handleChange}
               />
             </div>
-            
+
             <input
               name="street"
               placeholder="Street / Area *"
@@ -242,14 +299,14 @@ function CheckoutForm({ onSubmit }) {
               onChange={handleChange}
               required
             />
-            
+
             <input
               name="landmark"
               placeholder="Landmark (Optional)"
               value={form.landmark}
               onChange={handleChange}
             />
-            
+
             <div className="input-row">
               <input
                 name="city"
@@ -264,7 +321,7 @@ function CheckoutForm({ onSubmit }) {
                 value={form.state}
                 onChange={handleChange}
                 readOnly
-                style={{ backgroundColor: '#f5f5f5', color: '#666' }}
+                style={{ backgroundColor: "#f5f5f5", color: "#666" }}
                 required
               />
             </div>
@@ -277,13 +334,22 @@ function CheckoutForm({ onSubmit }) {
                 required
               />
             </div>
-            
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '15px', cursor: 'pointer', fontSize: '15px' }}>
+
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                marginTop: "15px",
+                cursor: "pointer",
+                fontSize: "15px",
+              }}
+            >
               <input
                 type="checkbox"
                 checked={saveAddress}
                 onChange={(e) => setSaveAddress(e.target.checked)}
-                style={{ width: '18px', height: '18px' }}
+                style={{ width: "18px", height: "18px" }}
               />
               Save this address for next time
             </label>
@@ -299,9 +365,13 @@ function CheckoutForm({ onSubmit }) {
           disabled={locationStatus === "loading"}
         >
           {locationStatus === "loading" ? (
-            <><FaSpinner className="spin-icon" /> Verifying...</>
+            <>
+              <FaSpinner className="spin-icon" /> Verifying...
+            </>
           ) : (
-            <><FaMapMarkerAlt /> Verify My Delivery Location</>
+            <>
+              <FaMapMarkerAlt /> Verify My Delivery Location
+            </>
           )}
         </button>
 
@@ -326,9 +396,9 @@ function CheckoutForm({ onSubmit }) {
         )}
       </div>
 
-      <button 
-        type="submit" 
-        className="primary-btn place-order-btn" 
+      <button
+        type="submit"
+        className="primary-btn place-order-btn"
         disabled={locationStatus !== "success"}
       >
         Continue to Payment

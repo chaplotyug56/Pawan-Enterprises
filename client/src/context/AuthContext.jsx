@@ -4,20 +4,13 @@ import api from "../services/api";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("user"))
-  );
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
-  const [token, setToken] = useState(
-    localStorage.getItem("token")
-  );
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem(
-        "user",
-        JSON.stringify(user)
-      );
+      localStorage.setItem("user", JSON.stringify(user));
     } else {
       localStorage.removeItem("user");
     }
@@ -30,13 +23,10 @@ export function AuthProvider({ children }) {
   }, [user, token]);
 
   const login = async (identifier, password) => {
-    const res = await api.post(
-      "/users/login",
-      {
-        identifier,
-        password,
-      }
-    );
+    const res = await api.post("/users/login", {
+      identifier,
+      password,
+    });
 
     setUser(res.data.user);
     setToken(res.data.token);
@@ -45,17 +35,16 @@ export function AuthProvider({ children }) {
   };
 
   const firebaseAuth = async (firebaseToken) => {
-    const res = await api.post("/users/firebase-auth", { token: firebaseToken });
+    const res = await api.post("/users/firebase-auth", {
+      token: firebaseToken,
+    });
     setUser(res.data.user);
     setToken(res.data.token);
     return res.data;
   };
 
   const register = async (data) => {
-    const res = await api.post(
-      "/users/register",
-      data
-    );
+    const res = await api.post("/users/register", data);
 
     return res.data;
   };
@@ -81,5 +70,4 @@ export function AuthProvider({ children }) {
   );
 }
 
-export const useAuth = () =>
-  useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);

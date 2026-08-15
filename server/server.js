@@ -1,3 +1,10 @@
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+});
+
 const express = require("express");
 const mongoose = require("mongoose");
 const productRoutes = require("./routes/productRoutes");
@@ -44,6 +51,17 @@ const allowedOrigins = [
   app.options(/(.*)/, cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
+app.use((req, res, next) => {
+  if (!process.env.MONGODB_URI) {
+    return res.status(500).json({ success: false, message: "CRITICAL: MONGODB_URI environment variable is missing in Vercel! Please add it in Vercel Settings -> Environment Variables." });
+  }
+  if (mongoose.connection.readyState === 0) {
+    // If not connected, don't let it buffer forever and timeout Vercel
+    return res.status(500).json({ success: false, message: "CRITICAL: MongoDB is not connected. The MONGODB_URI might be invalid or the database is rejecting the connection." });
+  }
+  next();
+});
+
 app.use("/api/products", productRoutes);
 console.log("✅ Product routes loaded");
 app.use("/api/users", userRoutes);
@@ -69,7 +87,11 @@ const connectDB = async () => {
       return;
     }
 
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
+      bufferCommands: false, // Don't buffer commands to avoid lambda timeouts
+    });
     console.log("✅ MongoDB Connected Successfully");
   } catch (err) {
     console.log("❌ MongoDB Connection Error:", err.message);

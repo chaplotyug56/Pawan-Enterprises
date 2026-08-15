@@ -106,10 +106,13 @@ app.use((err, req, res, next) => {
       message: err.message || "Internal Server Error",
     });
   });
-// Server Port
-const PORT = process.env.PORT || 8000;
-
 // Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+  });
+}
+
+// Export for Vercel serverless
+module.exports = app;

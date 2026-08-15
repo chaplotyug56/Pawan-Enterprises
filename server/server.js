@@ -91,6 +91,7 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 5000,
       connectTimeoutMS: 5000,
       bufferCommands: false, // Don't buffer commands to avoid lambda timeouts
+      family: 4, // Force IPv4, because Node 18+ prefers IPv6 which can cause 90s connection hangs with MongoDB Atlas
     });
     console.log("✅ MongoDB Connected Successfully");
   } catch (err) {
@@ -101,7 +102,13 @@ connectDB();
 
 // Home Route
 app.get("/", (req, res) => {
-  res.send("🚀 Welcome to Pawan Enterprises Backend!");
+  res.send(`
+    <html>
+      <body style="background-color: #1a1a1a; color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif;">
+        <h1 style="font-size: 3rem;">🚀 Welcome to Pawan Enterprises Backend!</h1>
+      </body>
+    </html>
+  `);
 });
 // ========================================
 // Global Error Handler

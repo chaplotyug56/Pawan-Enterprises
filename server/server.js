@@ -57,15 +57,18 @@ app.use("/api/settings", settingsRoutes);
 app.use("/api/images", imageRoutes);
 
 // Connect MongoDB
-const { MongoMemoryServer } = require("mongodb-memory-server");
 const connectDB = async () => {
   try {
     let uri = process.env.MONGODB_URI;
     if (!uri) {
-      console.log("No MONGODB_URI found, using in-memory MongoDB...");
-      const mongoServer = await MongoMemoryServer.create({ instance: { args: ['--nounixsocket'] } });
-      uri = mongoServer.getUri();
+      throw new Error("No MONGODB_URI found in environment variables!");
     }
+    
+    // In serverless environments, avoid re-connecting if already connected
+    if (mongoose.connection.readyState >= 1) {
+      return;
+    }
+
     await mongoose.connect(uri);
     console.log("✅ MongoDB Connected Successfully");
   } catch (err) {

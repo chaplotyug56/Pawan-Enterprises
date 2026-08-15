@@ -82,6 +82,9 @@ const connectDB = async () => {
       throw new Error("No MONGODB_URI found in environment variables!");
     }
     
+    // Automatically strip quotes in case the user accidentally pasted them in Vercel
+    uri = uri.replace(/^["']|["']$/g, "").trim();
+
     // In serverless environments, avoid re-connecting if already connected
     if (mongoose.connection.readyState >= 1) {
       return;

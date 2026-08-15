@@ -232,7 +232,22 @@ function ShopBilling() {
                 const url = window.URL.createObjectURL(
                   new Blob([resBlob.data], { type: "application/pdf" }),
                 );
-                window.open(url, "_blank");
+                
+                // Create a hidden iframe to load and print the PDF directly
+                const iframe = document.createElement("iframe");
+                iframe.style.display = "none";
+                iframe.src = url;
+                document.body.appendChild(iframe);
+                
+                iframe.onload = () => {
+                  setTimeout(() => {
+                    iframe.focus();
+                    iframe.contentWindow.print();
+                    // Clean up after printing
+                    setTimeout(() => document.body.removeChild(iframe), 1000);
+                  }, 100);
+                };
+                
                 navigate("/admin/shop-bills");
               }),
             {

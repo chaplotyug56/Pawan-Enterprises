@@ -69,8 +69,9 @@ const connectDB = async () => {
     uri = uri.replace(/^["']|["']$/g, "").trim();
 
     cached.promise = mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 15000,
+      connectTimeoutMS: 15000,
+      socketTimeoutMS: 45000,
       family: 4, // Force IPv4
     }).then((mongoose) => {
       console.log("✅ MongoDB Connected Successfully");

@@ -50,7 +50,48 @@ app.use(
 app.options(/(.*)/, cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
-app.use((req, res, next) => {
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+const connectDB = async () => {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    let uri = process.env.MONGODB_URI;
+    if (!uri) {
+      throw new Error("No MONGODB_URI found in environment variables!");
+    }
+
+    uri = uri.replace(/^["']|["']$/g, "").trim();
+
+    cached.promise = mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
+      family: 4, // Force IPv4
+    }).then((mongoose) => {
+      console.log("✅ MongoDB Connected Successfully");
+      return mongoose;
+    }).catch((err) => {
+      cached.promise = null;
+      console.log("❌ MongoDB Connection Error:", err.message);
+      throw err;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+  return cached.conn;
+};
+
+app.use(async (req, res, next) => {
   if (!process.env.MONGODB_URI) {
     return res
       .status(500)
@@ -58,12 +99,14 @@ app.use((req, res, next) => {
         "<h2>CRITICAL ERROR: MONGODB_URI missing!</h2><p>Please add MONGODB_URI in Vercel Settings -> Environment Variables.</p>",
       );
   }
-  if (mongoose.connection.readyState === 0) {
-    // If not connected, don't let it buffer forever and timeout Vercel
+  
+  try {
+    await connectDB();
+  } catch (err) {
     return res
       .status(500)
       .send(
-        "<h2>CRITICAL ERROR: MongoDB is not connected.</h2><p>Your MONGODB_URI in Vercel is invalid, or the MongoDB Atlas IP Whitelist is blocking the connection. Make sure 0.0.0.0/0 is added in MongoDB Atlas.</p>",
+        "<h2>CRITICAL ERROR: MongoDB connection failed.</h2><p>Your MONGODB_URI in Vercel might be invalid, or the MongoDB Atlas IP Whitelist is blocking the connection. Error: " + err.message + "</p>",
       );
   }
   next();
@@ -81,33 +124,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/images", imageRoutes);
 
-// Connect MongoDB
-const connectDB = async () => {
-  try {
-    let uri = process.env.MONGODB_URI;
-    if (!uri) {
-      throw new Error("No MONGODB_URI found in environment variables!");
-    }
 
-    // Automatically strip quotes in case the user accidentally pasted them in Vercel
-    uri = uri.replace(/^["']|["']$/g, "").trim();
-
-    // In serverless environments, avoid re-connecting if already connected
-    if (mongoose.connection.readyState >= 1) {
-      return;
-    }
-
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 5000,
-      family: 4, // Force IPv4, because Node 18+ prefers IPv6 which can cause 90s connection hangs with MongoDB Atlas
-    });
-    console.log("✅ MongoDB Connected Successfully");
-  } catch (err) {
-    console.log("❌ MongoDB Connection Error:", err.message);
-  }
-};
-connectDB();
 
 // Home Route
 app.get("/", (req, res) => {

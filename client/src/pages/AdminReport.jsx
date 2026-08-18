@@ -16,6 +16,8 @@ import "../styles/Admin.css";
 function AdminReport() {
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [updatingMaintenance, setUpdatingMaintenance] = useState(false);
 
   async function fetchDashboard() {
     try {
@@ -29,8 +31,39 @@ function AdminReport() {
     }
   }
 
+  async function fetchSettings() {
+    try {
+      const res = await api.get("/settings");
+      if (res.data && res.data.data) {
+        setMaintenanceMode(res.data.data.maintenanceMode);
+      }
+    } catch (err) {
+      console.error("Unable to load settings", err);
+    }
+  }
+
+  async function toggleMaintenanceMode() {
+    setUpdatingMaintenance(true);
+    const newValue = !maintenanceMode;
+    try {
+      await api.put("/settings", { maintenanceMode: newValue });
+      setMaintenanceMode(newValue);
+      if (newValue) {
+        toast.warning("Site is now offline (Maintenance Mode ON)");
+      } else {
+        toast.success("Site is back online (Maintenance Mode OFF)");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to toggle maintenance mode");
+    } finally {
+      setUpdatingMaintenance(false);
+    }
+  }
+
   useEffect(() => {
     fetchDashboard();
+    fetchSettings();
 
     // Listen for foreground push notifications
     const unsubscribe = onForegroundMessage((payload) => {
@@ -59,9 +92,25 @@ function AdminReport() {
 
   return (
     <div className="admin-container">
-      <div className="admin-header">
-        <h1 className="admin-title">Reports & Analytics</h1>
-        <NotificationBell />
+      <div className="admin-header d-flex justify-content-between align-items-center mb-4">
+        <h1 className="admin-title mb-0">Reports & Analytics</h1>
+        <div className="d-flex align-items-center gap-3">
+          <div className="form-check form-switch d-flex align-items-center gap-2 m-0 border border-danger rounded px-3 py-1 bg-light">
+            <input
+              className="form-check-input mt-0"
+              type="checkbox"
+              id="maintenanceToggle"
+              checked={maintenanceMode}
+              onChange={toggleMaintenanceMode}
+              disabled={updatingMaintenance}
+              style={{ cursor: "pointer" }}
+            />
+            <label className="form-check-label text-danger fw-bold m-0" htmlFor="maintenanceToggle" style={{ cursor: "pointer" }}>
+              Maintenance Mode
+            </label>
+          </div>
+          <NotificationBell />
+        </div>
       </div>
 
       <NotificationSettings />

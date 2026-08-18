@@ -92,23 +92,40 @@ function AdminReport() {
 
   return (
     <div className="admin-container">
-      <div className="admin-header d-flex justify-content-between align-items-center mb-4">
-        <h1 className="admin-title mb-0">Reports & Analytics</h1>
-        <div className="d-flex align-items-center gap-3">
-          <div className="form-check form-switch d-flex align-items-center gap-2 m-0 border border-danger rounded px-3 py-1 bg-light">
+      <div className="admin-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+        <h1 className="admin-title" style={{ margin: 0 }}>Reports & Analytics</h1>
+        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+          
+          {/* Custom Styled Maintenance Toggle */}
+          <div 
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "8px", 
+              border: "1px solid #ef4444", 
+              borderRadius: "8px", 
+              padding: "6px 12px", 
+              backgroundColor: maintenanceMode ? "#fef2f2" : "#fff",
+              cursor: "pointer"
+            }}
+            onClick={!updatingMaintenance ? toggleMaintenanceMode : undefined}
+          >
             <input
-              className="form-check-input mt-0"
               type="checkbox"
               id="maintenanceToggle"
               checked={maintenanceMode}
-              onChange={toggleMaintenanceMode}
+              onChange={() => {}} // Handled by div onClick
               disabled={updatingMaintenance}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", margin: 0, width: "16px", height: "16px", accentColor: "#ef4444" }}
             />
-            <label className="form-check-label text-danger fw-bold m-0" htmlFor="maintenanceToggle" style={{ cursor: "pointer" }}>
+            <label 
+              htmlFor="maintenanceToggle" 
+              style={{ color: "#ef4444", fontWeight: "600", margin: 0, cursor: "pointer", fontSize: "14px" }}
+            >
               Maintenance Mode
             </label>
           </div>
+
           <NotificationBell />
         </div>
       </div>

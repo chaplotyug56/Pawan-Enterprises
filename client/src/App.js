@@ -1,4 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import api from "./services/api";
+import { useAuth } from "./context/AuthContext";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -28,7 +31,41 @@ import AdminSettings from "./pages/AdminSettings";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 import ShopBilling from "./pages/ShopBilling";
 import AdminShopBills from "./pages/AdminShopBills";
+import Maintenance from "./pages/Maintenance";
+
 function App() {
+  const { user } = useAuth();
+  const location = useLocation();
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [loadingSettings, setLoadingSettings] = useState(true);
+
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const res = await api.get("/settings");
+        if (res.data && res.data.data) {
+          setMaintenanceMode(res.data.data.maintenanceMode);
+        }
+      } catch (error) {
+        console.error("Failed to load settings", error);
+      } finally {
+        setLoadingSettings(false);
+      }
+    }
+    fetchSettings();
+  }, []);
+
+  if (loadingSettings) {
+    return null; // or a full screen loader
+  }
+
+  const isAdminOrStaff = user && (user.role === "admin" || user.role === "staff");
+  const isLoginPage = location.pathname === "/login";
+
+  if (maintenanceMode && !isAdminOrStaff && !isLoginPage) {
+    return <Maintenance />;
+  }
+
   return (
     <>
       <ScrollToTop />

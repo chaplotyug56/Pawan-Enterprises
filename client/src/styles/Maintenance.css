@@ -21,7 +21,8 @@
 
 .maintenance-logo {
   width: 120px;
-  margin-bottom: 20px;
+  display: block;
+  margin: 0 auto 20px auto;
 }
 
 .maintenance-title {
